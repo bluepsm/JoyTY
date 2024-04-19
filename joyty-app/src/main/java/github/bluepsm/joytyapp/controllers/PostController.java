@@ -49,8 +49,7 @@ public class PostController {
     }
 
     @PostMapping("/create/{userId}")
-    public ResponseEntity<PostModel> createPost(@PathVariable Long userId, @RequestBody PostModel newPost, @RequestParam Long... tags) {
-        
+    public ResponseEntity<PostModel> createPost(@PathVariable Long userId, @RequestBody PostModel newPost, @RequestParam Long... tags) {        
         PostModel createdPost = postService.createPost(userId, newPost, tags);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);

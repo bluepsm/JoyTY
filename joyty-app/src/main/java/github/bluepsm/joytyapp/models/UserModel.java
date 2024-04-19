@@ -31,7 +31,7 @@ public class UserModel implements Serializable {
     @Column(name = "username")
     private String username;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "password")
     private String password;
 
@@ -63,13 +63,22 @@ public class UserModel implements Serializable {
     @Column(name = "created_at")
     private Long created_at;
 
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<PostModel> posts;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<CommentModel> comments;
+
+    @OneToMany(mappedBy = "request_by", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<RequestModel> send_request;
+
+    @ManyToMany(mappedBy = "party_member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<PostModel> join_party;
+
     @PrePersist
     protected void onCreate() {
         created_at = System.currentTimeMillis();
     }
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<PostModel> posts;
 
     public UserModel() {}
 

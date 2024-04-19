@@ -7,9 +7,6 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -31,6 +28,9 @@ public class PostModel implements Serializable {
     @Lob
     @Column(name = "body")
     private String body;
+
+    @Column(name = "party_size")
+    private Integer party_size;
 
     @Column(name = "meeting_location")
     private String meeting_location;
@@ -59,29 +59,41 @@ public class PostModel implements Serializable {
     @Column(name = "last_updated")
     private Long last_updated;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "post_tag",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<TagModel> tags;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserModel author;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<CommentModel> comments;
+
+    @OneToMany(mappedBy = "request_to", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<RequestModel> join_request;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "party",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<UserModel> party_member;
+
     @PrePersist
     protected void onCreate() {
         created_at = System.currentTimeMillis();
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "post_tag",
-        joinColumns = @JoinColumn(name = "post_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    //@ManyToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<TagModel> tags;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private UserModel user;
-
     public PostModel() {}
 
-    public PostModel(String body, String meeting_location, String meeting_city, String meeting_country, 
+    public PostModel(String body, Integer party_size, String meeting_location, String meeting_city, String meeting_country, 
         Long meeting_datetime, BigDecimal cost_estimate, Boolean cost_share, Boolean meeting_done) {
             this.body = body;
+            this.party_size = party_size;
             this.meeting_location = meeting_location;
             this.meeting_city = meeting_city;
             this.meeting_country = meeting_country;

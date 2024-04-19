@@ -1,9 +1,7 @@
 package github.bluepsm.joytyapp.services;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -12,7 +10,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import github.bluepsm.joytyapp.models.PostModel;
 import github.bluepsm.joytyapp.models.UserModel;
 import github.bluepsm.joytyapp.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -64,16 +61,6 @@ public class UserService {
         } catch(EmptyResultDataAccessException err) {
             return false;
         }
-    }
-
-    public void addPost(Long user_id, PostModel post) {
-        UserModel user = userRepository.findById(user_id).get();
-
-        Set<PostModel> posts = new HashSet<PostModel>();
-        posts.add(post);
-        
-        //user.setPosts(posts);
-        userRepository.save(user);
     }
 
 }

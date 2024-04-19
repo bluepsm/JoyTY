@@ -54,7 +54,7 @@ public class PostService {
             tags.add(tag);
         }
 
-        post.setUser(user.get());
+        post.setAuthor(user.get());
         post.setTags(tags);
 
         return postRepository.save(post);
@@ -75,8 +75,8 @@ public class PostService {
         post.setCreated_at(created_at);
 
         // Keep the post owner data
-        UserModel user = postOpt.get().getUser();
-        post.setUser(user);
+        UserModel user = postOpt.get().getAuthor();
+        post.setAuthor(user);
 
         // Keep tags
         Set<TagModel> tags = postOpt.get().getTags();
