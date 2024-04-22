@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { httpInterceptorProvider } from './helper/http.interceptor';
 import { AppRoutingModule } from './app-routing.module';
@@ -11,6 +13,7 @@ import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AppUserComponent } from './app-user/app-user.component';
+import { AppAdminComponent } from './app-admin/app-admin.component';
 
 
 @NgModule({
@@ -20,13 +23,16 @@ import { AppUserComponent } from './app-user/app-user.component';
     RegisterComponent,
     HomeComponent,
     ProfileComponent,
-    AppUserComponent
+    AppUserComponent,
+    AppAdminComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BsDatepickerModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [httpInterceptorProvider],
   bootstrap: [AppComponent]

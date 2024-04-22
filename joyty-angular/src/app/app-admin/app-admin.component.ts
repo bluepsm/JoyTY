@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
 
 @Component({
-  selector: 'app-app-user',
-  templateUrl: './app-user.component.html',
-  styleUrl: './app-user.component.css'
+  selector: 'app-app-admin',
+  templateUrl: './app-admin.component.html',
+  styleUrl: './app-admin.component.css'
 })
-export class AppUserComponent implements OnInit {
+export class AppAdminComponent implements OnInit {
   content?: string
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.getUserContent().subscribe({
+    this.userService.getAdminContent().subscribe({
       next: data => {
         this.content = data
       }, error: err => {
