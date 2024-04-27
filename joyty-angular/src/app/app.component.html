@@ -5,6 +5,11 @@
             <li class="nav-item">
                 <a href="/home" class="nav-link" routerLink="home">Home</a>
             </li>
+            @if (showModApp) {
+                <li class="nav-item">
+                    <a href="/mod" class="nav-link" routerLink="mod">Moderator</a>
+                </li>
+            }
             @if (showAdminApp) {
                 <li class="nav-item">
                     <a href="/admin" class="nav-link" routerLink="admin">Admin</a>

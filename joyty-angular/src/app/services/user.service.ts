@@ -19,6 +19,10 @@ export class UserService {
     return this.http.get(API_URL + 'user', {responseType: 'text'})
   }
 
+  getModeratorContent(): Observable<any> {
+    return this.http.get(API_URL + 'mod', {responseType: 'text'})
+  }
+
   getAdminContent(): Observable<any> {
     return this.http.get(API_URL + 'admin', {responseType: 'text'})
   }

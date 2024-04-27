@@ -12,6 +12,7 @@ export class AppComponent {
 
   private roles: string[] = []
   isLoggedIn = false
+  showModApp = false
   showAdminApp = false
   username?: string
 
@@ -25,6 +26,7 @@ export class AppComponent {
       this.roles = user.roles
 
       this.showAdminApp = this.roles.includes('ROLE_ADMIN')
+      this.showModApp = this.roles.includes('ROLE_MODERATOR')
 
       this.username = user.username
     }

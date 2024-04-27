@@ -42,7 +42,8 @@ import github.bluepsm.joyty.security.services.RefreshTokenService;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 
 @Slf4j
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
