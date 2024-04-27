@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "joyty.app.jwtCookieName",
+    "type": "java.lang.String",
+    "description": "Set cookie name."
+  },
+  {
+    "name": "joyty.app.jwtSecret",
+    "type": "java.lang.String",
+    "description": "Set secret key for JWT."
+  },
+  {
+    "name": "joyty.app.jwtExpirationMs",
+    "type": "java.lang.String",
+    "description": "Set expiration time of the cookie."
+  }
+]}
