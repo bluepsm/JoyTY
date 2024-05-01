@@ -225,12 +225,12 @@
                 class="form-control"
                 name="date_of_birth"
                 id="date_of_birth"
-                placeholder="DD/MM/YYYY"
+                placeholder="YYYY-MM-DD"
                 bsDatepicker
                 [(ngModel)]="form.date_of_birth"
                 required
                 #date_of_birth="ngModel"
-                [bsConfig]="{dateInputFormat: 'DD-MM-YYYY', isAnimated: true, adaptivePosition: true}"
+                [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', isAnimated: true, adaptivePosition: true}"
                 [ngClass]="{'is-invalid': f.submitted && date_of_birth.errors}"
             />
             @if (date_of_birth.errors && f.submitted) {

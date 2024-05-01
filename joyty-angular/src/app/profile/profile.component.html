@@ -1,16 +1,655 @@
-@if (currentUser) {
-    <div class="container">
-        <header class="header">
-            <h3><strong>{{currentUser.username}}</strong> Profile</h3>
-        </header>
-        <p><strong>Email:</strong> {{currentUser.email}}</p>
-        <strong>Roles:</strong>
-        <ul>
-            @for (role of currentUser.roles; track role) {
-                <li>{{role}}</li>
-            }
-        </ul>
-    </div>
-} @else {
-    <p>Please login.</p>
-}
+<div class="container-fluid mt-3">
+    @if (currentUser) {
+        <div class="row">
+            <div class="col-3">
+                <nav class="nav nav-pills flex-column border" role="tablist">
+                    <a class="nav-link active" role="tab" data-bs-toggle="tab" href="#personal-tab">
+                        <img src="./assets/user.svg" width="15" height="15"/>  Personal info</a>
+                    <a class="nav-link" role="tab" data-bs-toggle="tab" href="#security-tab">
+                        <img src="./assets/lock.svg" width="15" height="15"/>  Email and Password</a>
+                    <a class="nav-link" role="tab" data-bs-toggle="tab" href="#contact-tab">
+                        <img src="./assets/whatsapp.svg" width="15" height="15"/>  Contact and Social</a>
+                    <a class="nav-link" role="tab" data-bs-toggle="tab" href="#location-tab">
+                        <img src="./assets/marker.svg" width="15" height="15"/>  Location</a>
+                </nav>
+            </div>
+            <div class="col-9 border">
+                <div class="tab-content mt-2">
+                    <div class="tab-pane fade show active" id="personal-tab" role="tabpanel">
+                        <h5>Personal info</h5>
+                        <hr />
+                        <div class="accordion accordion-flush" id="personalInfoAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="usernameHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#usernameCollapse" aria-expanded="false" aria-controls="usernameCollapse">
+                                        <div class="col-sm-3" for="usernameShow">Username:</div>
+                                        <div id="usernameShow">{{ userData.username }}</div>
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" id="usernameCollapse" aria-labelledby="usernameHeading" data-bs-parent="#personalInfoAccordion">
+                                    <div class="accordion-body">
+                                        <!-- <form name="usernameForm" (ngSubmit)="f.form.valid && usernameFormSubmit()" #f="ngForm" novalidate> -->
+                                        <form [formGroup]="usernameForm" (ngSubmit)="usernameFormSubmit()">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label" for="username">Username:</label>
+                                                <div class="col-sm-6">
+                                                    <!-- <input 
+                                                        type="text" 
+                                                        class="form-control" 
+                                                        id="username"
+                                                        name="username"
+                                                        [(ngModel)]="usernameForm.username"
+                                                        required
+                                                        minlength="3"
+                                                        maxlength="20"
+                                                        #username="ngModel"
+                                                        [ngClass]="{'is-invalid': username.errors}"
+                                                    /> -->
+                                                    <input 
+                                                        type="text" 
+                                                        class="form-control" 
+                                                        id="username"
+                                                        name="username"
+                                                        formControlName="username"
+                                                        [ngClass]="{'is-invalid': uf['username'].errors}"
+                                                    />
+                                                    @if (uf['username'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (uf['username'].errors['required']) {
+                                                                <div>Username is required!</div>
+                                                            }
+                                                            @if (uf['username'].errors['minlength']) {
+                                                                <div>Username must be at least 3 character.</div>
+                                                            }
+                                                            @if (uf['username'].errors['maxlength']) {
+                                                                <div>Username must be at most 20 character.</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button submit" class="btn btn-outline-success" [disabled]="usernameForm.invalid">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="fullNameHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fullNameCollapse" aria-expanded="false" aria-controls="fullNameCollapse">
+                                        <div class="col-sm-3" for="fullNameShow">Full Name:</div>
+                                        <div id="fullNameShow">{{ userData.first_name }} {{ userData.last_name }}</div>
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" id="fullNameCollapse" aria-labelledby="fullNameHeading" data-bs-parent="#personalInfoAccordion">
+                                    <div class="accordion-body">
+                                        <!-- <form name="fullNameForm" (ngSubmit)="nf.form.valid && nameFormSubmit()" #nf="ngForm" novalidate> -->
+                                        <form [formGroup]="nameForm" (ngSubmit)="nameFormSubmit()">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label" for="firstname">Firstname:</label>
+                                                <div class="col-sm-6">
+                                                    <!-- <input 
+                                                        type="text"
+                                                        class="form-control"
+                                                        name="first_name"
+                                                        [(ngModel)]="nameForm.first_name"
+                                                        required
+                                                        minlength="3"
+                                                        maxlength="30"
+                                                        #first_name="ngModel"
+                                                        [ngClass]="{'is-invalid': first_name.errors}"
+
+                                                    /> -->
+                                                    <input 
+                                                        type="text"
+                                                        class="form-control"
+                                                        name="first_name"
+                                                        formControlName="first_name"
+                                                        [ngClass]="{'is-invalid': nf['first_name'].errors}"
+
+                                                    />
+                                                    @if (nf['first_name'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (nf['first_name'].errors['required']) {
+                                                                <div>First name is required!</div>
+                                                            }
+                                                            @if (nf['first_name'].errors['minlength']) {
+                                                                <div>First name must be at least 3 character.</div>
+                                                            }
+                                                            @if (nf['first_name'].errors['maxlength']) {
+                                                                <div>First name must be at most 30 character.</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <label class="col-sm-3 col-form-label" for="lastname">Lastname:</label>
+                                                <div class="col-sm-6">
+                                                    <!-- <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        name="last_name"
+                                                        [(ngModel)]="nameForm.last_name"
+                                                        required
+                                                        minlength="3"
+                                                        maxlength="30"
+                                                        #last_name="ngModel"
+                                                        [ngClass]="{'is-invalid': last_name.errors}"
+
+                                                    /> -->
+                                                    <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        name="last_name"
+                                                        formControlName="last_name"
+                                                        [ngClass]="{'is-invalid': nf['last_name'].errors}"
+
+                                                    />
+                                                    @if (nf['last_name'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (nf['last_name'].errors['required']) {
+                                                                <div>Last name is required!</div>
+                                                            }
+                                                            @if (nf['last_name'].errors['minlength']) {
+                                                                <div>Last name must be at least 3 character.</div>
+                                                            }
+                                                            @if (nf['last_name'].errors['maxlength']) {
+                                                                <div>Last name must be at most 30 character.</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button submit" class="btn btn-outline-success" [disabled]="nameForm.invalid">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="dobHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dobCollapse" aria-expanded="false" aria-controls="dobCollapse">
+                                        <div class="col-sm-3" for="dobShow">Date of birth:</div>
+                                        <div id="dobShow">{{ userData.date_of_birth }}</div>
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" id="dobCollapse" aria-labelledby="dobHeading" data-bs-parent="#personalInfoAccordion">
+                                    <div class="accordion-body">
+                                        <!-- <form name="dobForm" (ngSubmit)="dobf.form.valid" #dobf="ngForm" novalidate>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label" for="date_of_birth">Date of birth:</label>
+                                                <div class="col-sm-6">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        name="date_of_birth"
+                                                        id="date_of_birth"
+                                                        placeholder="YYYY-MM-DD"
+                                                        bsDatepicker
+                                                        [(ngModel)]="dateOfBirthForm.date_of_birth"
+                                                        required
+                                                        #date_of_birth="ngModel"
+                                                        [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', isAnimated: true, adaptivePosition: true}"
+                                                        [ngClass]="{'is-invalid': date_of_birth.errors}"
+                                                    />
+                                                    @if (date_of_birth.errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (date_of_birth.errors['required']) {
+                                                                <div>Date of birth is required!</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button submit" class="btn btn-outline-success" [disabled]="dobf.form.invalid">Save</button>
+                                            </div>
+                                        </form> -->
+                                        <form [formGroup]="dateOfBirthForm">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label" for="date_of_birth">Date of birth:</label>
+                                                <div class="col-sm-6">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        name="date_of_birth"
+                                                        id="date_of_birth"
+                                                        placeholder="YYYY-MM-DD"
+                                                        bsDatepicker
+                                                        [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', isAnimated: true, adaptivePosition: true}"
+                                                        formControlName="date_of_birth"
+                                                        [ngClass]="{'is-invalid': df['date_of_birth'].errors}"
+                                                    />
+                                                    @if (df['date_of_birth'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (df['date_of_birth'].errors['required']) {
+                                                                <div>Date of birth is required!</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button submit" class="btn btn-outline-success" [disabled]="dateOfBirthForm.invalid">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="genderHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#genderCollapse" aria-expanded="false" aria-controls="genderCollapse">
+                                        <div class="col-sm-3" for="genderShow">Gender:</div>
+                                        <div id="genderShow">{{ userData.gender }}</div>
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" id="genderCollapse" aria-labelledby="genderHeading" data-bs-parent="#personalInfoAccordion">
+                                    <div class="accordion-body">
+                                        <!-- <form name="genderForm" (ngSubmit)="gf.form.valid && genderFormSubmit()" #gf="ngForm" novalidate> -->
+                                        <form [formGroup]="genderForm" (ngSubmit)="genderFormSubmit()">
+                                            <label class="col-sm-3 form-check-label" for="gender">Gender:</label>
+                                            <div class="form-check form-check-inline">
+                                                <input
+                                                    class="form-check-input is-invalid"
+                                                    type="radio"
+                                                    name="gender"
+                                                    id="gender_male"
+                                                    value="male"
+                                                    formControlName="gender"
+                                                    [ngClass]="{'is-invalid': gf['gender'].errors}"
+                                                />
+                                                <label class="form-check-label" for="gender_male">Male</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <!-- <input
+                                                    class="form-check-input is-invalid"
+                                                    type="radio"
+                                                    name="gender"
+                                                    id="gender_female"
+                                                    value="female"
+                                                    [(ngModel)]="genderForm.gender"
+                                                    #gender="ngModel"
+                                                    required
+                                                    [ngClass]="{'is-invalid': gender.errors}"
+                                                /> -->
+                                                <input
+                                                    class="form-check-input is-invalid"
+                                                    type="radio"
+                                                    name="gender"
+                                                    id="gender_female"
+                                                    value="female"
+                                                    formControlName="gender"
+                                                    [ngClass]="{'is-invalid': gf['gender'].errors}"
+                                                />
+                                                <label class="form-check-label" for="gender_female">Female</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <!-- <input
+                                                    class="form-check-input is-invalid"
+                                                    type="radio"
+                                                    name="gender"
+                                                    id="gender_other"
+                                                    value="other"
+                                                    [(ngModel)]="genderForm.gender"
+                                                    #gender="ngModel"
+                                                    required
+                                                    [ngClass]="{'is-invalid': gender.errors}"
+                                                /> -->
+                                                <input
+                                                    class="form-check-input is-invalid"
+                                                    type="radio"
+                                                    name="gender"
+                                                    id="gender_other"
+                                                    value="other"
+                                                    formControlName="gender"
+                                                    [ngClass]="{'is-invalid': gf['gender'].errors}"
+                                                />
+                                                <label class="form-check-label" for="gender_other">Other</label>
+                                            </div>
+                                            @if (gf['gender'].errors) {
+                                                <div class="invalid-feedback">
+                                                    @if (gf['gender'].errors['required']) {
+                                                        <div>Gender is required!</div>
+                                                    }
+                                                </div>
+                                            }
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button submit" class="btn btn-outline-success" [disabled]="genderForm.invalid">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="security-tab" role="tabpanel">
+                        <h5>Email and Password</h5>
+                        <hr />
+                        <div class="accordion accordion-flush" id="securityAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="emailHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#emailCollapse" aria-expanded="false" aria-controls="emailCollapse">
+                                        <div class="col-sm-3" for="emailShow">Email:</div>
+                                        <div id="emailShow">{{ userData.email }}</div>
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" id="emailCollapse" aria-labelledby="emailHeading" data-bs-parent="#securityAccordion">
+                                    <div class="accordion-body">
+                                        <!-- <form name="emailForm" (ngSubmit)="ef.form.valid && emailFormSubmit()" #ef="ngForm" novalidate> -->
+                                        <form [formGroup]="emailForm" (ngSubmit)="emailFormSubmit()">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label" for="email">Email:</label>
+                                                <div class="col-sm-6">
+                                                    <!-- <input 
+                                                        type="email" 
+                                                        class="form-control-plaintext" 
+                                                        id="email"
+                                                        name="email"
+                                                        [(ngModel)]="emailForm.email"
+                                                        required
+                                                        email
+                                                        #email="ngModel"
+                                                        [ngClass]="{'is-invalid': email.errors}"
+                                                    /> -->
+                                                    <input 
+                                                        type="email" 
+                                                        class="form-control-plaintext" 
+                                                        id="email"
+                                                        name="email"
+                                                        formControlName="email"
+                                                        [ngClass]="{'is-invalid': ef['email'].errors}"
+                                                    />
+                                                    @if (ef['email'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (ef['email'].errors['required']) {
+                                                                <div>Email is required!</div>
+                                                            }
+                                                            @if (ef['email'].errors['email']) {
+                                                                <div>Email must be a valid email address.</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button submit" class="btn btn-outline-success" [disabled]="emailForm.invalid">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="passwordHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#passwordCollapse" aria-expanded="false" aria-controls="passwordCollapse">
+                                        <div class="col-sm-3" for="passwordShow">Password:</div>
+                                        <div type="password" id="passwordShow">Reset password.</div>
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" id="passwordCollapse" aria-labelledby="passwordHeading" data-bs-parent="#securityAccordion">
+                                    <div class="accordion-body">
+                                        <form [formGroup]="passwordForm">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label" for="password">New Password:</label>
+                                                <div class="col-sm-6">
+                                                    <input 
+                                                        type="password" 
+                                                        class="form-control-plaintext" 
+                                                        id="password"
+                                                        name="password"
+                                                        placeholder="Enter your new password here."
+                                                        formControlName="password"
+                                                        [ngClass]="{'is-invalid': pf['password'].errors}"
+                                                    />
+                                                    @if (pf['password'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (pf['password'].errors['required']) {
+                                                                <div>Password is required!</div>
+                                                            }
+                                                            @if (pf['password'].errors['minlength']) {
+                                                                <div>Password must be at least 8 character.</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <label class="col-sm-3 col-form-label" for="confirm_password">Confirm New Password:</label>
+                                                <div class="col-sm-6">
+                                                    <input 
+                                                        type="password" 
+                                                        class="form-control-plaintext" 
+                                                        id="confirm_password"
+                                                        name="confirm_password"
+                                                        placeholder="Confirm your new password."
+                                                        formControlName="confirm_password"
+                                                        [ngClass]="{'is-invalid': pf['confirm_password'].errors}"
+                                                    />
+                                                    @if (pf['confirm_password'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (pf['confirm_password'].errors['required']) {
+                                                                <div>Please confirm your new password!</div>
+                                                            }
+                                                            @if (pf['confirm_password'].errors['matching']) {
+                                                                <div>Password does not match!</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button" class="btn btn-outline-success" [disabled]="passwordForm.invalid">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="contact-tab" role="tabpanel">
+                        <h5>Contact and Social</h5>
+                        <hr />
+                        <div class="accordion accordion-flush" id="contactAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="phoneNumberHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#phoneNumberCollapse" aria-expanded="false" aria-controls="phoneNumberCollapse">
+                                        <div class="col-sm-3" for="phoneNumberShow">Phone Number:</div>
+                                        <div id="phoneNumberShow">{{ userData.phone_number }}</div>
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" id="phoneNumberCollapse" aria-labelledby="phoneNumberHeading" data-bs-parent="#contactAccordion">
+                                    <div class="accordion-body">
+                                        <!-- <form name="phoneNumberForm" (ngSubmit)="pf.form.valid && phoneNumberFormSubmit()" #pf="ngForm" novalidate> -->
+                                        <form [formGroup]="phoneNumberForm" (ngSubmit)="phoneNumberFormSubmit()">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label" for="phoneNumber">Phone Number:</label>
+                                                <div class="col-sm-6">
+                                                    <!-- <input 
+                                                        type="tel" 
+                                                        class="form-control" 
+                                                        id="phoneNumber"
+                                                        name="phoneNumber"
+                                                        [(ngModel)]="phoneNumberForm.phone_number"
+                                                        required
+                                                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                                        #phoneNumber="ngModel"
+                                                        [ngClass]="{'is-invalid': phoneNumber.errors}"
+                                                    /> -->
+                                                    <input 
+                                                        type="tel" 
+                                                        class="form-control" 
+                                                        id="phoneNumber"
+                                                        name="phoneNumber"
+                                                        formControlName="phone_number"
+                                                        [ngClass]="{'is-invalid': phf['phone_number'].errors}"
+                                                    />
+                                                    @if (phf['phone_number'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (phf['phone_number'].errors['required']) {
+                                                                <div>Phone number is required!</div>
+                                                            }
+                                                            @if (phf['phone_number'].errors['pattern']) {
+                                                                <div>Phone number must be a valid number.</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button submit" class="btn btn-outline-success" [disabled]="phoneNumberForm.invalid">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="location-tab" role="tabpanel">
+                        <h5>Location</h5>
+                        <hr />
+                        <div class="accordion accordion-flush" id="locationAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="locationHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#locationCollapse" aria-expanded="false" aria-controls="locationCollapse">
+                                        <div class="col-sm-3" for="locationShow">Location:</div>
+                                        <div id="locationShow">
+                                            @if (userData.city !== null && userData.city !== "") {
+                                                {{ userData.city }},
+                                            }
+                                            @if (userData.state !== null && userData.state !== "") {
+                                                {{ userData.state }},
+                                            }
+                                            {{ userData.country }}
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" id="locationCollapse" aria-labelledby="locationHeading" data-bs-parent="#locationAccordion">
+                                    <div class="accordion-body">
+                                        <!-- <form name="locationForm" (ngSubmit)="lf.form.valid && locationFormSubmit()" #lf="ngForm" novalidate> -->
+                                        <form [formGroup]="locationForm" (ngSubmit)="locationFormSubmit()">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label" for="country">Country:</label>
+                                                <div class="col-sm-6">
+                                                    <!-- <select 
+                                                        class="form-select" 
+                                                        id="country"
+                                                        name="country"
+                                                        (change)="onCountryChange()" 
+                                                        [(ngModel)]="selectedCountry" 
+                                                        required
+                                                        #country="ngModel"
+                                                        [ngClass]="{'is-invalid': country.errors}"
+                                                    >
+                                                        <option [ngValue]="null">-- Select Your Country --</option>
+                                                        <option *ngFor="let country of countries" [value]="country.isoCode">{{ country.flag }}&nbsp;&nbsp;{{ country.name }}</option>
+                                                    </select> -->
+                                                    <select 
+                                                        class="form-select" 
+                                                        id="country"
+                                                        name="country"
+                                                        (change)="onCountryChange()" 
+                                                        formControlName="country"
+                                                        [ngClass]="{'is-invalid': lf['country'].errors}"
+                                                    >
+                                                        <option [ngValue]="null">-- Select Your Country --</option>
+                                                        <option *ngFor="let country of countries" [value]="country.isoCode">{{ country.flag }}&nbsp;&nbsp;{{ country.name }}</option>
+                                                    </select>
+                                                    @if (lf['country'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (lf['country'].errors['required']) {
+                                                                <div>Country is required!</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <label class="col-sm-3 col-form-label" for="state">State:</label>
+                                                <div class="col-sm-6">
+                                                    <!-- <select 
+                                                        class="form-select" 
+                                                        id="state"
+                                                        name="state"
+                                                        (change)="onStateChange()" 
+                                                        [(ngModel)]="selectedState"
+                                                        required
+                                                        #state="ngModel"
+                                                        [ngClass]="{'is-invalid': state.errors}"
+                                                    >
+                                                        <option [ngValue]="null">-- Select Your State --</option>
+                                                        <option *ngFor="let state of states" [value]="state.isoCode">{{ state.name }}</option>
+                                                    </select> -->
+                                                    <select 
+                                                        class="form-select" 
+                                                        id="state"
+                                                        name="state"
+                                                        (change)="onStateChange()" 
+                                                        formControlName="state"
+                                                        [ngClass]="{'is-invalid': lf['state'].errors}"
+                                                    >
+                                                        <option [ngValue]="null">-- Select Your State --</option>
+                                                        <option *ngFor="let state of states" [value]="state.isoCode">{{ state.name }}</option>
+                                                    </select>
+                                                    @if (lf['state'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (lf['state'].errors['required']) {
+                                                                <div>State is required!</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <label class="col-sm-3 col-form-label" for="city">City:</label>
+                                                <div class="col-sm-6">
+                                                    <!-- <select 
+                                                        class="form-select" 
+                                                        id="city"
+                                                        name="city"
+                                                        (change)="onCityChange()" 
+                                                        [(ngModel)]="selectedCity"
+                                                        required
+                                                        #city="ngModel"
+                                                        [ngClass]="{'is-invalid': city.errors}"
+                                                    >
+                                                        <option [ngValue]="null">-- Select Your City --</option>
+                                                        <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
+                                                    </select> -->
+                                                    <select 
+                                                        class="form-select" 
+                                                        id="city"
+                                                        name="city"
+                                                        (change)="onCityChange()" 
+                                                        formControlName="city"
+                                                        [ngClass]="{'is-invalid': lf['city'].errors}"
+                                                    >
+                                                        <option [ngValue]="null">-- Select Your City --</option>
+                                                        <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
+                                                    </select>
+                                                    @if (lf['city'].errors) {
+                                                        <div class="invalid-feedback">
+                                                            @if (lf['city'].errors['required']) {
+                                                                <div>City is required!</div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 d-grid d-flex justify-content-end">
+                                                <button type="button submit" class="btn btn-outline-success" [disabled]="locationForm.invalid">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p>Please login.</p>
+    }
+</div>

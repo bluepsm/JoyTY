@@ -2,6 +2,7 @@ package github.bluepsm.joyty.services;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,5 +62,74 @@ public class UserService {
         } catch(EmptyResultDataAccessException err) {
             return false;
         }
+    }
+    
+    public Optional<User> updateUsername(Long userId, String username) {
+    	try {
+    		User user = userRepository.findById(userId).get();
+    		user.setUsername(username);
+    		
+    		return Optional.of(userRepository.save(user));
+    	} catch (Exception e) {
+			return Optional.empty();
+		}
+    }
+    
+    public Optional<User> updateName(Long userId, String firstName, String lastName) {
+    	try {
+    		User user = userRepository.findById(userId).get();
+    		user.setFirst_name(firstName);
+    		user.setLast_name(lastName);
+    		
+    		return Optional.of(userRepository.save(user));
+    	} catch (Exception e) {
+			return Optional.empty();
+		}
+    }
+    
+    public Optional<User> updateGender(Long userId, String gender) {
+    	try {
+    		User user = userRepository.findById(userId).get();
+    		user.setGender(gender);
+    		
+    		return Optional.of(userRepository.save(user));
+    	} catch (Exception e) {
+			return Optional.empty();
+		}
+    }
+    
+    public Optional<User> updateEmail(Long userId, String email) {
+    	try {
+    		User user = userRepository.findById(userId).get();
+    		user.setEmail(email);
+    		
+    		return Optional.of(userRepository.save(user));
+    	} catch (Exception e) {
+			return Optional.empty();
+		}
+    }
+    
+    public Optional<User> updatePhoneNumber(Long userId, String phoneNumber) {
+    	try {
+    		User user = userRepository.findById(userId).get();
+    		user.setPhone_number(phoneNumber);
+    		
+    		return Optional.of(userRepository.save(user));
+    	} catch (Exception e) {
+			return Optional.empty();
+		}
+    }
+    
+    public Optional<User> updateLocation(Long userId, String country, String state, String city) {
+    	try {
+    		User user = userRepository.findById(userId).get();
+    		user.setCountry(country);
+    		user.setState(state);
+    		user.setCity(city);
+    		
+    		return Optional.of(userRepository.save(user));
+    	} catch (Exception e) {
+			return Optional.empty();
+		}
     }
 }
