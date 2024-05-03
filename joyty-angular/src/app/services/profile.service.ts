@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 
-const API_URL = 'http://localhost:8080/api/user/'
+const USER_API_URL = 'http://localhost:8080/api/user/'
+const AUTH_API_URL = 'http://localhost:8080/api/auth/'
+
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,30 +21,38 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   getUserProfile(userId: any): Observable<User> {
-    return this.http.get<User>(API_URL + userId)
+    return this.http.get<User>(USER_API_URL + userId)
   }
 
-  updateUsername(userId: any, username: string): Observable<User> {
-    return this.http.patch<User>(API_URL + userId + '/updateUsername?username=' + username, {}, httpOptions)
+  updateUsername(userId: any, username: string): Observable<any> {
+    return this.http.patch<any>(AUTH_API_URL + 'updateUsername', { userId, username }, httpOptions)
   }
 
-  updateName(userId: any, firstName: string, lastName: string): Observable<User> {
-    return this.http.patch<User>(API_URL + userId + '/updateName?firstName=' + firstName + '&lastName=' + lastName, {}, httpOptions)
+  updateEmail(userId: any, email: string): Observable<any> {
+    return this.http.patch<any>(AUTH_API_URL + 'updateEmail', { userId, email }, httpOptions)
   }
 
-  updateGender(userId: any, gender: string): Observable<User> {
-    return this.http.patch<User>(API_URL + userId + '/updateGender?gender=' + gender, {}, httpOptions)
+  updatePassword(userId: any, password: string): Observable<any> {
+    return this.http.patch<any>(AUTH_API_URL + 'resetPassword', { userId, password }, httpOptions)
   }
 
-  updateEmail(userId: any, email: string): Observable<User> {
-    return this.http.patch<User>(API_URL + userId + '/updateEmail?email=' + email, {}, httpOptions)
+  updateName(userId: any, firstName: string, lastName: string): Observable<any> {
+    return this.http.patch<any>(USER_API_URL + 'updateName', { userId, firstName, lastName }, httpOptions)
   }
 
-  updatePhoneNumber(userId: any, phoneNumber: string): Observable<User> {
-    return this.http.patch<User>(API_URL + userId + '/updatePhoneNumber?phoneNumber=' + phoneNumber, {}, httpOptions)
+  updateDateOfBirth(userId: any, dateOfBirth: any): Observable<any> {
+    return this.http.patch<any>(USER_API_URL + 'updateDateOfBirth', { userId, dateOfBirth }, httpOptions)
   }
 
-  updateLocation(userId: any, country: string, state: string, city: string): Observable<User> {
-    return this.http.patch<User>(API_URL + userId + '/updateLocation?country=' + country + '&state=' + state + '&city=' + city, {}, httpOptions)
+  updateGender(userId: any, gender: string): Observable<any> {
+    return this.http.patch<any>(USER_API_URL + 'updateGender', { userId, gender }, httpOptions)
+  }
+
+  updatePhoneNumber(userId: any, phoneNumber: string): Observable<any> {
+    return this.http.patch<any>(USER_API_URL + 'updatePhoneNumber', { userId, phoneNumber }, httpOptions)
+  }
+
+  updateLocation(userId: any, country: string, state: string, city: string): Observable<any> {
+    return this.http.patch<any>(USER_API_URL + 'updateLocation', { userId, country, state, city }, httpOptions)
   }
 }

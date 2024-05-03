@@ -1,5 +1,6 @@
 package github.bluepsm.joyty.controllers;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,9 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import ch.qos.logback.classic.Logger;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,15 +25,28 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import github.bluepsm.joyty.models.User;
+import github.bluepsm.joyty.payload.request.ResetPasswordRequest;
+import github.bluepsm.joyty.payload.request.UpdateDobRequest;
+import github.bluepsm.joyty.payload.request.UpdateGenderRequest;
+import github.bluepsm.joyty.payload.request.UpdateLocationRequest;
+import github.bluepsm.joyty.payload.request.UpdateNameRequest;
+import github.bluepsm.joyty.payload.request.UpdatePhoneNumberRequest;
+import github.bluepsm.joyty.payload.response.MessageResponse;
 import github.bluepsm.joyty.repositories.UserRepository;
 import github.bluepsm.joyty.services.UserService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RequestMapping("/api/user")
 public class UserController {
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	PasswordEncoder encoder;
     
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -79,70 +97,77 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
     
-    @PatchMapping("/{userId}/updateUsername")
-    public ResponseEntity<User> updateUsername(@PathVariable Long userId, @RequestParam String username) {
-    	Optional<User> user = userService.updateUsername(userId, username);
-    		
-    	if (!user.isPresent()) {
-    		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    	}
-    		
-    	return new ResponseEntity<User>(HttpStatus.OK);
-    }
-    
-    @PatchMapping("/{userId}/updateName")
-    public ResponseEntity<User> updateName(@PathVariable Long userId, @RequestParam String firstName, @RequestParam String lastName) {
+    @PatchMapping("/updateName")
+    public ResponseEntity<?> updateName(@Valid @RequestBody UpdateNameRequest updateNameRequest) {
+    	final Long userId = updateNameRequest.getUserId();
+    	final String firstName = updateNameRequest.getFirst_name();
+    	final String lastName = updateNameRequest.getLast_name();
+    	
     	Optional<User> user = userService.updateName(userId, firstName, lastName);
-    		
+    	
     	if (!user.isPresent()) {
-    		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update name!"));
     	}
     		
-    	return new ResponseEntity<User>(HttpStatus.OK);
+    	return ResponseEntity.ok(new MessageResponse("Name update successfully!"));
     }
     
-    @PatchMapping("/{userId}/updateGender")
-    public ResponseEntity<User> updateGender(@PathVariable Long userId, @RequestParam String gender) {
+    @PatchMapping("/updateDateOfBirth")
+    public ResponseEntity<?> updateDateOfBirth(@Valid @RequestBody UpdateDobRequest updateDobRequest) {
+    	final Long userId = updateDobRequest.getUserId();
+    	final Date dob = updateDobRequest.getDate_of_birth();
+    	
+    	Optional<User> user = userService.updateDateOfBirth(userId, dob);
+    	
+    	if (!user.isPresent()) {
+    		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update date of birth!"));
+    	}
+    		
+    	return ResponseEntity.ok(new MessageResponse("Date of birth update successfully!"));
+    }
+    
+    @PatchMapping("/updateGender")
+    public ResponseEntity<?> updateGender(@Valid @RequestBody UpdateGenderRequest updateGenderRequest) {
+    	final Long userId = updateGenderRequest.getUserId();
+    	final String gender = updateGenderRequest.getGender();
+    	
     	Optional<User> user = userService.updateGender(userId, gender);
     		
     	if (!user.isPresent()) {
-    		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update gender!"));
     	}
     		
-    	return new ResponseEntity<User>(HttpStatus.OK);
+    	return ResponseEntity.ok(new MessageResponse("Gender update successfully!"));
     }
     
-    @PatchMapping("/{userId}/updateEmail")
-    public ResponseEntity<User> updateEmail(@PathVariable Long userId, @RequestParam String email) {
-    	Optional<User> user = userService.updateEmail(userId, email);
-    		
-    	if (!user.isPresent()) {
-    		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    	}
-    		
-    	return new ResponseEntity<User>(HttpStatus.OK);
-    }
-    
-    @PatchMapping("/{userId}/updatePhoneNumber")
-    public ResponseEntity<User> updatePhoneNumber(@PathVariable Long userId, @RequestParam String phoneNumber) {
+    @PatchMapping("/updatePhoneNumber")
+    public ResponseEntity<?> updatePhoneNumber(@Valid @RequestBody UpdatePhoneNumberRequest updatePhoneNumberRequest) {
+    	final Long userId = updatePhoneNumberRequest.getUserId();
+    	final String phoneNumber = updatePhoneNumberRequest.getPhone_number();
+    	
     	Optional<User> user = userService.updatePhoneNumber(userId, phoneNumber);
     		
     	if (!user.isPresent()) {
-    		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update phone number!"));
     	}
     		
-    	return new ResponseEntity<User>(HttpStatus.OK);
+    	return ResponseEntity.ok(new MessageResponse("Phone number update successfully!"));
     }
     
-    @PatchMapping("/{userId}/updateLocation")
-    public ResponseEntity<User> updateLocation(@PathVariable Long userId, @RequestParam String country, @RequestParam String state,@RequestParam String city) {
+    @PatchMapping("/updateLocation")
+    public ResponseEntity<?> updateLocation(@Valid @RequestBody UpdateLocationRequest updateLocationRequest) {
+    	final Long userId = updateLocationRequest.getUserId();
+    	final String country = updateLocationRequest.getCountry();
+    	final String state = updateLocationRequest.getState();
+    	final String city = updateLocationRequest.getCity();
+    	
     	Optional<User> user = userService.updateLocation(userId, country, state, city);
     		
     	if (!user.isPresent()) {
-    		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update location!"));
     	}
     		
-    	return new ResponseEntity<User>(HttpStatus.OK);
+    	return ResponseEntity.ok(new MessageResponse("Location update successfully!"));
     }
     
 }

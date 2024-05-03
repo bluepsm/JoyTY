@@ -28,23 +28,10 @@
                                 </h2>
                                 <div class="accordion-collapse collapse" id="usernameCollapse" aria-labelledby="usernameHeading" data-bs-parent="#personalInfoAccordion">
                                     <div class="accordion-body">
-                                        <!-- <form name="usernameForm" (ngSubmit)="f.form.valid && usernameFormSubmit()" #f="ngForm" novalidate> -->
                                         <form [formGroup]="usernameForm" (ngSubmit)="usernameFormSubmit()">
                                             <div class="row">
                                                 <label class="col-sm-3 col-form-label" for="username">Username:</label>
                                                 <div class="col-sm-6">
-                                                    <!-- <input 
-                                                        type="text" 
-                                                        class="form-control" 
-                                                        id="username"
-                                                        name="username"
-                                                        [(ngModel)]="usernameForm.username"
-                                                        required
-                                                        minlength="3"
-                                                        maxlength="20"
-                                                        #username="ngModel"
-                                                        [ngClass]="{'is-invalid': username.errors}"
-                                                    /> -->
                                                     <input 
                                                         type="text" 
                                                         class="form-control" 
@@ -69,7 +56,7 @@
                                                 </div>
                                             </div>
                                             <div class="mt-3 d-grid d-flex justify-content-end">
-                                                <button type="button submit" class="btn btn-outline-success" [disabled]="usernameForm.invalid">Save</button>
+                                                <button type="button" class="btn btn-outline-success" [disabled]="usernameForm.invalid" (click)="onUsernameSubmit()">Save</button>
                                             </div>
                                         </form>
                                     </div>
@@ -84,23 +71,10 @@
                                 </h2>
                                 <div class="accordion-collapse collapse" id="fullNameCollapse" aria-labelledby="fullNameHeading" data-bs-parent="#personalInfoAccordion">
                                     <div class="accordion-body">
-                                        <!-- <form name="fullNameForm" (ngSubmit)="nf.form.valid && nameFormSubmit()" #nf="ngForm" novalidate> -->
                                         <form [formGroup]="nameForm" (ngSubmit)="nameFormSubmit()">
                                             <div class="row">
                                                 <label class="col-sm-3 col-form-label" for="firstname">Firstname:</label>
                                                 <div class="col-sm-6">
-                                                    <!-- <input 
-                                                        type="text"
-                                                        class="form-control"
-                                                        name="first_name"
-                                                        [(ngModel)]="nameForm.first_name"
-                                                        required
-                                                        minlength="3"
-                                                        maxlength="30"
-                                                        #first_name="ngModel"
-                                                        [ngClass]="{'is-invalid': first_name.errors}"
-
-                                                    /> -->
                                                     <input 
                                                         type="text"
                                                         class="form-control"
@@ -127,18 +101,6 @@
                                             <div class="row mt-3">
                                                 <label class="col-sm-3 col-form-label" for="lastname">Lastname:</label>
                                                 <div class="col-sm-6">
-                                                    <!-- <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        name="last_name"
-                                                        [(ngModel)]="nameForm.last_name"
-                                                        required
-                                                        minlength="3"
-                                                        maxlength="30"
-                                                        #last_name="ngModel"
-                                                        [ngClass]="{'is-invalid': last_name.errors}"
-
-                                                    /> -->
                                                     <input
                                                         type="text"
                                                         class="form-control"
@@ -178,37 +140,7 @@
                                 </h2>
                                 <div class="accordion-collapse collapse" id="dobCollapse" aria-labelledby="dobHeading" data-bs-parent="#personalInfoAccordion">
                                     <div class="accordion-body">
-                                        <!-- <form name="dobForm" (ngSubmit)="dobf.form.valid" #dobf="ngForm" novalidate>
-                                            <div class="row">
-                                                <label class="col-sm-3 col-form-label" for="date_of_birth">Date of birth:</label>
-                                                <div class="col-sm-6">
-                                                    <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        name="date_of_birth"
-                                                        id="date_of_birth"
-                                                        placeholder="YYYY-MM-DD"
-                                                        bsDatepicker
-                                                        [(ngModel)]="dateOfBirthForm.date_of_birth"
-                                                        required
-                                                        #date_of_birth="ngModel"
-                                                        [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', isAnimated: true, adaptivePosition: true}"
-                                                        [ngClass]="{'is-invalid': date_of_birth.errors}"
-                                                    />
-                                                    @if (date_of_birth.errors) {
-                                                        <div class="invalid-feedback">
-                                                            @if (date_of_birth.errors['required']) {
-                                                                <div>Date of birth is required!</div>
-                                                            }
-                                                        </div>
-                                                    }
-                                                </div>
-                                            </div>
-                                            <div class="mt-3 d-grid d-flex justify-content-end">
-                                                <button type="button submit" class="btn btn-outline-success" [disabled]="dobf.form.invalid">Save</button>
-                                            </div>
-                                        </form> -->
-                                        <form [formGroup]="dateOfBirthForm">
+                                        <form [formGroup]="dateOfBirthForm" (ngSubmit)="dateOfBirthFormSubmit()">
                                             <div class="row">
                                                 <label class="col-sm-3 col-form-label" for="date_of_birth">Date of birth:</label>
                                                 <div class="col-sm-6">
@@ -248,7 +180,6 @@
                                 </h2>
                                 <div class="accordion-collapse collapse" id="genderCollapse" aria-labelledby="genderHeading" data-bs-parent="#personalInfoAccordion">
                                     <div class="accordion-body">
-                                        <!-- <form name="genderForm" (ngSubmit)="gf.form.valid && genderFormSubmit()" #gf="ngForm" novalidate> -->
                                         <form [formGroup]="genderForm" (ngSubmit)="genderFormSubmit()">
                                             <label class="col-sm-3 form-check-label" for="gender">Gender:</label>
                                             <div class="form-check form-check-inline">
@@ -264,17 +195,6 @@
                                                 <label class="form-check-label" for="gender_male">Male</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <!-- <input
-                                                    class="form-check-input is-invalid"
-                                                    type="radio"
-                                                    name="gender"
-                                                    id="gender_female"
-                                                    value="female"
-                                                    [(ngModel)]="genderForm.gender"
-                                                    #gender="ngModel"
-                                                    required
-                                                    [ngClass]="{'is-invalid': gender.errors}"
-                                                /> -->
                                                 <input
                                                     class="form-check-input is-invalid"
                                                     type="radio"
@@ -287,17 +207,6 @@
                                                 <label class="form-check-label" for="gender_female">Female</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <!-- <input
-                                                    class="form-check-input is-invalid"
-                                                    type="radio"
-                                                    name="gender"
-                                                    id="gender_other"
-                                                    value="other"
-                                                    [(ngModel)]="genderForm.gender"
-                                                    #gender="ngModel"
-                                                    required
-                                                    [ngClass]="{'is-invalid': gender.errors}"
-                                                /> -->
                                                 <input
                                                     class="form-check-input is-invalid"
                                                     type="radio"
@@ -338,22 +247,10 @@
                                 </h2>
                                 <div class="accordion-collapse collapse" id="emailCollapse" aria-labelledby="emailHeading" data-bs-parent="#securityAccordion">
                                     <div class="accordion-body">
-                                        <!-- <form name="emailForm" (ngSubmit)="ef.form.valid && emailFormSubmit()" #ef="ngForm" novalidate> -->
                                         <form [formGroup]="emailForm" (ngSubmit)="emailFormSubmit()">
                                             <div class="row">
                                                 <label class="col-sm-3 col-form-label" for="email">Email:</label>
                                                 <div class="col-sm-6">
-                                                    <!-- <input 
-                                                        type="email" 
-                                                        class="form-control-plaintext" 
-                                                        id="email"
-                                                        name="email"
-                                                        [(ngModel)]="emailForm.email"
-                                                        required
-                                                        email
-                                                        #email="ngModel"
-                                                        [ngClass]="{'is-invalid': email.errors}"
-                                                    /> -->
                                                     <input 
                                                         type="email" 
                                                         class="form-control-plaintext" 
@@ -390,7 +287,7 @@
                                 </h2>
                                 <div class="accordion-collapse collapse" id="passwordCollapse" aria-labelledby="passwordHeading" data-bs-parent="#securityAccordion">
                                     <div class="accordion-body">
-                                        <form [formGroup]="passwordForm">
+                                        <form [formGroup]="passwordForm" (ngSubmit)="passwordFormSubmit()">
                                             <div class="row">
                                                 <label class="col-sm-3 col-form-label" for="password">New Password:</label>
                                                 <div class="col-sm-6">
@@ -440,7 +337,7 @@
                                                 </div>
                                             </div>
                                             <div class="mt-3 d-grid d-flex justify-content-end">
-                                                <button type="button" class="btn btn-outline-success" [disabled]="passwordForm.invalid">Save</button>
+                                                <button type="button" class="btn btn-outline-success" [disabled]="passwordForm.invalid" (click)="onPasswordSubmit()">Save</button>
                                             </div>
                                         </form>
                                     </div>
@@ -461,22 +358,10 @@
                                 </h2>
                                 <div class="accordion-collapse collapse" id="phoneNumberCollapse" aria-labelledby="phoneNumberHeading" data-bs-parent="#contactAccordion">
                                     <div class="accordion-body">
-                                        <!-- <form name="phoneNumberForm" (ngSubmit)="pf.form.valid && phoneNumberFormSubmit()" #pf="ngForm" novalidate> -->
                                         <form [formGroup]="phoneNumberForm" (ngSubmit)="phoneNumberFormSubmit()">
                                             <div class="row">
                                                 <label class="col-sm-3 col-form-label" for="phoneNumber">Phone Number:</label>
                                                 <div class="col-sm-6">
-                                                    <!-- <input 
-                                                        type="tel" 
-                                                        class="form-control" 
-                                                        id="phoneNumber"
-                                                        name="phoneNumber"
-                                                        [(ngModel)]="phoneNumberForm.phone_number"
-                                                        required
-                                                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                                        #phoneNumber="ngModel"
-                                                        [ngClass]="{'is-invalid': phoneNumber.errors}"
-                                                    /> -->
                                                     <input 
                                                         type="tel" 
                                                         class="form-control" 
@@ -527,34 +412,21 @@
                                 </h2>
                                 <div class="accordion-collapse collapse" id="locationCollapse" aria-labelledby="locationHeading" data-bs-parent="#locationAccordion">
                                     <div class="accordion-body">
-                                        <!-- <form name="locationForm" (ngSubmit)="lf.form.valid && locationFormSubmit()" #lf="ngForm" novalidate> -->
                                         <form [formGroup]="locationForm" (ngSubmit)="locationFormSubmit()">
                                             <div class="row">
                                                 <label class="col-sm-3 col-form-label" for="country">Country:</label>
                                                 <div class="col-sm-6">
-                                                    <!-- <select 
-                                                        class="form-select" 
-                                                        id="country"
-                                                        name="country"
-                                                        (change)="onCountryChange()" 
-                                                        [(ngModel)]="selectedCountry" 
-                                                        required
-                                                        #country="ngModel"
-                                                        [ngClass]="{'is-invalid': country.errors}"
-                                                    >
-                                                        <option [ngValue]="null">-- Select Your Country --</option>
-                                                        <option *ngFor="let country of countries" [value]="country.isoCode">{{ country.flag }}&nbsp;&nbsp;{{ country.name }}</option>
-                                                    </select> -->
                                                     <select 
                                                         class="form-select" 
                                                         id="country"
                                                         name="country"
-                                                        (change)="onCountryChange()" 
-                                                        formControlName="country"
+                                                        (change)="onCountryChange($event)" 
+                                                        [(ngModel)]="selectedCountry"
+                                                        [ngModelOptions]="{standalone: true}"
                                                         [ngClass]="{'is-invalid': lf['country'].errors}"
                                                     >
                                                         <option [ngValue]="null">-- Select Your Country --</option>
-                                                        <option *ngFor="let country of countries" [value]="country.isoCode">{{ country.flag }}&nbsp;&nbsp;{{ country.name }}</option>
+                                                        <option *ngFor="let country of countries" [ngValue]="country">{{ country.flag }}&nbsp;&nbsp;{{ country.name }}</option>
                                                     </select>
                                                     @if (lf['country'].errors) {
                                                         <div class="invalid-feedback">
@@ -568,29 +440,17 @@
                                             <div class="row mt-3">
                                                 <label class="col-sm-3 col-form-label" for="state">State:</label>
                                                 <div class="col-sm-6">
-                                                    <!-- <select 
-                                                        class="form-select" 
-                                                        id="state"
-                                                        name="state"
-                                                        (change)="onStateChange()" 
-                                                        [(ngModel)]="selectedState"
-                                                        required
-                                                        #state="ngModel"
-                                                        [ngClass]="{'is-invalid': state.errors}"
-                                                    >
-                                                        <option [ngValue]="null">-- Select Your State --</option>
-                                                        <option *ngFor="let state of states" [value]="state.isoCode">{{ state.name }}</option>
-                                                    </select> -->
                                                     <select 
                                                         class="form-select" 
                                                         id="state"
                                                         name="state"
-                                                        (change)="onStateChange()" 
-                                                        formControlName="state"
+                                                        (change)="onStateChange($event)" 
+                                                        [(ngModel)]="selectedState"
+                                                        [ngModelOptions]="{standalone: true}"
                                                         [ngClass]="{'is-invalid': lf['state'].errors}"
                                                     >
                                                         <option [ngValue]="null">-- Select Your State --</option>
-                                                        <option *ngFor="let state of states" [value]="state.isoCode">{{ state.name }}</option>
+                                                        <option *ngFor="let state of states" [ngValue]="state">{{ state.name }}</option>
                                                     </select>
                                                     @if (lf['state'].errors) {
                                                         <div class="invalid-feedback">
@@ -604,29 +464,17 @@
                                             <div class="row mt-3">
                                                 <label class="col-sm-3 col-form-label" for="city">City:</label>
                                                 <div class="col-sm-6">
-                                                    <!-- <select 
-                                                        class="form-select" 
-                                                        id="city"
-                                                        name="city"
-                                                        (change)="onCityChange()" 
-                                                        [(ngModel)]="selectedCity"
-                                                        required
-                                                        #city="ngModel"
-                                                        [ngClass]="{'is-invalid': city.errors}"
-                                                    >
-                                                        <option [ngValue]="null">-- Select Your City --</option>
-                                                        <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
-                                                    </select> -->
                                                     <select 
                                                         class="form-select" 
                                                         id="city"
                                                         name="city"
-                                                        (change)="onCityChange()" 
-                                                        formControlName="city"
+                                                        (change)="onCityChange($event)" 
+                                                        [(ngModel)]="selectedCity"
+                                                        [ngModelOptions]="{standalone: true}"
                                                         [ngClass]="{'is-invalid': lf['city'].errors}"
                                                     >
                                                         <option [ngValue]="null">-- Select Your City --</option>
-                                                        <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
+                                                        <option *ngFor="let city of cities" [ngValue]="city">{{ city.name }}</option>
                                                     </select>
                                                     @if (lf['city'].errors) {
                                                         <div class="invalid-feedback">
@@ -653,3 +501,21 @@
         <p>Please login.</p>
     }
 </div>
+<app-confirm-dialog 
+    #updateUsernameConfirm 
+    (newConfirmationEvent)="getUpdateUsernameConfirmation($event)" 
+    [modalStyle]="usernameConfirmModalStyle"
+    [modalTitle]="usernameConfirmModalTitle" 
+    [modalBody]="usernameConfirmModalBody"
+    [modalButtonColor]="usernameConfirmModalButtonColor"
+>
+</app-confirm-dialog>
+<app-confirm-dialog 
+    #updatePasswordConfirm 
+    (newConfirmationEvent)="getUpdatePasswordConfirmation($event)" 
+    [modalStyle]="passwordConfirmModalStyle"
+    [modalTitle]="passwordConfirmModalTitle"
+    [modalBody]="passwordConfirmModalBody"
+    [modalButtonColor]="passwordConfirmModalButtonColor"
+>
+</app-confirm-dialog>

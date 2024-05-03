@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { httpInterceptorProvider } from './_helper/http.interceptor';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,7 +14,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { AppUserComponent } from './app-user/app-user.component';
 import { AppAdminComponent } from './app-admin/app-admin.component';
 import { AppModeratorComponent } from './app-moderator/app-moderator.component';
-
+import { SharedModule } from './shared/shared.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,7 @@ import { AppModeratorComponent } from './app-moderator/app-moderator.component';
     ProfileComponent,
     AppUserComponent,
     AppAdminComponent,
-    AppModeratorComponent
+    AppModeratorComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +35,9 @@ import { AppModeratorComponent } from './app-moderator/app-moderator.component';
     FormsModule,
     HttpClientModule,
     BsDatepickerModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    SharedModule,
+    NgbModule
   ],
   providers: [httpInterceptorProvider],
   bootstrap: [AppComponent]

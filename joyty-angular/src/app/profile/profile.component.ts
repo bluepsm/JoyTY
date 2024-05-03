@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { AbstractControl, Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Country, State, City, ICountry, IState, ICity } from 'country-state-city';
@@ -6,6 +7,10 @@ import { StorageService } from '../services/storage.service';
 import { ProfileService } from '../services/profile.service';
 import { User } from '../models/user.model';
 import Validation from '../utils/validation';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-profile',
@@ -19,9 +24,9 @@ export class ProfileComponent implements OnInit {
   countries: ICountry[] = Country.getAllCountries()
   states: IState[] = []
   cities: ICity[] = []
-  selectedCountry?: string | null = null
-  selectedState?: string | null =  null
-  selectedCity?: string | null = null
+  selectedCountry?: any = null
+  selectedState?: any =  null
+  selectedCity?: any = null
 
   usernameForm: FormGroup = new FormGroup({
     username: new FormControl('')
@@ -33,7 +38,7 @@ export class ProfileComponent implements OnInit {
   })
 
   dateOfBirthForm: FormGroup = new FormGroup({
-    date_of_birth: new FormControl('')
+    date_of_birth: new FormControl(Date)
   })
 
   genderForm: FormGroup = new FormGroup({
@@ -59,11 +64,17 @@ export class ProfileComponent implements OnInit {
     city: new FormControl('')
   })
 
-  constructor(private storageService: StorageService, private profileService: ProfileService, private formBuilder: FormBuilder) {}
+  constructor(
+    private authService: AuthService,
+    private storageService: StorageService, 
+    private profileService: ProfileService,
+    private router: Router, 
+    private formBuilder: FormBuilder,
+  ) {}
 
   ngOnInit(): void {
       this.currentUser = this.storageService.getUser()
-      console.log(this.currentUser.id)
+      //console.log(this.currentUser.id)
 
       this.profileService.getUserProfile(this.currentUser.id)
         .subscribe({
@@ -141,22 +152,27 @@ export class ProfileComponent implements OnInit {
 
             for (let country of this.countries) {
               if (country.name === this.lf['country'].value) {
-                this.selectedCountry = country.isoCode
+                this.selectedCountry = country
+                //console.log(this.selectedCountry)
               }
             }
             
-            this.states = State.getStatesOfCountry(this.selectedCountry!)
-            for (let state of this.states) {
-              if (state.name === this.lf['state'].value) {
-                this.selectedState = state.isoCode
+            if (this.selectedCountry !== null) {
+              this.states = State.getStatesOfCountry(this.selectedCountry.isoCode)
+              for (let state of this.states) {
+                if (state.name === this.lf['state'].value) {
+                  this.selectedState = state
+                  //console.log(this.selectedState)
+                }
               }
             }
             
             if (this.selectedState !== null) {
-              this.cities = City.getCitiesOfState(this.selectedCountry!, this.selectedState!)
+              this.cities = City.getCitiesOfState(this.selectedCountry.isoCode, this.selectedState.isoCode)
               for (let city of this.cities) {
                 if (city.name === this.lf['city'].value) {
-                  this.selectedCity = city.name
+                  this.selectedCity = city
+                  //console.log(this.selectedCity)
                 }
               }
             }
@@ -164,6 +180,7 @@ export class ProfileComponent implements OnInit {
           }, error: err => {
             console.log(err)
           }
+
         })
   }
 
@@ -199,41 +216,69 @@ export class ProfileComponent implements OnInit {
     return this.locationForm.controls;
   }
 
-  onCountryChange(): void {
+  onCountryChange($event: Event): void {
     setTimeout(() => {
       if (this.selectedCountry !== null) {
-        this.states = State.getStatesOfCountry(this.selectedCountry)
+        //console.log("selected country: " + this.selectedCountry)
+
+        this.states = State.getStatesOfCountry(this.selectedCountry.isoCode)
+        this.lf['country'].setValue(this.selectedCountry.name)
+      } else {
+        this.lf['country'].setValue("")
+        this.lf['state'].setValue("")
+        this.lf['city'].setValue("")
       }
       this.selectedState = null
       this.selectedCity = null
-    })
-    
-    console.log("selected country: " + this.selectedCountry)
-    console.log("selected state: " + this.selectedState)
-    console.log("selected city: " + this.selectedCity)
+    })    
   }
 
-  onStateChange(): void {
+  onStateChange($event: Event): void {
     setTimeout(() => {
       if (this.selectedState !== null) {
-        this.cities = City.getCitiesOfState(this.selectedCountry!, this.selectedState!)
+        //console.log("selected state: " + this.selectedState)
+
+        this.cities = City.getCitiesOfState(this.selectedCountry.isoCode, this.selectedState.isoCode)
+        this.lf['state'].setValue(this.selectedState.name)
+      } else {
+        this.lf['state'].setValue("")
+        this.lf['city'].setValue("")
       }
       this.selectedCity = null
     })
-
-    console.log("selected country: " + this.selectedCountry)
-    console.log("selected state: " + this.selectedState)
-    console.log("selected city: " + this.selectedCity)
   }
 
-  onCityChange(): void {
-    console.log("selected country: " + this.selectedCountry)
-    console.log("selected state: " + this.selectedState)
-    console.log("selected city: " + this.selectedCity)
+  onCityChange($event: Event): void {
+    setTimeout(() => {
+      if (this.selectedCity !== null) {
+        //console.log("selected city: " + this.selectedCity.name)
+
+        this.lf['city'].setValue(this.selectedCity.name)
+      } else {
+        this.lf['city'].setValue("")
+      }
+
+      // console.log("Location Form")
+      // console.log("Country: " + this.lf['country'].value)
+      // console.log("State: " + this.lf['state'].value)
+      // console.log("City: " + this.lf['city'].value)
+    })  
   }
 
   usernameFormSubmit(): void {
     this.profileService.updateUsername(this.currentUser.id, this.uf['username'].value)
+     .subscribe({
+        next: data => {
+          console.log(data)
+          //this.ngOnInit()
+        }, error: err => {
+          console.log(err)
+        }
+      })
+  }
+
+  nameFormSubmit(): void {
+    this.profileService.updateName(this.currentUser.id, this.nf['first_name'].value, this.nf['last_name'].value)
      .subscribe({
         next: data => {
           console.log(data)
@@ -244,8 +289,11 @@ export class ProfileComponent implements OnInit {
       })
   }
 
-  nameFormSubmit(): void {
-    this.profileService.updateName(this.currentUser.id, this.nf['first_name'].value, this.nf['last_name'].value)
+  dateOfBirthFormSubmit(): void {
+    let date = new Date(this.df['date_of_birth'].value)
+    let formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US')
+    console.log(formattedDate)
+    this.profileService.updateDateOfBirth(this.currentUser.id, formattedDate)
      .subscribe({
         next: data => {
           console.log(data)
@@ -292,22 +340,20 @@ export class ProfileComponent implements OnInit {
       })
   }
 
-  locationFormSubmit(): void {
-    for (let country of this.countries) {
-      if (country.isoCode === this.selectedCountry) {
-        this.lf['country'].setValue(country.name)
-      }
-    }
-    if (this.selectedState !== null) {
-      for (let state of this.states) {
-        if (state.isoCode === this.selectedState) {
-          this.lf['state'].setValue(state.name)
+  passwordFormSubmit(): void {
+    console.log(this.pf['password'].value)
+    this.profileService.updatePassword(this.currentUser.id, this.pf['password'].value)
+     .subscribe({
+        next: data => {
+          console.log(data)
+          //this.ngOnInit()
+        }, error: err => {
+          console.log(err)
         }
-      }
-    }
-    if (this.selectedCity!== null) {
-      this.lf['city'].setValue(this.selectedCity)
-    }
+      })
+  }
+
+  locationFormSubmit(): void {
     this.profileService.updateLocation(this.currentUser.id, this.lf['country'].value, this.lf['state'].value, this.lf['city'].value)
      .subscribe({
         next: data => {
@@ -317,6 +363,67 @@ export class ProfileComponent implements OnInit {
           console.log(err)
         }
       })
+  }
+
+  @ViewChild('updateUsernameConfirm') private updateUsernameConfirm!: ConfirmDialogComponent
+  usernameConfirmModalStyle: string = 'modal-style-warning';
+  usernameConfirmModalTitle: string = 'Update Confirmation';
+  usernameConfirmModalBody: string = "You'll have to login again after the username updated.";
+  usernameConfirmModalButtonColor: string = 'btn-warning';
+
+  async openUpdateUsernameModal() {
+    return await this.updateUsernameConfirm.open();
+  }
+
+  onUsernameSubmit() {
+    this.openUpdateUsernameModal();
+  }
+
+  getUpdateUsernameConfirmation(value: any) {
+    if (value == 'OK') {
+      console.log("OK From getUpdateUsernameConfirmation");
+      this.usernameFormSubmit();
+      this.logOut();
+    } else {
+      console.log("CANCEL From getUpdateUsernameConfirmation");
+    }
+  }
+
+  @ViewChild('updatePasswordConfirm') private updatePasswordConfirm!: ConfirmDialogComponent
+  passwordConfirmModalStyle: string = 'modal-style-warning';
+  passwordConfirmModalTitle: string = 'Update Confirmation';
+  passwordConfirmModalBody: string = "You'll have to login again after the password updated.";
+  passwordConfirmModalButtonColor: string = 'btn-warning';
+
+  async openUpdatePasswordModal() {
+    return await this.updatePasswordConfirm.open();
+  }
+
+  onPasswordSubmit() {
+    this.openUpdatePasswordModal();
+  }
+
+  getUpdatePasswordConfirmation(value: any) {
+    if (value == 'OK') {
+      console.log("OK From getUpdatePasswordConfirmation");
+      this.passwordFormSubmit();
+      this.logOut();
+    } else {
+      console.log("CANCEL From getUpdatePasswordConfirmation");
+    }
+  }
+
+  logOut(): void {
+    this.authService.logout().subscribe({
+      next: res => {
+        console.log(res);
+        this.storageService.clean();
+        //window.location.reload()
+        this.router.navigate(["/login"]);
+      }, error: err => {
+        console.log(err);
+      }
+    });
   }
 
 }

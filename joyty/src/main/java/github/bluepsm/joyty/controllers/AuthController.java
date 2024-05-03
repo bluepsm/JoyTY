@@ -2,6 +2,7 @@ package github.bluepsm.joyty.controllers;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,12 +22,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.qos.logback.classic.Logger;
 import github.bluepsm.joyty.exception.TokenRefreshException;
 import github.bluepsm.joyty.models.ERole;
 import github.bluepsm.joyty.models.RefreshToken;
@@ -33,6 +36,9 @@ import github.bluepsm.joyty.models.Role;
 import github.bluepsm.joyty.models.User;
 import github.bluepsm.joyty.payload.request.LoginRequest;
 import github.bluepsm.joyty.payload.request.SignupRequest;
+import github.bluepsm.joyty.payload.request.UpdateEmailRequest;
+import github.bluepsm.joyty.payload.request.UpdateUsernameRequest;
+import github.bluepsm.joyty.payload.request.ResetPasswordRequest;
 import github.bluepsm.joyty.payload.response.MessageResponse;
 import github.bluepsm.joyty.payload.response.UserInfoResponse;
 import github.bluepsm.joyty.repositories.RoleRepository;
@@ -198,4 +204,52 @@ public class AuthController {
 		
 		return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
 	}
+	
+	@PatchMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    	//log.info("Password before encode: " + updatePasswordRequest.getPassword());
+    	final Long userId = resetPasswordRequest.getUserId();
+    	final String encodedPassword = encoder.encode(resetPasswordRequest.getPassword());
+    		
+    	User user = userRepository.findById(userId).get();
+		user.setPassword(encodedPassword);
+		
+		userRepository.save(user);
+    		
+    	return ResponseEntity.ok(new MessageResponse("Reset password successfully!"));
+    }
+	
+	@PatchMapping("/updateEmail")
+    public ResponseEntity<?> updateEmail(@Valid @RequestBody UpdateEmailRequest updateEmailRequest) {
+    	final Long userId = updateEmailRequest.getUserId();
+    	final String email = updateEmailRequest.getEmail();
+    	
+    	if (userRepository.existsByEmail(email)) {
+	    	return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+	    }
+    	
+    	User user = userRepository.findById(userId).get();
+		user.setEmail(email);
+		
+		userRepository.save(user);
+    		
+    	return ResponseEntity.ok(new MessageResponse("Email update successfully!"));
+    }
+	
+	@PatchMapping("/updateUsername")
+    public ResponseEntity<?> updateUsername(@Valid @RequestBody UpdateUsernameRequest updateUsernameRequest) {
+    	final Long userId = updateUsernameRequest.getUserId();
+    	final String username = updateUsernameRequest.getUsername();
+    	log.info("Update Username Checkpoint.");
+    	if (userRepository.existsByUsername(username)) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+	    }
+    	
+    	User user = userRepository.findById(userId).get();
+		user.setUsername(username);
+		
+		userRepository.save(user);
+    		
+    	return ResponseEntity.ok(new MessageResponse("Username update successfully!"));
+    }
 }

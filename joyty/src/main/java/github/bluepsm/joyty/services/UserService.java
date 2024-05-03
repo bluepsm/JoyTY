@@ -2,7 +2,10 @@ package github.bluepsm.joyty.services;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Date;
+import java.security.spec.EncodedKeySpec;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,17 +67,6 @@ public class UserService {
         }
     }
     
-    public Optional<User> updateUsername(Long userId, String username) {
-    	try {
-    		User user = userRepository.findById(userId).get();
-    		user.setUsername(username);
-    		
-    		return Optional.of(userRepository.save(user));
-    	} catch (Exception e) {
-			return Optional.empty();
-		}
-    }
-    
     public Optional<User> updateName(Long userId, String firstName, String lastName) {
     	try {
     		User user = userRepository.findById(userId).get();
@@ -87,10 +79,13 @@ public class UserService {
 		}
     }
     
-    public Optional<User> updateGender(Long userId, String gender) {
+    public Optional<User> updateDateOfBirth(Long userId, Date dob) {
     	try {
     		User user = userRepository.findById(userId).get();
-    		user.setGender(gender);
+    		
+    		log.info("dob params: " + dob);
+    		
+    		user.setDate_of_birth(dob);
     		
     		return Optional.of(userRepository.save(user));
     	} catch (Exception e) {
@@ -98,10 +93,10 @@ public class UserService {
 		}
     }
     
-    public Optional<User> updateEmail(Long userId, String email) {
+    public Optional<User> updateGender(Long userId, String gender) {
     	try {
     		User user = userRepository.findById(userId).get();
-    		user.setEmail(email);
+    		user.setGender(gender);
     		
     		return Optional.of(userRepository.save(user));
     	} catch (Exception e) {
