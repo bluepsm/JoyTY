@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const AUTH_API = 'http://localhost:8080/api/auth/'
+const AUTH_API = 'http://localhost:8080/api/auth'
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,7 +19,7 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     return this.http.post(
-      AUTH_API + 'signin', {username, password}, httpOptions
+      AUTH_API + '/signin', {username, password}, httpOptions
     )
   }
 
@@ -37,7 +37,7 @@ export class AuthService {
     city: string
   ): Observable<any> {
     return this.http.post(
-      AUTH_API + 'signup', 
+      AUTH_API + '/signup', 
       {
         username, 
         password,
@@ -55,11 +55,18 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(AUTH_API + 'signout', {}, httpOptions)
+    return this.http.post(AUTH_API + '/signout', {}, httpOptions)
   }
 
   refreshToken() {
-    return this.http.post(AUTH_API + 'refreshtoken', {}, httpOptions)
+    return this.http.post(AUTH_API + '/refreshtoken', {}, httpOptions)
   }
 
+  existsByUsername(username: string): Observable<any> {
+    return this.http.get(AUTH_API + '/existsByUsername?username=' + username, httpOptions)
+  }
+
+  existsByEmail(email: string): Observable<any> {
+    return this.http.get(AUTH_API + '/existsByEmail?email=' + email, httpOptions)
+  }
 }

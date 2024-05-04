@@ -29,7 +29,7 @@ export class ConfirmDialogComponent implements OnInit {
 
   open(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
-      this.modalRef = this.modalService.open(this.modalContent, { size: 'sm' })
+      this.modalRef = this.modalService.open(this.modalContent, { centered: true, size: 'md' })
       this.modalRef.result.then((accept) => {
         this.newConfirmationEvent.emit(accept);
       }, (reject) => {

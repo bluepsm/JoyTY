@@ -14,5 +14,5 @@ public class UpdatePhoneNumberRequest {
 	
 	@Size(min = 12, max = 12)
     @NotBlank
-    private String phone_number;
+    private String phoneNumber;
 }

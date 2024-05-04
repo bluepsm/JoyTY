@@ -16,5 +16,5 @@ public class UpdateDobRequest {
 	
 	@NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date_of_birth;
+    private Date dateOfBirth;
 }

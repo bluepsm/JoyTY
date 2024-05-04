@@ -100,8 +100,8 @@ public class UserController {
     @PatchMapping("/updateName")
     public ResponseEntity<?> updateName(@Valid @RequestBody UpdateNameRequest updateNameRequest) {
     	final Long userId = updateNameRequest.getUserId();
-    	final String firstName = updateNameRequest.getFirst_name();
-    	final String lastName = updateNameRequest.getLast_name();
+    	final String firstName = updateNameRequest.getFirstName();
+    	final String lastName = updateNameRequest.getLastName();
     	
     	Optional<User> user = userService.updateName(userId, firstName, lastName);
     	
@@ -115,7 +115,7 @@ public class UserController {
     @PatchMapping("/updateDateOfBirth")
     public ResponseEntity<?> updateDateOfBirth(@Valid @RequestBody UpdateDobRequest updateDobRequest) {
     	final Long userId = updateDobRequest.getUserId();
-    	final Date dob = updateDobRequest.getDate_of_birth();
+    	final Date dob = updateDobRequest.getDateOfBirth();
     	
     	Optional<User> user = userService.updateDateOfBirth(userId, dob);
     	
@@ -143,7 +143,7 @@ public class UserController {
     @PatchMapping("/updatePhoneNumber")
     public ResponseEntity<?> updatePhoneNumber(@Valid @RequestBody UpdatePhoneNumberRequest updatePhoneNumberRequest) {
     	final Long userId = updatePhoneNumberRequest.getUserId();
-    	final String phoneNumber = updatePhoneNumberRequest.getPhone_number();
+    	final String phoneNumber = updatePhoneNumberRequest.getPhoneNumber();
     	
     	Optional<User> user = userService.updatePhoneNumber(userId, phoneNumber);
     		
@@ -169,5 +169,4 @@ public class UserController {
     		
     	return ResponseEntity.ok(new MessageResponse("Location update successfully!"));
     }
-    
 }

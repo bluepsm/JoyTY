@@ -51,6 +51,9 @@
                                                             @if (uf['username'].errors['maxlength']) {
                                                                 <div>Username must be at most 20 character.</div>
                                                             }
+                                                            @if (uf['username'].errors['isExists']) {
+                                                                <div>Username is already taken.</div>
+                                                            }
                                                         </div>
                                                     }
                                                 </div>
@@ -266,6 +269,9 @@
                                                             }
                                                             @if (ef['email'].errors['email']) {
                                                                 <div>Email must be a valid email address.</div>
+                                                            }
+                                                            @if (ef['email'].errors['isExists']) {
+                                                                <div>Email is already in use.</div>
                                                             }
                                                         </div>
                                                     }
@@ -497,10 +503,13 @@
                 </div>
             </div>
         </div>
+        <!-- <button class="btn btn-primary" (click)="showStatusToast()">Test Toast</button>
+        <button class="btn btn-danger" (click)="showErrorToast()">Test Error Toast</button> -->
     } @else {
         <p>Please login.</p>
     }
 </div>
+<app-toast aria-live="polite" aria-atomic="true"></app-toast>
 <app-confirm-dialog 
     #updateUsernameConfirm 
     (newConfirmationEvent)="getUpdateUsernameConfirmation($event)" 

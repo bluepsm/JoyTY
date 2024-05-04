@@ -14,9 +14,9 @@ public class UpdateNameRequest {
 	
 	@Size(min = 2, max = 30)
     @NotBlank
-    private String first_name;
+    private String firstName;
 
     @Size(min = 2, max = 30)
     @NotBlank
-    private String last_name;
+    private String lastName;
 }

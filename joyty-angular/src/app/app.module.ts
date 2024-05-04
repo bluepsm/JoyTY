@@ -16,6 +16,8 @@ import { AppAdminComponent } from './app-admin/app-admin.component';
 import { AppModeratorComponent } from './app-moderator/app-moderator.component';
 import { SharedModule } from './shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgTemplateOutlet } from '@angular/common';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BsDatepickerModule.forRoot(),
     BrowserAnimationsModule,
     SharedModule,
-    NgbModule
+    NgbModule,
+    NgbToastModule,
+    NgTemplateOutlet
   ],
   providers: [httpInterceptorProvider],
   bootstrap: [AppComponent]

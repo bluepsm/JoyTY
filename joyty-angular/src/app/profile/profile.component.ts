@@ -6,10 +6,11 @@ import { Country, State, City, ICountry, IState, ICity } from 'country-state-cit
 import { StorageService } from '../services/storage.service';
 import { ProfileService } from '../services/profile.service';
 import { User } from '../models/user.model';
-import Validation from '../utils/validation';
+import { ValidationService } from '../utils/validationService';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { ToastService } from '../shared/toast/toast.service';
 
 
 @Component({
@@ -70,6 +71,8 @@ export class ProfileComponent implements OnInit {
     private profileService: ProfileService,
     private router: Router, 
     private formBuilder: FormBuilder,
+    private validationService: ValidationService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -86,7 +89,9 @@ export class ProfileComponent implements OnInit {
                 [
                   Validators.required,
                   Validators.minLength(3),
-                  Validators.maxLength(20)
+                  Validators.maxLength(20),
+                  //this.validationService.existsByUsername(this.authService)
+                  this.validationService.existsByUsername()
                 ]]
             })
 
@@ -117,7 +122,8 @@ export class ProfileComponent implements OnInit {
               email: [this.userData.email, 
                 [
                   Validators.required,
-                  Validators.email
+                  Validators.email,
+                  this.validationService.existsByEmail()
                 ]]
             })
 
@@ -133,7 +139,7 @@ export class ProfileComponent implements OnInit {
                 ]]
             }, 
             {
-              validators: [Validation.match('password', 'confirm_password')]
+              validators: [this.validationService.match('password', 'confirm_password')]
             })
 
             this.phoneNumberForm = this.formBuilder.group({
@@ -270,9 +276,11 @@ export class ProfileComponent implements OnInit {
      .subscribe({
         next: data => {
           console.log(data)
+          this.showStatusToast("Username Update Successfully.")
           //this.ngOnInit()
         }, error: err => {
           console.log(err)
+          this.showErrorToast("Cannot Update Username.")
         }
       })
   }
@@ -282,9 +290,11 @@ export class ProfileComponent implements OnInit {
      .subscribe({
         next: data => {
           console.log(data)
+          this.showStatusToast("Name Update Successfully.")
           this.ngOnInit()
         }, error: err => {
           console.log(err)
+          this.showErrorToast("Cannot Update Name.")
         }
       })
   }
@@ -297,9 +307,11 @@ export class ProfileComponent implements OnInit {
      .subscribe({
         next: data => {
           console.log(data)
+          this.showStatusToast("Date Of Birth Update Successfully.")
           this.ngOnInit()
         }, error: err => {
           console.log(err)
+          this.showErrorToast("Cannot Update Date Of Birth.")
         }
       })
   }
@@ -309,9 +321,11 @@ export class ProfileComponent implements OnInit {
      .subscribe({
         next: data => {
           console.log(data)
+          this.showStatusToast("Gender Update Successfully.")
           this.ngOnInit()
         }, error: err => {
           console.log(err)
+          this.showErrorToast("Cannot Update Gender.")
         }
       })
   }
@@ -321,9 +335,11 @@ export class ProfileComponent implements OnInit {
      .subscribe({
         next: data => {
           console.log(data)
+          this.showStatusToast("Phone Number Update Successfully.")
           this.ngOnInit()
         }, error: err => {
           console.log(err)
+          this.showErrorToast("Cannot Update Phone Number.")
         }
       })
   }
@@ -333,9 +349,11 @@ export class ProfileComponent implements OnInit {
      .subscribe({
         next: data => {
           console.log(data)
+          this.showStatusToast("Email Update Successfully.")
           this.ngOnInit()
         }, error: err => {
           console.log(err)
+          this.showErrorToast("Cannot Update Email.")
         }
       })
   }
@@ -346,9 +364,11 @@ export class ProfileComponent implements OnInit {
      .subscribe({
         next: data => {
           console.log(data)
+          this.showStatusToast("Password Update Successfully.")
           //this.ngOnInit()
         }, error: err => {
           console.log(err)
+          this.showErrorToast("Cannot Update Password.")
         }
       })
   }
@@ -358,11 +378,23 @@ export class ProfileComponent implements OnInit {
      .subscribe({
         next: data => {
           console.log(data)
+          this.showStatusToast("Location Update Successfully.")
           this.ngOnInit()
         }, error: err => {
           console.log(err)
+          this.showErrorToast("Cannot Update Location.")
         }
       })
+  }
+
+  showStatusToast(message: String) {
+    //console.log("Toast fn")
+    this.toastService.show(message, { classname: 'bg-dark text-light', delay: 5000 })
+  }
+
+  showErrorToast(message: String) {
+    //console.log("Toast fn")
+    this.toastService.show(message, { classname: 'bg-danger text-light', delay: 15000 })
   }
 
   @ViewChild('updateUsernameConfirm') private updateUsernameConfirm!: ConfirmDialogComponent
