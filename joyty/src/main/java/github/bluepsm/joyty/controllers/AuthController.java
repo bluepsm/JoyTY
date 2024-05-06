@@ -89,9 +89,15 @@ public class AuthController {
 	      .map(item -> item.getAuthority())
 	      .collect(Collectors.toList());
 	    
+	    //log.info("User ID: {}", userDetails.getId());
+	    //log.info("User Username: {}", userDetails.getUsername());
+	    //log.info("User Password: {}", userDetails.getPassword());
+	    
 	    RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 	    
 	    ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
+	    
+	    //log.info("Refresh Token: {}", jwtRefreshCookie.toString());
 
 	    return ResponseEntity.ok()
 	    		.header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
@@ -112,8 +118,8 @@ public class AuthController {
 	    	return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
 	    }
 
-	    System.out.println("Register submitted: " + signUpRequest);
-	    log.info("method registerUser is executed.");
+	    //System.out.println("Register submitted: " + signUpRequest);
+	    //log.info("method registerUser is executed.");
 
 	    // Create new user's account
 	    User user = new User(signUpRequest.getUsername(),
@@ -171,7 +177,7 @@ public class AuthController {
 		
 		if (principle.toString() != "anonymousUser") {
 			Long userId = ((UserDetailsImpl) principle).getId();
-			log.info("This log is from before the call of deleteByUserId. UserID is {}", userId);
+			//log.info("This log is from before the call of deleteByUserId. UserID is {}", userId);
 			refreshTokenService.deleteByUserId(userId);
 		}
 		
@@ -189,12 +195,12 @@ public class AuthController {
 		String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
 		
 		if ((refreshToken != null) && (refreshToken.length() > 0)) {
-			log.info("found refresh token.");
+			//log.info("found refresh token.");
 			return refreshTokenService.findByToken(refreshToken)
 					.map(refreshTokenService::verifyExpiration)
 					.map(RefreshToken::getUser)
 					.map(user -> {
-						log.info("generating new token.");
+						//log.info("generating new token.");
 						ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(user);
 						
 						return ResponseEntity.ok()
@@ -242,7 +248,7 @@ public class AuthController {
     public ResponseEntity<?> updateUsername(@Valid @RequestBody UpdateUsernameRequest updateUsernameRequest) {
     	final Long userId = updateUsernameRequest.getUserId();
     	final String username = updateUsernameRequest.getUsername();
-    	log.info("Update Username Checkpoint.");
+    	//log.info("Update Username Checkpoint.");
     	if (userRepository.existsByUsername(username)) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 	    }

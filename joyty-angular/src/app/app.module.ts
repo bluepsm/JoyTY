@@ -18,6 +18,7 @@ import { SharedModule } from './shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgTemplateOutlet } from '@angular/common';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { AppHeaderComponent } from './app-header/app-header.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
     AppUserComponent,
     AppAdminComponent,
     AppModeratorComponent,
+    AppHeaderComponent,
   ],
   imports: [
     BrowserModule,

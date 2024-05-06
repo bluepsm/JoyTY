@@ -4,7 +4,7 @@ import { StorageService } from './services/storage.service';
 import { AuthService } from './services/auth.service';
 import { EventBusService } from './shared/event-bus.service';
 import { Subscription, delay } from 'rxjs';
-import { LoadingService } from './loading.service';
+import { LoadingService } from './shared/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -12,12 +12,12 @@ import { LoadingService } from './loading.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  private roles: string[] = []
-  isLoggedIn = false
-  showModApp = false
-  showAdminApp = false
-  username?: string
-  eventBusSub?: Subscription
+  // private roles: string[] = []
+  // isLoggedIn = false
+  // showModApp = false
+  // showAdminApp = false
+  // username?: string
+  // eventBusSub?: Subscription
   loading: boolean = false
 
   constructor(
@@ -25,43 +25,47 @@ export class AppComponent implements OnInit {
     private storageService: StorageService, 
     private authService: AuthService, 
     private eventBusService: EventBusService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
   ) {}
 
   ngOnInit(): void {
-    this.isLoggedIn = this.storageService.isLoggedIn()
+    // this.isLoggedIn = this.storageService.isLoggedIn()
 
-    if (this.isLoggedIn) {
-      const user = this.storageService.getUser()
-      this.roles = user.roles
+    // if (this.isLoggedIn) {
+    //   const user = this.storageService.getUser()
+    //   this.roles = user.roles
 
-      this.showAdminApp = this.roles.includes('ROLE_ADMIN')
-      this.showModApp = this.roles.includes('ROLE_MODERATOR')
+    //   this.showAdminApp = this.roles.includes('ROLE_ADMIN')
+    //   this.showModApp = this.roles.includes('ROLE_MODERATOR')
 
-      this.username = user.username
-    }
+    //   this.username = user.username
+    // }
 
-    this.eventBusSub = this.eventBusService.on('logout', () => {
-      this.logOut
-    })
+    // this.eventBusSub = this.eventBusService.on('logout', () => {
+    //   this.logOut
+    // })
+
+    console.log("App OnInit")
+
+    //this.appHeader.ngOnInit()
 
     this.listenToLoading()
   }
 
-  logOut(): void {
-    //console.log("logOut")
-    this.authService.logout().subscribe({
-      next: res => {
-        console.log(res)
-        this.storageService.clean()
-        this.router.navigate(["/home"])
-        this.ngOnInit()
-        //window.location.reload()
-      }, error: err => {
-        console.log(err)
-      }
-    })
-  }
+  // logOut(): void {
+  //   //console.log("logOut")
+  //   this.authService.logout().subscribe({
+  //     next: res => {
+  //       console.log(res)
+  //       this.storageService.clean()
+  //       this.router.navigate(["/home"])
+  //       this.ngOnInit()
+  //       //window.location.reload()
+  //     }, error: err => {
+  //       console.log(err)
+  //     }
+  //   })
+  // }
 
   listenToLoading(): void {
     this.loadingService.loadingSub

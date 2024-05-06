@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HTTP_INTERCEPTORS, HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { Observable, catchError, switchMap, throwError, map, delay, takeUntil, timer, finalize, share, of, merge, first, combineLatest, startWith, distinctUntilChanged } from "rxjs";
+import { Observable, catchError, switchMap, throwError, map, delay, takeUntil, timer, finalize, share, of, merge, first, combineLatest, startWith, distinctUntilChanged, timeout } from "rxjs";
 import { AuthService } from "../services/auth.service";
 import { StorageService } from "../services/storage.service";
 import { EventBusService } from "../shared/event-bus.service";
 import { EventData } from "../shared/event.class";
-import { LoadingService } from "../loading.service";
+import { LoadingService } from "../shared/loading.service";
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
@@ -15,7 +15,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         private authService: AuthService,
         private storageService: StorageService,
         private eventBusService: EventBusService,
-        private loadingService: LoadingService
+        private loadingService: LoadingService,
     ) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -23,11 +23,10 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             withCredentials: true
         });
 
-        //this.loadingService.setLoading(true, req.url)
-
         const res = next.handle(req)
             .pipe(
-                //delay(3000),
+                //delay(1200),
+                timeout(10000),
                 catchError((error) => {
                     if (error instanceof HttpErrorResponse && !req.url.includes('auth/signin') && error.status === 401) {
                         return this.handle401Error(req, next)
@@ -37,12 +36,13 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
                     return throwError(() => error)
                 }),
-                map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
-                    if (evt instanceof HttpResponse) {
-                        this.loadingService.setLoading(false, req.url)
-                    }
-                    return evt
-                })
+                // map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
+                //     if (evt instanceof HttpResponse) {
+                //         this.loadingService.setLoading(false, req.url)
+                //     }
+                //     return evt
+                // }),
+                share()
         );
 
         merge(
@@ -69,6 +69,9 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             startWith(this.loadingService.setLoading(false, req.url)),
             distinctUntilChanged()
         ).subscribe()
+
+        //res.subscribe()
+        //showLoading.subscribe()
 
         return res
     };

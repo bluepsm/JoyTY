@@ -35,14 +35,14 @@ public class WebSecurityConfig {
 
 	@Bean
 	public AuthTokenFilter authenticationJwtTokenFilter() {
-		log.info("authenticationJwtTokenFilter method is executed.");
+		//log.info("authenticationJwtTokenFilter method is executed.");
 
 	    return new AuthTokenFilter();
 	}
 
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
-	    log.info("authenticationProvider method is executed.");
+	    //log.info("authenticationProvider method is executed.");
 
 	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 	       
@@ -54,14 +54,14 @@ public class WebSecurityConfig {
 	  
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-	    log.info("authenticationManager method is executed.");
+	    //log.info("authenticationManager method is executed.");
 
 	    return authConfig.getAuthenticationManager();
 	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-	    log.info("passwordEncoder method is executed.");
+	    //log.info("passwordEncoder method is executed.");
 
 	    return new BCryptPasswordEncoder();
 	}
@@ -69,7 +69,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-	    log.info("filterChain method is executed.");
+	    //log.info("filterChain method is executed.");
 	    
 	    http.csrf(csrf -> csrf.disable())
 	        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
