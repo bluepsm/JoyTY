@@ -30,32 +30,42 @@ export class ValidationService {
 
     existsByUsername(): ValidatorFn {
         return (control: AbstractControl) => {
-            this.authService.existsByUsername(control?.value).subscribe({
-                next: data => {
-                    if (data === true) {
-                        //console.log("in checkifuserexists method: exits");
-                        control.setErrors({ 'isExists': true });
+            if (!control.valueChanges || control.pristine) {
+                return null;
+            } else {
+                this.authService.existsByUsername(control?.value).subscribe({
+                    next: data => {
+                        if (data === true) {
+                            //console.log("in checkifuserexists method: exits");
+                            control.setErrors({ 'isExists': true });
+                        }
+                    }, error: err => {
+                        console.log(err);
                     }
-                }, error: err => {
-                    console.log(err);
-                }
-            })
+                })
+            }
+            
             return null;
         };
     }
 
     existsByEmail(): ValidatorFn {
         return (control: AbstractControl) => {
-            this.authService.existsByEmail(control?.value).subscribe({
-                next: data => {
-                    if (data === true) {
-                        //console.log("in checkifuserexists method: exits");
-                        control.setErrors({ 'isExists': true });
+            if (!control.valueChanges || control.pristine) {
+                return null;
+            } else {
+                this.authService.existsByEmail(control?.value).subscribe({
+                    next: data => {
+                        if (data === true) {
+                            //console.log("in checkifuserexists method: exits");
+                            control.setErrors({ 'isExists': true });
+                        }
+                    }, error: err => {
+                        console.log(err);
                     }
-                }, error: err => {
-                    console.log(err);
-                }
-            })
+                })
+            }
+            
             return null;
         };
     }

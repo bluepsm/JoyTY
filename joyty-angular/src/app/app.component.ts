@@ -1,25 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StorageService } from './services/storage.service';
 import { AuthService } from './services/auth.service';
 import { EventBusService } from './shared/event-bus.service';
-import { Subscription } from 'rxjs';
+import { Subscription, delay } from 'rxjs';
+import { LoadingService } from './loading.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private roles: string[] = []
   isLoggedIn = false
   showModApp = false
   showAdminApp = false
   username?: string
-
   eventBusSub?: Subscription
+  loading: boolean = false
 
-  constructor(private router: Router, private storageService: StorageService, private authService: AuthService, private eventBusService: EventBusService) {}
+  constructor(
+    private router: Router, 
+    private storageService: StorageService, 
+    private authService: AuthService, 
+    private eventBusService: EventBusService,
+    private loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn()
@@ -37,6 +44,8 @@ export class AppComponent {
     this.eventBusSub = this.eventBusService.on('logout', () => {
       this.logOut
     })
+
+    this.listenToLoading()
   }
 
   logOut(): void {
@@ -52,5 +61,13 @@ export class AppComponent {
         console.log(err)
       }
     })
+  }
+
+  listenToLoading(): void {
+    this.loadingService.loadingSub
+      .pipe(delay(0)) // This prevents a ExpressionChangedAfterItHasBeenCheckedError for subsequent requests
+      .subscribe((loading) => {
+        this.loading = loading
+      })
   }
 }

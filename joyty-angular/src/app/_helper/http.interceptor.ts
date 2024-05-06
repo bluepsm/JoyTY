@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HTTP_INTERCEPTORS, HttpErrorResponse } from "@angular/common/http";
-import { Observable, catchError, switchMap, throwError } from "rxjs";
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HTTP_INTERCEPTORS, HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { Observable, catchError, switchMap, throwError, map, delay, takeUntil, timer, finalize, share, of, merge, first, combineLatest, startWith, distinctUntilChanged } from "rxjs";
 import { AuthService } from "../services/auth.service";
 import { StorageService } from "../services/storage.service";
 import { EventBusService } from "../shared/event-bus.service";
 import { EventData } from "../shared/event.class";
+import { LoadingService } from "../loading.service";
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
@@ -13,7 +14,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     constructor(
         private authService: AuthService,
         private storageService: StorageService,
-        private eventBusService: EventBusService
+        private eventBusService: EventBusService,
+        private loadingService: LoadingService
     ) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -21,15 +23,54 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             withCredentials: true
         });
 
-        return next.handle(req).pipe(
-            catchError((error) => {
-                if (error instanceof HttpErrorResponse && !req.url.includes('auth/signin') && error.status === 401) {
-                    return this.handle401Error(req, next)
-                }
+        //this.loadingService.setLoading(true, req.url)
 
-                return throwError(() => error)
-            })
+        const res = next.handle(req)
+            .pipe(
+                //delay(3000),
+                catchError((error) => {
+                    if (error instanceof HttpErrorResponse && !req.url.includes('auth/signin') && error.status === 401) {
+                        return this.handle401Error(req, next)
+                    }
+
+                    this.loadingService.setLoading(false, req.url)
+
+                    return throwError(() => error)
+                }),
+                map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
+                    if (evt instanceof HttpResponse) {
+                        this.loadingService.setLoading(false, req.url)
+                    }
+                    return evt
+                })
         );
+
+        merge(
+            timer(1000).pipe(
+                map(() => {
+                    //console.log("1 second passed.")
+                    this.loadingService.setLoading(true, req.url)
+                }),
+                takeUntil(res),
+            ),
+            combineLatest([res, timer(2000)]).pipe(
+                map(() => {
+                    this.loadingService.setLoading(false, req.url)
+                })
+
+                // map<[HttpEvent<any>, any], any>((evt: [HttpEvent<any>, any]) => {
+                //     if (evt instanceof HttpResponse) {
+                //         this.loadingService.setLoading(false, req.url)
+                //     }
+                //     return evt
+                // })
+            )
+        ).pipe(
+            startWith(this.loadingService.setLoading(false, req.url)),
+            distinctUntilChanged()
+        ).subscribe()
+
+        return res
     };
 
     private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
