@@ -23,7 +23,7 @@
 }
   
 .site-content {
-    /* margin-top: 20px; */
+    margin-top: 7px;
     height: calc(100vh - 65px);
     padding: 0 15px;
     overflow: auto;

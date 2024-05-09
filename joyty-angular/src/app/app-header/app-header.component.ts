@@ -26,7 +26,7 @@ export class AppHeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log("Header OnInit")
+    //console.log("Header OnInit")
 
     this.isLoggedIn = this.storageService.isLoggedIn()
 
@@ -38,7 +38,7 @@ export class AppHeaderComponent implements OnInit {
       this.showModApp = this.roles.includes('ROLE_MODERATOR')
 
       this.username = user.username
-      console.log("Header username = " + this.username)
+      //console.log("Header username = " + this.username)
     }
 
     this.eventBusSub = this.eventBusService.on('logout', () => {

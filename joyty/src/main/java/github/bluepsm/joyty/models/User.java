@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
@@ -28,7 +29,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -41,6 +42,7 @@ public class User implements Serializable{
     @NotBlank
     private String username;
 
+	@JsonIgnore
     @Column(name = "password")
     @Size(min = 8)
     @NotBlank
@@ -91,22 +93,26 @@ public class User implements Serializable{
     @CreatedDate
     private Long created_at;
 
-	
+    //@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable( name = "user_role", 
 		joinColumns = @JoinColumn(name = "user_id"),
 		inverseJoinColumns = @JoinColumn(name = "role_id") ) 
 	private Set<Role> roles;
-	  
-	@OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+	 
+	@JsonIgnore
+	@OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Post> posts;
-	  
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
 	private Set<Comment> comments;
-	  
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "request_by", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
 	private Set<Request> send_request;
-	  
+	
+	@JsonIgnore
 	@ManyToMany(mappedBy = "party_member", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
 	private Set<Post> join_party;
 	 

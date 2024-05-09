@@ -23,10 +23,12 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             withCredentials: true
         });
 
+        this.loadingService.setLoading(true, req.url)
+
         const res = next.handle(req)
             .pipe(
                 //delay(1200),
-                timeout(10000),
+                //timeout(10000),
                 catchError((error) => {
                     if (error instanceof HttpErrorResponse && !req.url.includes('auth/signin') && error.status === 401) {
                         return this.handle401Error(req, next)
@@ -36,39 +38,39 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
                     return throwError(() => error)
                 }),
-                // map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
-                //     if (evt instanceof HttpResponse) {
-                //         this.loadingService.setLoading(false, req.url)
-                //     }
-                //     return evt
-                // }),
-                share()
+                map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
+                    if (evt instanceof HttpResponse) {
+                        this.loadingService.setLoading(false, req.url)
+                    }
+                    return evt
+                }),
+                //share()
         );
 
-        merge(
-            timer(1000).pipe(
-                map(() => {
-                    //console.log("1 second passed.")
-                    this.loadingService.setLoading(true, req.url)
-                }),
-                takeUntil(res),
-            ),
-            combineLatest([res, timer(2000)]).pipe(
-                map(() => {
-                    this.loadingService.setLoading(false, req.url)
-                })
+        // merge(
+        //     timer(1000).pipe(
+        //         map(() => {
+        //             //console.log("1 second passed.")
+        //             this.loadingService.setLoading(true, req.url)
+        //         }),
+        //         takeUntil(res),
+        //     ),
+        //     combineLatest([res, timer(2000)]).pipe(
+        //         map(() => {
+        //             this.loadingService.setLoading(false, req.url)
+        //         })
 
-                // map<[HttpEvent<any>, any], any>((evt: [HttpEvent<any>, any]) => {
-                //     if (evt instanceof HttpResponse) {
-                //         this.loadingService.setLoading(false, req.url)
-                //     }
-                //     return evt
-                // })
-            )
-        ).pipe(
-            startWith(this.loadingService.setLoading(false, req.url)),
-            distinctUntilChanged()
-        ).subscribe()
+        //         // map<[HttpEvent<any>, any], any>((evt: [HttpEvent<any>, any]) => {
+        //         //     if (evt instanceof HttpResponse) {
+        //         //         this.loadingService.setLoading(false, req.url)
+        //         //     }
+        //         //     return evt
+        //         // })
+        //     )
+        // ).pipe(
+        //     startWith(this.loadingService.setLoading(false, req.url)),
+        //     distinctUntilChanged()
+        // ).subscribe()
 
         //res.subscribe()
         //showLoading.subscribe()

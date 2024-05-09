@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Tag implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -32,8 +33,8 @@ public class Tag implements Serializable {
     @NotBlank
     private String tagname;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@JsonIgnore
     private Set<Post> posts;
 
     public Tag() {}

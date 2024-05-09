@@ -31,14 +31,14 @@ export class LoginComponent implements OnInit{
 
     this.authService.login(username, password).subscribe({
       next: data => {
-        console.log("login complete")
+        //console.log("login complete")
         this.storageService.saveUser(data)
         this.fail = false
         this.isLoggedIn = true
         this.roles = this.storageService.getUser().roles
         this.reloadPage()
       }, error: err => {
-        console.log("login error")
+        //console.log("login error")
         this.errorMsg = err.error.message
         this.fail = true
       }

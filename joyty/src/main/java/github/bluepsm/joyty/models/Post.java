@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
@@ -27,7 +28,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Post implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -50,6 +51,9 @@ public class Post implements Serializable {
 
     @Column(name = "meeting_city")
     private String meeting_city;
+    
+    @Column(name = "meeting_state")
+    private String meeting_state;
 
     @Column(name = "meeting_country")
     private String meeting_country;
@@ -85,9 +89,11 @@ public class Post implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User author;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "request_to", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Request> join_request;
 
@@ -105,12 +111,13 @@ public class Post implements Serializable {
 
     public Post() {}
 
-    public Post(String body, Integer party_size, String meeting_location, String meeting_city, String meeting_country, 
+    public Post(String body, Integer party_size, String meeting_location, String meeting_city, String meeting_state, String meeting_country, 
     		Date meeting_datetime, BigDecimal cost_estimate, Boolean cost_share) {
     	this.body = body;
         this.party_size = party_size;
         this.meeting_location = meeting_location;
         this.meeting_city = meeting_city;
+        this.meeting_state = meeting_state;
         this.meeting_country = meeting_country;
         this.meeting_datetime = meeting_datetime;
         this.cost_estimate = cost_estimate;

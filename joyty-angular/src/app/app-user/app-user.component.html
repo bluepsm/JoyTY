@@ -1,5 +1,104 @@
-<div class="container">
-    <header class="header">
-        <p>{{content}}</p>
-    </header>
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col bg-warning-subtle align-content-center">A Side</div>
+        <div class="col-6 d-flex flex-column justify-content-center">
+            <div class="row row-cols-1">
+                <div class="col sticky-top">
+                    <div class="card w-100 bg-dark-subtle">
+                        <div class="card-header">
+                            Create Post
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-block w-100" (click)="openPostModal()">Create your new post...</button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <hr>
+                </div>
+                <div class="col mb-4" *ngFor="let post of postData">
+                    <div class="card w-100">
+                        <div class="card-header">
+                            <div class="row justify-content-between">
+                                <div class="col d-flex gap-2">
+                                    <i class="bi bi-person-circle"></i>
+                                    <strong>{{ post.author.username }}</strong>
+                                </div>
+                                <div class="col text-end">{{ post.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row bg-info-subtle">
+                                <p>{{ post.body }}</p>
+                            </div>
+                            <div class="row row-cols-1 bg-secondary-subtle">
+                                <div class="col">
+                                    <div class="d-flex gap-2">
+                                        <i class="bi bi-calendar-event-fill"></i>
+                                        <span>{{ post.meeting_datetime | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="d-flex gap-2">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span>{{ post.meeting_location }}, {{ post.meeting_city }}, {{ post.meeting_state }}, {{ post.meeting_country }}</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="row bg-info-subtle justify-content-evenly">
+                                        <div class="col-4 d-flex justify-content-center gap-2 bg-primary-subtle">
+                                            <i class="bi bi-people-fill"></i>
+                                            <span>{{ post.party_size }}</span>
+                                        </div>
+                                        <div class="col-4 d-flex justify-content-center gap-2">
+                                            <i class="bi bi-currency-dollar"></i>
+                                            <span>{{ post.cost_estimate }}</span>
+                                        </div>
+                                        <div class="col-4 d-flex justify-content-center gap-2 bg-primary-subtle">
+                                            <i class="bi bi-currency-exchange"></i>
+                                            <span>{{ post.cost_share }}</span>
+                                        </div>
+                                    </div>        
+                                </div>
+                            </div>
+                            <div class="row row-cols-1 bg-danger-subtle">
+                                <div class="d-flex justify-content-start gap-1">
+                                    <span class="badge rounded-pill text-bg-info" *ngFor="let tag of post.tags">{{ tag.tagname }}</span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-sm btn-outline-primary" type="button">Join</button>
+                                <button class="btn btn-sm btn-outline-secondary" type="button">Comments</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col mb-4" *ngFor="let x of [1,2,3,4]">
+                    <div class="card w-100">
+                        <div class="card-header">
+                            Card Header
+                        </div>
+                        <div class="card-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vestibulum nunc velit, 
+                            sed varius purus malesuada quis. Vestibulum auctor efficitur vestibulum. Duis id eros nulla. 
+                            Ut posuere congue gravida. Aliquam finibus ultricies tempus. 
+                            Maecenas id elit et sem tempor placerat ut eu sapien. Donec vulputate lacus commodo arcu vulputate, non.
+                        </div>
+                        <div class="card-footer">
+                            Card Footer
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <div class="col bg-danger-subtle align-content-center">B Side</div>
+    </div>
 </div>
+<app-post-modal
+    #postModal 
+    (newPostModalEvent)="getNewPostValue($event)" 
+></app-post-modal>
