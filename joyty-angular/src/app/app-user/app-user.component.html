@@ -9,7 +9,7 @@
                             Create Post
                         </div>
                         <div class="card-body">
-                            <button class="btn btn-block w-100" (click)="openPostModal()">Create your new post...</button>
+                            <button class="btn btn-block w-100" (click)="openModal()">Create your new post...</button>
                         </div>
                     </div>
                 </div>
@@ -77,28 +77,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col mb-4" *ngFor="let x of [1,2,3,4]">
-                    <div class="card w-100">
-                        <div class="card-header">
-                            Card Header
-                        </div>
-                        <div class="card-body">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vestibulum nunc velit, 
-                            sed varius purus malesuada quis. Vestibulum auctor efficitur vestibulum. Duis id eros nulla. 
-                            Ut posuere congue gravida. Aliquam finibus ultricies tempus. 
-                            Maecenas id elit et sem tempor placerat ut eu sapien. Donec vulputate lacus commodo arcu vulputate, non.
-                        </div>
-                        <div class="card-footer">
-                            Card Footer
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </div>
         <div class="col bg-danger-subtle align-content-center">B Side</div>
     </div>
 </div>
-<app-post-modal
-    #postModal 
-    (newPostModalEvent)="getNewPostValue($event)" 
-></app-post-modal>

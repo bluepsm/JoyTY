@@ -10,16 +10,15 @@ import { Tag } from '../../models/tag.model';
   selector: 'app-post-modal',
   templateUrl: './post-modal.component.html',
   styleUrl: './post-modal.component.css',
-  providers: [NgbModalConfig, NgbModal, NgbActiveModal]
 })
 
 @Injectable()
 export class PostModalComponent implements OnInit {
-  private modalRef!: NgbModalRef;
-  @ViewChild('postModal') private modalContent!: TemplateRef<PostModalComponent>
-  @Output() newPostModalEvent = new EventEmitter<FormGroup>();
   @Input() public post?: any
   
+  private modalService = inject(NgbModal)
+  activeModal = inject(NgbActiveModal)
+
   countries: ICountry[] = Country.getAllCountries()
   states: IState[] = []
   cities: ICity[] = []
@@ -48,19 +47,14 @@ export class PostModalComponent implements OnInit {
   selectedTags?: Tag[]
 
   constructor(
-    private config: NgbModalConfig, 
-    private modalService: NgbModal,
+    //private config: NgbModalConfig, 
     private formBuilder: FormBuilder,
-    //private activeModal: NgbActiveModal
   ) {
-    this.config.backdrop = 'static'
-    this.config.keyboard = false
+    // this.config.backdrop = 'static'
+    // this.config.keyboard = false
   }
 
   ngOnInit(): void {
-    //console.log(this.ngbDate.month)
-    //console.log("combine datetime: " + this.date)
-
     this.postForm = this.formBuilder.group({
       body: ['', [
         Validators.required
@@ -96,15 +90,8 @@ export class PostModalComponent implements OnInit {
         
       ]],
     })
-  }
 
-  get pf(): { [key: string]: AbstractControl } {
-    return this.postForm.controls
-  }
-
-  open(): Promise<boolean> {
     if (this.post) {
-      //console.log("post data availiable")
       console.log(this.post)
       
       this.pf['body'].setValue(this.post['body'])
@@ -149,15 +136,10 @@ export class PostModalComponent implements OnInit {
     } else {
       console.log("no post data")
     }
-    return new Promise<boolean>(resolve => {
-      this.modalRef = this.modalService.open(this.modalContent, { centered: true, size: 'lg', scrollable: true })
-      this.modalRef.result.then((accept) => {
-        //console.log(accept)
-        this.newPostModalEvent.emit(this.postForm);
-      }, (reject) => {
-        console.log(reject)
-      });
-    })
+  }
+
+  get pf(): { [key: string]: AbstractControl } {
+    return this.postForm.controls
   }
 
   onCountryChange($event: Event): void {
@@ -211,7 +193,7 @@ export class PostModalComponent implements OnInit {
   }
 
   openTagModal() {
-    const modalRef = this.modalService.open(TagModalComponent, { size: 'sm', centered: true })
+    const modalRef = this.modalService.open(TagModalComponent, { size: 'sm', centered: true, scrollable: true })
     modalRef.result.then((result) => {
       if (result) {
         //console.log(result)
@@ -225,15 +207,4 @@ export class PostModalComponent implements OnInit {
       }
     })
   }
-  // onDateChange($event: Event): void {
-  //   this.date.setFullYear(this.ngbDate.year, this.ngbDate.month, this.ngbDate.day)
-  //   this.pf['meeting_date'].setValue(this.date.getFullYear)
-  //   console.log("onDateChange Date: " + this.date.getFullYear)
-  // }
-
-  // onTimeChange($event: Event): void {
-  //   this.date.setHours(this.time.hour, this.time.minute, 0)
-  //   this.pf['meeting_time'].setValue(this.date.getHours)
-  //   console.log("onTimeChange Time: " + this.date.getHours)
-  // }
 }

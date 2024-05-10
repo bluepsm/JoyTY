@@ -10,14 +10,13 @@ import { Post } from '../models/post.model';
   selector: 'app-app-user',
   templateUrl: './app-user.component.html',
   styleUrl: './app-user.component.css',
-  providers: [NgbActiveModal]
 })
 export class AppUserComponent implements OnInit {
   content?: string
   postData?: Post[]
   date = new Date()
 
-  activeModal = inject(NgbActiveModal)
+  private modalService = inject(NgbModal)
 
   public post = {
     body: "Test",
@@ -36,7 +35,6 @@ export class AppUserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private postService: PostService,
-    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -56,50 +54,41 @@ export class AppUserComponent implements OnInit {
     })
   }
 
-  @ViewChild('postModal') private postModal!: PostModalComponent
+  openModal() {
+    const modalRef = this.modalService.open(PostModalComponent, { size: 'lg', centered: true, scrollable: true })
+    modalRef.componentInstance.post = this.post
+    modalRef.result.then((form) => {
+      if (form) {
+        //console.log(form.value)
+        const ngbDate = form.controls['meeting_date'].value
+        const ngbTime = form.controls['meeting_time'].value
 
-  openPostModal() {
-    this.postModal.post = this.post
-    this.postModal.open()
-    // modalRef.then((result) => {
-    //   if (result) {
-    //     console.log(result)
-    //   }
-    // })
-  }
+        this.date.setFullYear(ngbDate.year, ngbDate.month, ngbDate.day)
+        this.date.setHours(ngbTime.hour, ngbTime.minute, 0)
 
-  getNewPostValue(form: FormGroup) {
-    //console.log(form.value)
-    const ngbDate = form.controls['meeting_date'].value
-    const ngbTime = form.controls['meeting_time'].value
+        const newPostForm: FormGroup = new FormGroup({
+          body: new FormControl(form.controls['body'].value),
+          party_size: new FormControl(form.controls['party_size'].value),
+          meeting_location: new FormControl(form.controls['meeting_location'].value),
+          meeting_city: new FormControl(form.controls['meeting_city'].value),
+          meeting_state: new FormControl(form.controls['meeting_state'].value),
+          meeting_country: new FormControl(form.controls['meeting_country'].value),
+          meeting_datetime: new FormControl(this.date),
+          cost_estimate: new FormControl(form.controls['cost_estimate'].value),
+          cost_share: new FormControl(form.controls['cost_share'].value),
+          tags: new FormControl(form.controls['tags'].value),
+        })
 
-    this.date.setFullYear(ngbDate.year, ngbDate.month, ngbDate.day)
-    this.date.setHours(ngbTime.hour, ngbTime.minute, 0)
-    //console.log(this.date.getTime())
+        console.log(newPostForm.value)
 
-    const newPostForm: FormGroup = new FormGroup({
-      body: new FormControl(form.controls['body'].value),
-      party_size: new FormControl(form.controls['party_size'].value),
-      meeting_location: new FormControl(form.controls['meeting_location'].value),
-      meeting_city: new FormControl(form.controls['meeting_city'].value),
-      meeting_state: new FormControl(form.controls['meeting_state'].value),
-      meeting_country: new FormControl(form.controls['meeting_country'].value),
-      meeting_datetime: new FormControl(this.date),
-      cost_estimate: new FormControl(form.controls['cost_estimate'].value),
-      cost_share: new FormControl(form.controls['cost_share'].value),
-      tags: new FormControl(form.controls['tags'].value),
-    })
-
-    console.log(newPostForm.value)
-
-    this.postService.createPost(newPostForm).subscribe({
-      next: data => {
-        console.log(data)
-        //this.showStatusToast("Gender Update Successfully.")
-        //this.ngOnInit()
-      }, error: err => {
-        console.log(err)
-        //this.showErrorToast("Cannot Update Gender.")
+        this.postService.createPost(newPostForm).subscribe({
+          next: data => {
+            console.log(data)
+            //this.ngOnInit()
+          }, error: err => {
+            console.log(err)
+          }
+        })
       }
     })
   }

@@ -17,7 +17,7 @@ export class TagModalComponent implements OnInit {
   constructor(private tagService: TagService) {}
 
   ngOnInit(): void {
-      this.getAllTags()
+    this.getAllTags()
   }
 
   getAllTags() {
@@ -46,8 +46,4 @@ export class TagModalComponent implements OnInit {
     //console.log("Delete")
     return tags.filter(tag => tag.id !== removeId)
   }
-
-  // passback() {
-  //   this.activeModal.close(this.selectedTags)
-  // }
 }
