@@ -237,6 +237,16 @@
                     </div>
                 </div>
             </div>
+            <div *ngIf="selectedTags" class="row mb-3">
+                <div class="d-flex flex-wrap justify-content-start gap-2">
+                    <span class="badge rounded-pill text-bg-primary" *ngFor="let tag of selectedTags">{{ tag.tagname }}</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="d-grid">
+                    <button class="btn btn-outline-secondary" type="button" (click)="openTagModal()">Add Tags</button>
+                </div>
+            </div>
         </form>
 	</div>
 	<div class="modal-footer">

@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h4 class="modal-title">Add Tags</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body"> 
+        <div class="d-flex flex-wrap justify-content-start gap-2">
+            <!-- <div class="badge rounded-pill text-bg-info" *ngFor="let tag of tags">
+                {{ tag.tagname }}
+            </div> -->
+            <span class="selectable badge rounded-pill" *ngFor="let tag of tags" (click)="selectTag(tag)" [ngClass]="selectedTags.includes(tag) ? 'text-bg-primary' : 'text-bg-info'">{{ tag.tagname }}</span>
+        </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close(selectedTags)">OK</button>
+</div>

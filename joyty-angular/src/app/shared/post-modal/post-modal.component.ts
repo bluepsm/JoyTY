@@ -3,6 +3,8 @@ import { NgbDateStruct, NgbModal, NgbModalConfig, NgbModalRef, NgbActiveModal } 
 import { Country, State, City, ICountry, IState, ICity } from 'country-state-city';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TagModalComponent } from '../tag-modal/tag-modal.component';
+import { Tag } from '../../models/tag.model';
 
 @Component({
   selector: 'app-post-modal',
@@ -42,6 +44,8 @@ export class PostModalComponent implements OnInit {
     cost_share: new FormControl(false),
     tags: new FormControl(''),
   })
+
+  selectedTags?: Tag[]
 
   constructor(
     private config: NgbModalConfig, 
@@ -206,6 +210,21 @@ export class PostModalComponent implements OnInit {
     })  
   }
 
+  openTagModal() {
+    const modalRef = this.modalService.open(TagModalComponent, { size: 'sm', centered: true })
+    modalRef.result.then((result) => {
+      if (result) {
+        //console.log(result)
+        this.selectedTags = result
+        let tagsId: any[] = []
+        for (let tag of result) {
+          tagsId.push(tag.id)
+        }
+        this.pf['tags'].setValue(tagsId)
+        //console.log(this.pf['tags'].value)
+      }
+    })
+  }
   // onDateChange($event: Event): void {
   //   this.date.setFullYear(this.ngbDate.year, this.ngbDate.month, this.ngbDate.day)
   //   this.pf['meeting_date'].setValue(this.date.getFullYear)

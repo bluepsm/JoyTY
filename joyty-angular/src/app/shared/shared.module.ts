@@ -9,9 +9,10 @@ import { PostModalComponent } from './post-modal/post-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbDatepickerModule, NgbDatepickerConfig, NgbTimepickerModule, NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TagModalComponent } from './tag-modal/tag-modal.component';
 
 @NgModule({
-  declarations: [ConfirmDialogComponent, ToastComponent, PostModalComponent],
+  declarations: [ConfirmDialogComponent, ToastComponent, PostModalComponent, TagModalComponent],
   imports: [
     CommonModule,
     NgbModule,

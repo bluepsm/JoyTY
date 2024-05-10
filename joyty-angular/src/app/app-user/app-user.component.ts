@@ -1,7 +1,7 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { PostModalComponent } from '../shared/post-modal/post-modal.component';
-import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PostService } from '../services/post.service';
 import { Post } from '../models/post.model';
@@ -9,12 +9,15 @@ import { Post } from '../models/post.model';
 @Component({
   selector: 'app-app-user',
   templateUrl: './app-user.component.html',
-  styleUrl: './app-user.component.css'
+  styleUrl: './app-user.component.css',
+  providers: [NgbActiveModal]
 })
 export class AppUserComponent implements OnInit {
   content?: string
   postData?: Post[]
   date = new Date()
+
+  activeModal = inject(NgbActiveModal)
 
   public post = {
     body: "Test",
@@ -32,8 +35,8 @@ export class AppUserComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private postService: PostService
-    //private modalService: NgbModal
+    private postService: PostService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
