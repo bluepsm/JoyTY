@@ -9,7 +9,7 @@
                             Create Post
                         </div>
                         <div class="card-body">
-                            <button class="btn btn-block w-100" (click)="openModal()">Create your new post...</button>
+                            <button class="btn btn-block w-100" (click)="openPostModal()">Create your new post...</button>
                         </div>
                     </div>
                 </div>
@@ -17,7 +17,7 @@
                     <hr>
                 </div>
                 <div class="col mb-4" *ngFor="let post of postData">
-                    <div class="card w-100">
+                    <div class="card w-100" [ngClass]="{'bg-primary-subtle': post.author.id === userData.id}">
                         <div class="card-header">
                             <div class="row justify-content-between">
                                 <div class="col d-flex gap-2">
@@ -70,8 +70,20 @@
                         </div>
                         <div class="card-footer">
                             <div class="d-flex justify-content-between">
-                                <button class="btn btn-sm btn-outline-primary" type="button">Join</button>
-                                <button class="btn btn-sm btn-outline-secondary" type="button">Comments</button>
+                                <button 
+                                    class="btn btn-sm btn-outline-primary" 
+                                    type="button" 
+                                    [style.visibility]="post.author.id === userData.id ? 'hidden' : 'visible'"
+                                >
+                                    Join
+                                </button>
+                                <button 
+                                    class="btn btn-sm btn-outline-secondary" 
+                                    type="button" 
+                                    (click)="openCommentModal(post.id)"
+                                >
+                                    Comments
+                                </button>
                             </div>
                             
                         </div>

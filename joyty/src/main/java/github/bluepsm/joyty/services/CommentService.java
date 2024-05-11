@@ -43,16 +43,6 @@ public class CommentService {
         return commentRepository.findById(id);
     }
 
-    public Comment createComment(Long postId, Long userId, Comment comment) {
-        Post post = postRepository.findById(postId).get();
-        User user = userRepository.findById(userId).get();
-
-        comment.setPost(post);
-        comment.setUser(user);
-        
-        return commentRepository.save(comment);
-    }
-
     @CachePut(value = "comments", key = "#id")
     public Optional<Comment> updateCommentById(Long id, Comment comment) {
         Optional<Comment> commentOpt = commentRepository.findById(id);
@@ -64,7 +54,7 @@ public class CommentService {
         comment.setId(id);
         
         // Keep the existing created_at timestamp
-        Date created_at = commentOpt.get().getCreated_at();
+        Long created_at = commentOpt.get().getCreated_at();
         comment.setCreated_at(created_at);
 
         return Optional.of(commentRepository.save(comment));
@@ -78,5 +68,21 @@ public class CommentService {
         } catch(EmptyResultDataAccessException err) {
             return false;
         }
+    }
+    
+    public Comment createComment(Long postId, Long userId, String body) {
+        Post post = postRepository.findById(postId).get();
+        User user = userRepository.findById(userId).get();
+        
+        Comment comment = new Comment(body);
+        comment.setPost(post);
+        comment.setUser(user);
+        
+        return commentRepository.save(comment);
+    }
+    
+    public Optional<List<Comment>> getCommentsByPostId(Long postId) {
+        //log.info("Redis is Retrieve Comment ID: {}", id);
+        return commentRepository.findByPostId(postId);
     }
 }

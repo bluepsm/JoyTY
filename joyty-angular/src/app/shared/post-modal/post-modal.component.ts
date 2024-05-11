@@ -47,11 +47,11 @@ export class PostModalComponent implements OnInit {
   selectedTags?: Tag[]
 
   constructor(
-    //private config: NgbModalConfig, 
+    private config: NgbModalConfig,
     private formBuilder: FormBuilder,
   ) {
-    // this.config.backdrop = 'static'
-    // this.config.keyboard = false
+    this.config.backdrop = 'static'
+    this.config.keyboard = false
   }
 
   ngOnInit(): void {

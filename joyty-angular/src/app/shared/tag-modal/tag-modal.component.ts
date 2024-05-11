@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TagService } from '../../services/tag.service';
 import { Tag } from '../../models/tag.model';
 
@@ -14,7 +14,13 @@ export class TagModalComponent implements OnInit {
   tags?: Tag[]
   selectedTags: Tag[] = []
 
-  constructor(private tagService: TagService) {}
+  constructor(
+    private config: NgbModalConfig,
+    private tagService: TagService,
+  ) {
+    this.config.backdrop = 'static'
+    this.config.keyboard = false
+  }
 
   ngOnInit(): void {
     this.getAllTags()

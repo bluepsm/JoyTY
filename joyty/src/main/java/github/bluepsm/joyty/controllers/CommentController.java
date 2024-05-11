@@ -6,10 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,16 +19,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import github.bluepsm.joyty.models.Comment;
+import github.bluepsm.joyty.payload.request.CreateCommentRequest;
+import github.bluepsm.joyty.security.services.UserDetailsImpl;
 import github.bluepsm.joyty.services.CommentService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/api/comment")
 public class CommentController {
 	@Autowired
 	private CommentService commentService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Comment>> getAllPosts() {
+    public ResponseEntity<List<Comment>> getAllComments() {
         Optional<List<Comment>> comments = commentService.getAllComments();
         
         if(!comments.isPresent()) {
@@ -38,7 +44,7 @@ public class CommentController {
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<Comment> getPostById(@PathVariable Long commentId) {
+    public ResponseEntity<Comment> getCommentById(@PathVariable Long commentId) {
         Optional<Comment> comment = commentService.getCommentById(commentId);
 
         if(!comment.isPresent()) {
@@ -48,15 +54,15 @@ public class CommentController {
         return ResponseEntity.ok(comment.get());
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Comment> createPost(@RequestParam Long postId, @RequestParam Long userId, @RequestBody Comment newComment) {        
-        Comment createdComment = commentService.createComment(postId, userId, newComment);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
-    }
+//    @PostMapping("/create")
+//    public ResponseEntity<Comment> createComment(@RequestParam Long postId, @RequestParam Long userId, @RequestBody Comment newComment) {        
+//        Comment createdComment = commentService.createComment(postId, userId, newComment);
+//
+//        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
+//    }
 
     @PutMapping("/{commentId}/update")
-    public ResponseEntity<Comment> updatePostById(@PathVariable Long commentId, @RequestBody Comment newComment) {
+    public ResponseEntity<Comment> updateCommentById(@PathVariable Long commentId, @RequestBody Comment newComment) {
         Optional<Comment> updatedComment = commentService.updateCommentById(commentId, newComment);
 
         if(!updatedComment.isPresent()) {
@@ -67,11 +73,45 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}/delete")
-    public ResponseEntity<?> deletePostById(@PathVariable Long commentId) {
+    public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
         if(!commentService.deleteCommentById(commentId)) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok().build();
+    }
+    
+    private Optional<Long> getUserId() {
+    	Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	if (principle.toString() != "anonymousUser") {
+			Long userId = ((UserDetailsImpl) principle).getId();
+			return Optional.of(userId);
+		} else {
+			return Optional.empty();
+		}
+    }
+    
+    @PostMapping("/create")
+    public ResponseEntity<Comment> createComment(@RequestBody CreateCommentRequest commentRequest) {
+    	Optional<Long> userId = getUserId();
+    	
+    	if (!userId.isPresent()) {
+    		return ResponseEntity.internalServerError().build();
+    	}
+    		
+        Comment createdComment = commentService.createComment(commentRequest.getPostId(), userId.get(), commentRequest.getBody());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
+    }
+    
+    @GetMapping("/getCommentByPost/{postId}")
+    public ResponseEntity<List<Comment>> getCommentByPostId(@PathVariable Long postId) {
+    	Optional<List<Comment>> comments = commentService.getCommentsByPostId(postId);
+
+        if(!comments.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(comments.get());
     }
 }

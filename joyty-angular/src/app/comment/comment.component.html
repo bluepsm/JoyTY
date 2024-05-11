@@ -1,0 +1,46 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Comment</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross Click')"></button>
+</div>
+<div class="modal-body">
+    <div class="container bg-primary-subtle">
+        <div *ngIf="comments">
+            <div class="row mb-3" *ngFor="let comment of comments">
+                <div class="col-2 align-content-center bg-warning-subtle">
+                    Avatar
+                </div>
+                <div class="col-10 p-0 bg-danger-subtle">
+                    <div class="card" [ngClass]="{'bg-primary-subtle': comment.user.id === userId}">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>{{ comment.user.username }}</strong>
+                                </div>
+                                <div class="text-end">{{ comment.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {{ comment.body }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer bg-danger">
+    <div class="container-fluid bg-danger-subtle">
+        <form [formGroup]="commentForm">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Write your comment here..."
+                    formControlName="body"
+                    [ngClass]="{'is-invalid': cf['body'].errors}"
+                >
+                <button class="btn btn-outline-secondary" type="button" [disabled]="commentForm.invalid" (click)="commentFormSubmit()">Comment</button>
+            </div>
+        </form> 
+    </div>
+</div>

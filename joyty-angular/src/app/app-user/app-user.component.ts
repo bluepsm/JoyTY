@@ -5,6 +5,8 @@ import { NgbActiveModal, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PostService } from '../services/post.service';
 import { Post } from '../models/post.model';
+import { CommentComponent } from '../comment/comment.component';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-app-user',
@@ -15,6 +17,7 @@ export class AppUserComponent implements OnInit {
   content?: string
   postData?: Post[]
   date = new Date()
+  userData?: any
 
   private modalService = inject(NgbModal)
 
@@ -35,6 +38,7 @@ export class AppUserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private postService: PostService,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
@@ -52,9 +56,12 @@ export class AppUserComponent implements OnInit {
         }
       }
     })
+
+    console.log("Data from storage service: " + JSON.stringify(this.storageService.getUser()))
+    this.userData = this.storageService.getUser()
   }
 
-  openModal() {
+  openPostModal() {
     const modalRef = this.modalService.open(PostModalComponent, { size: 'lg', centered: true, scrollable: true })
     modalRef.componentInstance.post = this.post
     modalRef.result.then((form) => {
@@ -103,5 +110,11 @@ export class AppUserComponent implements OnInit {
         console.log(err)
       }
     })
+  }
+
+  openCommentModal(postId: number) {
+    const modalRef = this.modalService.open(CommentComponent, { size: 'xl', centered: true, scrollable: true })
+    modalRef.componentInstance.postId = postId
+    modalRef.componentInstance.userId = this.userData.id
   }
 }

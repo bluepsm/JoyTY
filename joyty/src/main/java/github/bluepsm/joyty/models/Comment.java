@@ -5,6 +5,9 @@ import java.sql.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -21,6 +24,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Comment implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -35,12 +39,12 @@ public class Comment implements Serializable {
     private String body;
 
     @Column(name = "created_at")
-    @CreationTimestamp
-    private Date created_at;
+    @CreatedDate
+    private Long created_at;
 
     @Column(name = "last_updated")
-    @UpdateTimestamp
-    private Date last_updated;
+    @LastModifiedDate
+    private Long last_updated;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

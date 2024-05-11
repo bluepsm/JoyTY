@@ -80,6 +80,7 @@ public class WebSecurityConfig {
 	              .requestMatchers("/api/user/**").permitAll()
 	              .requestMatchers("/api/post/**").permitAll()
 	              .requestMatchers("/api/tag/**").permitAll()
+	              .requestMatchers("/api/comment/**").permitAll()
 	              .anyRequest().authenticated()
 	        );
 	    
