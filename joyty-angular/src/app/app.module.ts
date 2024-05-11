@@ -20,6 +20,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { CommentComponent } from './comment/comment.component';
+import { JoinModalComponent } from './join-modal/join-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { CommentComponent } from './comment/comment.component';
     AppModeratorComponent,
     AppHeaderComponent,
     CommentComponent,
+    JoinModalComponent,
   ],
   imports: [
     BrowserModule,

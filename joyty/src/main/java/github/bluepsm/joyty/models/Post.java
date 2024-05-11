@@ -94,8 +94,8 @@ public class Post implements Serializable {
     private Set<Comment> comments;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "request_to", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Request> join_request;
+    @OneToMany(mappedBy = "join", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Request> join_requests;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "party",

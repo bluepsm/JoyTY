@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -19,6 +21,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Request implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -36,16 +39,16 @@ public class Request implements Serializable {
     private ERequest status = ERequest.PENDING;
 
     @Column(name = "created_at")
-    @CreationTimestamp
-    private Date created_at;
+    @CreatedDate
+    private Long created_at;
 
     @ManyToOne
-    @JoinColumn(name = "request_by", referencedColumnName = "id")
-    private User request_by;
+    @JoinColumn(name = "user_id")
+    private User owner;
 
     @ManyToOne
-    @JoinColumn(name = "request_to", referencedColumnName = "id")
-    private Post request_to;
+    @JoinColumn(name = "post_id")
+    private Post join;
 
     /* @PrePersist
     protected void onCreate() {

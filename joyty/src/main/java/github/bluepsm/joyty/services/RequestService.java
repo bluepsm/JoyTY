@@ -44,16 +44,6 @@ public class RequestService {
         return requestRepository.findById(id);
     }
 
-    public Request createRequest(Long postId, Long userId, Request request) {
-        Post post = postRepository.findById(postId).get();
-        User user = userRepository.findById(userId).get();
-        
-        request.setRequest_to(post);
-        request.setRequest_by(user);
-        
-        return requestRepository.save(request);
-    }
-
     @CachePut(value = "requests", key = "#id")
     public Optional<Request> updateRequestById(Long id, Request request) {
         Optional<Request> requestOpt = requestRepository.findById(id);
@@ -65,7 +55,7 @@ public class RequestService {
         request.setId(id);
         
         // Keep the existing created_at timestamp
-        Date created_at = requestOpt.get().getCreated_at();
+        Long created_at = requestOpt.get().getCreated_at();
         request.setCreated_at(created_at);
 
         return Optional.of(requestRepository.save(request));
@@ -83,8 +73,8 @@ public class RequestService {
 
     public Request requestRespond(Long requestId, String respond) {
         Request request = requestRepository.findById(requestId).get();
-        Post post = request.getRequest_to();
-        User user = request.getRequest_by();
+        Post post = request.getJoin();
+        User user = request.getOwner();
         Integer numberOfMember = post.getParty_member().size();
         Integer partySize = post.getParty_size();
 
@@ -106,5 +96,22 @@ public class RequestService {
         };
 
         return request;
+    }
+    
+    public Request createRequest(Long postId, Long userId, String body) {
+        Post post = postRepository.findById(postId).get();
+        User user = userRepository.findById(userId).get();
+        
+        Request request = new Request(body);
+        
+        request.setJoin(post);
+        request.setOwner(user);
+        
+        return requestRepository.save(request);
+    }
+    
+    public Optional<List<Request>> getRequestByUserId(Long userId) {
+        //log.info("Redis is Retrieve Request ID: {}", id);
+        return requestRepository.findByOwnerId(userId);
     }
 }

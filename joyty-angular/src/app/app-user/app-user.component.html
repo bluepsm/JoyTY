@@ -70,13 +70,19 @@
                         </div>
                         <div class="card-footer">
                             <div class="d-flex justify-content-between">
-                                <button 
-                                    class="btn btn-sm btn-outline-primary" 
-                                    type="button" 
-                                    [style.visibility]="post.author.id === userData.id ? 'hidden' : 'visible'"
-                                >
-                                    Join
-                                </button>
+                                <div *ngIf="checkJoinRequestHasBeenSent(post.id); else elseBlock">
+                                    <span>Join request has been sent</span>
+                                </div>
+                                <ng-template #elseBlock>
+                                    <button 
+                                        class="btn btn-sm btn-outline-primary" 
+                                        type="button" 
+                                        [style.visibility]="post.author.id === userData.id ? 'hidden' : 'visible'"
+                                        (click)="openJoinModal(post.id)"
+                                        >
+                                        Join
+                                    </button>
+                                </ng-template>
                                 <button 
                                     class="btn btn-sm btn-outline-secondary" 
                                     type="button" 

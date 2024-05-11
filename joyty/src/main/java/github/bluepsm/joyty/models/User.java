@@ -109,8 +109,8 @@ public class User implements Serializable{
 	private Set<Comment> comments;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "request_by", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
-	private Set<Request> send_request;
+	@OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+	private Set<Request> requests;
 	
 	@JsonIgnore
 	@ManyToMany(mappedBy = "party_member", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 

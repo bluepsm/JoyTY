@@ -7,6 +7,8 @@ import { PostService } from '../services/post.service';
 import { Post } from '../models/post.model';
 import { CommentComponent } from '../comment/comment.component';
 import { StorageService } from '../services/storage.service';
+import { JoinModalComponent } from '../join-modal/join-modal.component';
+import { JoinService } from '../services/join.service';
 
 @Component({
   selector: 'app-app-user',
@@ -18,6 +20,8 @@ export class AppUserComponent implements OnInit {
   postData?: Post[]
   date = new Date()
   userData?: any
+  joinRequest?: any
+  joinRequestId: number[] = []
 
   private modalService = inject(NgbModal)
 
@@ -38,7 +42,8 @@ export class AppUserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private postService: PostService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private joinRequestService: JoinService
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +64,8 @@ export class AppUserComponent implements OnInit {
 
     console.log("Data from storage service: " + JSON.stringify(this.storageService.getUser()))
     this.userData = this.storageService.getUser()
+    this.getAllJoinRequest(this.userData.id)
+    console.log(this.joinRequestId)
   }
 
   openPostModal() {
@@ -101,10 +108,9 @@ export class AppUserComponent implements OnInit {
   }
 
   getAllPost() {
-    console.log("getAllPost")
     this.postService.getAllPost().subscribe({
       next: data => {
-        console.log(data)
+        //console.log(data)
         this.postData = data
       }, error: err => {
         console.log(err)
@@ -116,5 +122,33 @@ export class AppUserComponent implements OnInit {
     const modalRef = this.modalService.open(CommentComponent, { size: 'xl', centered: true, scrollable: true })
     modalRef.componentInstance.postId = postId
     modalRef.componentInstance.userId = this.userData.id
+  }
+
+  openJoinModal(postId: number) {
+    const modalRef = this.modalService.open(JoinModalComponent, { size: 'sm', centered: true, scrollable: true })
+    modalRef.componentInstance.postId = postId
+    modalRef.componentInstance.userId = this.userData.id
+  }
+
+  getAllJoinRequest(userId: number) {
+    this.joinRequestService.getAllRequest(userId).subscribe({
+      next: data => {
+        this.joinRequest = data
+        for (let joinRequest of data) {
+          this.joinRequestId.push(joinRequest.join.id)
+        }
+        //console.log(data)
+      }, error: err => {
+        console.log(err)
+      }
+    })
+  }
+
+  checkJoinRequestHasBeenSent(postId: number): boolean {
+    if (this.joinRequestId.includes(postId)) {
+      return true
+    } else {
+      return false
+    }
   }
 }

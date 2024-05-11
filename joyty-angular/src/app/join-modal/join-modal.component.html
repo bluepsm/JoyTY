@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h4 class="modal-title">Join</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+    <div class="container bg-primary-subtle">
+        <form [formGroup]="joinForm" (ngSubmit)="joinFormSubmit">
+            <div class="row">
+                <textarea 
+                    class="form-control" 
+                    rows="5" 
+                    placeholder="Maybe introduce yourself a little bit?"
+                    formControlName="body"
+                    [ngClass]="{'is-invalid': jf['body'].errors}"
+                >
+                </textarea>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-outline-primary" [disabled]="joinForm.invalid" (click)="joinFormSubmit()">Send</button>
+</div>
