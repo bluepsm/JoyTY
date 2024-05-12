@@ -7,6 +7,7 @@ export class Post {
     meeting_country?: string;
     meeting_datetime?: Date;
     party_size?: number;
+    joinner?: number;
     cost_estimate?: bigint;
     cost_share?: boolean;
     meeting_done?: boolean;

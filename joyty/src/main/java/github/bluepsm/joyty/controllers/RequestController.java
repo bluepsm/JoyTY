@@ -73,12 +73,12 @@ public class RequestController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{requestId}/respond")
-    public ResponseEntity<Request> requestRespond(@PathVariable Long requestId, @RequestParam String respond) {
-        Request request = requestService.requestRespond(requestId, respond);
-
-        return ResponseEntity.ok(request);
-    }
+//    @PutMapping("/{requestId}/respond")
+//    public ResponseEntity<Request> requestRespond(@PathVariable Long requestId, @RequestParam String respond) {
+//        Request request = requestService.requestRespond(requestId, respond);
+//
+//        return ResponseEntity.ok(request);
+//    }
     
     private Optional<Long> getUserId() {
     	Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -112,5 +112,21 @@ public class RequestController {
         }
 
         return ResponseEntity.ok(requests.get());
+    }
+    
+    @GetMapping("/getJoinRequestByPostId/{postId}")
+    public ResponseEntity<List<Request>> getJoinRequestByPostId(@PathVariable Long postId) {
+    	Optional<List<Request>> requests = requestService.getRequestByPostId(postId);
+
+        if(!requests.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(requests.get());
+    }
+    
+    @GetMapping("/respondToRequest/{requestId}")
+    public ResponseEntity<Request> respondToRequest(@PathVariable Long requestId, @RequestParam String response) {
+    	return ResponseEntity.ok(requestService.respondToRequest(requestId, response));
     }
 }

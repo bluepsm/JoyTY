@@ -3,6 +3,9 @@ package github.bluepsm.joyty.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +26,6 @@ import github.bluepsm.joyty.payload.request.CreatePostRequest;
 import github.bluepsm.joyty.payload.response.MessageResponse;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 import github.bluepsm.joyty.services.PostService;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
@@ -45,16 +46,16 @@ public class PostController {
 //        return ResponseEntity.ok(posts.get());
 //    }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
-        Optional<Post> post = postService.getPostById(postId);
-
-        if(!post.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(post.get());
-    }
+//    @GetMapping("/{postId}")
+//    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
+//        Optional<Post> post = postService.getPostById(postId);
+//
+//        if(!post.isPresent()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        return ResponseEntity.ok(post.get());
+//    }
 
 	/*
 	 * @PostMapping("/create/{userId}") public ResponseEntity<Post>
@@ -109,5 +110,16 @@ public class PostController {
         }
 
         return ResponseEntity.ok(posts.get());
+    }
+    
+    @GetMapping("/{postId}")
+    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
+        Optional<Post> post = postService.getPostById(postId);
+
+        if(!post.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(post.get());
     }
 }

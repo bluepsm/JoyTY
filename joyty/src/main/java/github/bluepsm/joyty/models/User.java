@@ -113,8 +113,8 @@ public class User implements Serializable{
 	private Set<Request> requests;
 	
 	@JsonIgnore
-	@ManyToMany(mappedBy = "party_member", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
-	private Set<Post> join_party;
+	@ManyToMany(mappedBy = "members", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+	private Set<Post> parties;
 	 
 
     /* @PrePersist

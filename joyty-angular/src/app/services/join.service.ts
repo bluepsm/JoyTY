@@ -22,7 +22,15 @@ export class JoinService {
     return this.http.post(JOIN_API + '/create', {postId, body}, httpOptions)
   }
 
-  getAllRequest(userId: number): Observable<JoinRequest[]> {
+  getAllRequestByUserId(userId: number): Observable<JoinRequest[]> {
     return this.http.get<JoinRequest[]>(JOIN_API + '/getJoinRequestByUserId/' + userId, httpOptions)
+  }
+
+  getAllRequestByPostId(postId: number): Observable<JoinRequest[]> {
+    return this.http.get<JoinRequest[]>(JOIN_API + '/getJoinRequestByPostId/' + postId, httpOptions)
+  }
+
+  respondToRequest(requestId: number, response: string): Observable<any> {
+    return this.http.get(JOIN_API + '/respondToRequest/' + requestId + '?response=' + response, httpOptions)
   }
 }

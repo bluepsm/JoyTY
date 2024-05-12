@@ -11,4 +11,5 @@ import github.bluepsm.joyty.models.Request;
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
 	Optional<List<Request>> findByOwnerId(Long userId);
+	Optional<List<Request>> findByJoinId(Long postId);
 }

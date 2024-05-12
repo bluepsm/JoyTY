@@ -52,4 +52,8 @@ export class PostService {
   getAllPost(): Observable<Post[]> {
     return this.http.get<Post[]>(POST_API + '/all', httpOptions)
   }
+
+  getPostByPostId(postId: number): Observable<Post> {
+    return this.http.get<Post>(POST_API + '/' + postId, httpOptions)
+  }
 }

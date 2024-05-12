@@ -71,32 +71,32 @@ public class RequestService {
         }
     }
 
-    public Request requestRespond(Long requestId, String respond) {
-        Request request = requestRepository.findById(requestId).get();
-        Post post = request.getJoin();
-        User user = request.getOwner();
-        Integer numberOfMember = post.getParty_member().size();
-        Integer partySize = post.getParty_size();
-
-        switch (respond) {
-            case "accept":
-                if (partySize == 0 || numberOfMember < partySize) {
-                    request.setStatus(ERequest.ACCEPT);
-                    post.getParty_member().add(user);
-                    postRepository.save(post);
-                } else {
-                    log.info("Party is full.");
-                };
-                break;
-            case "reject":
-                request.setStatus(ERequest.REJECT);
-                break;
-            default:
-                log.info("response is not matching.");
-        };
-
-        return request;
-    }
+//    public Request requestRespond(Long requestId, String respond) {
+//        Request request = requestRepository.findById(requestId).get();
+//        Post post = request.getJoin();
+//        User user = request.getOwner();
+//        Integer numberOfMember = post.getParty_member().size();
+//        Integer partySize = post.getParty_size();
+//
+//        switch (respond) {
+//            case "accept":
+//                if (partySize == 0 || numberOfMember < partySize) {
+//                    request.setStatus(ERequest.ACCEPT);
+//                    post.getParty_member().add(user);
+//                    postRepository.save(post);
+//                } else {
+//                    log.info("Party is full.");
+//                };
+//                break;
+//            case "reject":
+//                request.setStatus(ERequest.REJECT);
+//                break;
+//            default:
+//                log.info("response is not matching.");
+//        };
+//
+//        return request;
+//    }
     
     public Request createRequest(Long postId, Long userId, String body) {
         Post post = postRepository.findById(postId).get();
@@ -113,5 +113,42 @@ public class RequestService {
     public Optional<List<Request>> getRequestByUserId(Long userId) {
         //log.info("Redis is Retrieve Request ID: {}", id);
         return requestRepository.findByOwnerId(userId);
+    }
+    
+    public Optional<List<Request>> getRequestByPostId(Long postId) {
+        //log.info("Redis is Retrieve Request ID: {}", id);
+        return requestRepository.findByJoinId(postId);
+    }
+    
+    public Request respondToRequest(Long requestId, String response) {
+        Request request = requestRepository.findById(requestId).get();
+        Post post = request.getJoin();
+        User user = request.getOwner();
+        Long created_at = request.getCreated_at();
+        Integer numberOfMember = post.getMembers().size();
+        Integer partySize = post.getParty_size();
+
+        switch (response) {
+            case "ACCEPT":
+                if (partySize == 0 || numberOfMember < partySize) {
+                    request.setStatus(ERequest.ACCEPT);
+                    post.getMembers().add(user);
+                    post.setJoinner(numberOfMember + 1);
+                    postRepository.save(post);
+                } else {
+                    log.info("Party is full.");
+                };
+                break;
+            case "REJECT":
+                request.setStatus(ERequest.REJECT);
+                break;
+            default:
+                log.info("response is not matching.");
+        };
+        
+        request.setCreated_at(created_at);
+        requestRepository.save(request);
+        
+        return request;
     }
 }

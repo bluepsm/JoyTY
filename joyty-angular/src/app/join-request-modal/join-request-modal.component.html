@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h4 class="modal-title">Join Requests</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+    <div class="container bg-primary-subtle">
+        <div *ngIf="joinRequests">
+            <div class="row mb-3" *ngFor="let joinRequest of joinRequests">
+                <div class="d-flex justify-content-center">
+                    <div class="col-1 align-content-center bg-warning-subtle">
+                        Avatar
+                    </div>
+                    <div class="col-8 p-0 bg-danger-subtle">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>{{ joinRequest.owner.username }}</strong>
+                                    </div>
+                                    <div class="text-end">{{ joinRequest.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                {{ joinRequest.body }}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="joinRequest.status === 'PENDING'; else respond" class="col-3 d-flex justify-content-center align-self-center bg-dark-subtle">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success" (click)="respondToRequest(joinRequest.id, 'ACCEPT')" [disabled]="checkAvailable(post?.party_size, post?.joinner) === 0">Accept</button>
+                            <button type="button" class="btn btn-danger" (click)="respondToRequest(joinRequest.id, 'REJECT')" [disabled]="checkAvailable(post?.party_size, post?.joinner) === 0">Reject</button>
+                        </div>
+                    </div>
+                    <ng-template #respond>
+                        <div *ngIf="joinRequest.status === 'ACCEPT'; else rejected" class="col-3 d-flex justify-content-center align-self-center bg-dark-subtle">
+                            <span class="badge bg-success">ACCEPTED</span>
+                        </div>
+                        <ng-template #rejected>
+                            <div class="col-3 d-flex justify-content-center align-self-center bg-dark-subtle">
+                                <span class="badge bg-danger">REJECTED</span>
+                            </div>
+                        </ng-template>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="container p-0 bg-secondary-subtle">
+        <div class="d-flex justify-content-between">
+            <div>
+                <div class="bg-secondary-subtle">Party Size: {{ post?.party_size }}</div>
+                <div class="bg-warning-subtle">Availiable: {{ checkAvailable(post?.party_size, post?.joinner) }}</div>
+            </div>
+            <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+        </div>
+    </div>
+</div>

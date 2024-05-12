@@ -42,11 +42,11 @@ public class PostService {
 //        return Optional.of(posts);
 //    }
 
-    @Cacheable(value = "posts", key = "#id", unless = "#result == null")
-    public Optional<Post> getPostById(Long id) {
-        log.info("Redis is Retrieve Post ID: {}", id);
-        return postRepository.findById(id);
-    }
+//    @Cacheable(value = "posts", key = "#id", unless = "#result == null")
+//    public Optional<Post> getPostById(Long id) {
+//        log.info("Redis is Retrieve Post ID: {}", id);
+//        return postRepository.findById(id);
+//    }
 
 //    public Post createPost(Long userId, Post post, Long[] tagsId) {
 //        Optional<User> user = userRepository.findById(userId);
@@ -129,6 +129,7 @@ public class PostService {
         
         post.setAuthor(user.get());
         post.setTags(tags);
+        post.setJoinner(0);
         post.setMeeting_done(false);
         
         return postRepository.save(post);
@@ -137,5 +138,10 @@ public class PostService {
     public Optional<List<Post>> getAllPosts() {
         List<Post> posts = postRepository.findAll();
         return Optional.of(posts);
+    }
+    
+    public Optional<Post> getPostById(Long postId) {
+        //log.info("Redis is Retrieve Post ID: {}", id);
+        return postRepository.findById(postId);
     }
 }

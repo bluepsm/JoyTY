@@ -21,6 +21,7 @@ import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { CommentComponent } from './comment/comment.component';
 import { JoinModalComponent } from './join-modal/join-modal.component';
+import { JoinRequestModalComponent } from './join-request-modal/join-request-modal.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { JoinModalComponent } from './join-modal/join-modal.component';
     AppHeaderComponent,
     CommentComponent,
     JoinModalComponent,
+    JoinRequestModalComponent,
   ],
   imports: [
     BrowserModule,

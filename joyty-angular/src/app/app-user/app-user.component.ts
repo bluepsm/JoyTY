@@ -9,6 +9,7 @@ import { CommentComponent } from '../comment/comment.component';
 import { StorageService } from '../services/storage.service';
 import { JoinModalComponent } from '../join-modal/join-modal.component';
 import { JoinService } from '../services/join.service';
+import { JoinRequestModalComponent } from '../join-request-modal/join-request-modal.component';
 
 @Component({
   selector: 'app-app-user',
@@ -48,24 +49,10 @@ export class AppUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllPost()
-    this.userService.getUserContent().subscribe({
-      next: data => {
-        this.content = data
-      }, error: err => {
-        console.log(err)
-
-        if (err.error) {
-          this.content = JSON.parse(err.error).message
-        } else {
-          this.content = "Error with status: " + err.status
-        }
-      }
-    })
-
-    console.log("Data from storage service: " + JSON.stringify(this.storageService.getUser()))
+    //console.log("Data from storage service: " + JSON.stringify(this.storageService.getUser()))
     this.userData = this.storageService.getUser()
     this.getAllJoinRequest(this.userData.id)
-    console.log(this.joinRequestId)
+    //console.log(this.joinRequestId)
   }
 
   openPostModal() {
@@ -131,7 +118,7 @@ export class AppUserComponent implements OnInit {
   }
 
   getAllJoinRequest(userId: number) {
-    this.joinRequestService.getAllRequest(userId).subscribe({
+    this.joinRequestService.getAllRequestByUserId(userId).subscribe({
       next: data => {
         this.joinRequest = data
         for (let joinRequest of data) {
@@ -149,6 +136,24 @@ export class AppUserComponent implements OnInit {
       return true
     } else {
       return false
+    }
+  }
+
+  openJoinRequestModal(postId: number) {
+    const modalRef = this.modalService.open(JoinRequestModalComponent, { size: 'lg', centered: true, scrollable: true })
+    modalRef.componentInstance.postId = postId
+  }
+
+  shareCalculate(cost: bigint, numberOfPeople: number): number {
+    if (cost === BigInt(0)) {
+      return 0
+    } else {
+      numberOfPeople += 1;
+
+      let costPerPersonInt: number = Math.ceil(Number(cost) / numberOfPeople);
+      //console.log(`Cost per person (${numberOfPeople} persons): ${costPerPersonInt}`);
+
+      return costPerPersonInt
     }
   }
 }

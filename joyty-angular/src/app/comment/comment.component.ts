@@ -46,7 +46,7 @@ export class CommentComponent implements OnInit {
     this.commentService.getAllComments(postId).subscribe({
       next: data => {
         this.comments = data
-        console.log(data)
+        //console.log(data)
       }, error: err => {
         console.log(err)
       }

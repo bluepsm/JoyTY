@@ -67,6 +67,11 @@ public class Post implements Serializable {
     @Column(name = "cost_share")
     private Boolean cost_share;
 
+    @Column(name = "joinner", columnDefinition = "int default 0")
+    @Min(0)
+    @NotNull
+    private Integer joinner;
+
     @Column(name = "meeting_done", columnDefinition = "bit default 0")
     private Boolean meeting_done;
 
@@ -95,14 +100,14 @@ public class Post implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "join", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Request> join_requests;
+    private Set<Request> requests;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "party",
         joinColumns = @JoinColumn(name = "post_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> party_member;
+    private Set<User> members;
 
     /* @PrePersist
     protected void onCreate() {
