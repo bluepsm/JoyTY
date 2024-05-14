@@ -1,13 +1,49 @@
 <div class="bg-primary border-warning card">
     <div class="card-body">
-        <h3 class="text-warning fw-bold card-title">
-            {{ notification?.title }}
-        </h3>
-        <span class="badge text-bg-warning card-date">
-            {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
-        </span>
-        <p class="card-text">
-            {{ notification?.description }}
-        </p>
+        @if (notification?.entity === enumEntity.ENTITY_COMMENT.toString()) {
+            @if (notification?.type === enumType.TYPE_COMMENT.toString()) {
+                <h3 class="text-warning fw-bold card-title">
+                    <strong class="text-bg-primary">{{ notification?.fromUser.username }}</strong> is commented on your post
+                </h3>
+                <span class="badge text-bg-warning card-date">
+                    {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
+                </span>
+                <p class="card-text">
+                    <strong>{{ notification?.fromUser.username }}</strong> is commented(ID: {{ notification?.entityId }}) on your post.
+                </p>
+            }
+        } @else if (notification?.entity === enumEntity.ENTITY_REQUEST.toString()) {
+            @if (notification?.type === enumType.TYPE_SEND_REQUEST.toString()) {
+                <h3 class="text-warning fw-bold card-title">
+                    <strong class="text-bg-primary">{{ notification?.fromUser.username }}</strong> is sending request to join you!
+                </h3>
+                <span class="badge text-bg-warning card-date">
+                    {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
+                </span>
+                <p class="card-text">
+                    <strong>{{ notification?.fromUser.username }}</strong> is wanting to join on your party! (Request ID: {{ notification?.entityId }}).
+                </p>
+            } @else if (notification?.type === enumType.TYPE_ACCEPT_REQUEST.toString()) {
+                <h3 class="text-warning fw-bold card-title">
+                    <strong class="text-bg-primary">{{ notification?.fromUser.username }}</strong> is accepted your request!
+                </h3>
+                <span class="badge text-bg-warning card-date">
+                    {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
+                </span>
+                <p class="card-text">
+                    <strong>{{ notification?.fromUser.username }}</strong> is accepted your request to join on their party! (Request ID: {{ notification?.entityId }}).
+                </p>
+            } @else if (notification?.type === enumType.TYPE_REJECT_REQUEST.toString()) {
+                <h3 class="text-warning fw-bold card-title">
+                    <strong class="text-bg-primary">{{ notification?.fromUser.username }}</strong> is rejected your request
+                </h3>
+                <span class="badge text-bg-warning card-date">
+                    {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
+                </span>
+                <p class="card-text">
+                    <strong>{{ notification?.fromUser.username }}</strong> is rejected your request to join on their party (Request ID: {{ notification?.entityId }}).
+                </p>
+            }
+        }
     </div>
 </div>

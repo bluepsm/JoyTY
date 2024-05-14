@@ -1,7 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { Notification } from '../models/notification.model';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { animateListItems } from '../../animations/animation';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-menu-notification',
@@ -11,30 +12,26 @@ import { animateListItems } from '../../animations/animation';
 })
 export class MenuNotificationComponent implements OnInit {
   activeOffcanvas = inject(NgbActiveOffcanvas)
+  @Input() public userId?: bigint
+
+  notifications?: Notification[]
+
+  constructor(
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
+    this.getAllNotifications()
   }
 
-  notificationsMockup: Notification[] = [
-    {
-      title: 'What is Lorem Ipsum?',
-      created_at: new Date('2023-02-21'),
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    },
-    {
-      title: 'What is Lorem Ipsum?',
-      created_at: new Date('2023-02-21'),
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    },
-    {
-      title: 'What is Lorem Ipsum?',
-      created_at: new Date('2023-02-21'),
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    },
-    {
-      title: 'What is Lorem Ipsum?',
-      created_at: new Date('2023-02-21'),
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    },
-  ];
+  getAllNotifications() {
+    this.notificationService.getAllNotifications(this.userId!).subscribe({
+      next: data => {
+        this.notifications = data
+        //console.log(data)
+      }, error: err => {
+        console.log(err)
+      }
+    })
+  }
 }

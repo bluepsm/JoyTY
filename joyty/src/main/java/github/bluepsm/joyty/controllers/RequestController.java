@@ -19,10 +19,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import github.bluepsm.joyty.models.Comment;
+import github.bluepsm.joyty.models.ERequest;
 import github.bluepsm.joyty.models.Request;
+import github.bluepsm.joyty.models.notification.EEntity;
+import github.bluepsm.joyty.models.notification.EType;
+import github.bluepsm.joyty.models.notification.Notification;
 import github.bluepsm.joyty.payload.request.JoinRequest;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 import github.bluepsm.joyty.services.RequestService;
+import github.bluepsm.joyty.services.notification.NotificationService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
@@ -30,6 +35,9 @@ import github.bluepsm.joyty.services.RequestService;
 public class RequestController {
 	@Autowired
 	private RequestService requestService;
+	
+	@Autowired
+	private NotificationService notificationService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Request>> getAllRequests() {
@@ -98,9 +106,19 @@ public class RequestController {
     		return ResponseEntity.internalServerError().build();
     	}
     	
-        Request createdRequest = requestService.createRequest(joinRequest.getPostId(), userId.get(), joinRequest.getBody());
+        Optional<Request> createdRequest = requestService.createRequest(joinRequest.getPostId(), userId.get(), joinRequest.getBody());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
+        if (!createdRequest.isPresent()) {
+    		return ResponseEntity.internalServerError().build();
+    	}
+        
+        Request request = createdRequest.get();
+        
+        Long toUserId = request.getJoin().getAuthor().getId();
+        
+        notificationService.createNotification(userId.get(), toUserId, EType.TYPE_SEND_REQUEST, EEntity.ENTITY_REQUEST, request.getId());
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(request);
     }
     
     @GetMapping("/getJoinRequestByUserId/{userId}")
@@ -127,6 +145,25 @@ public class RequestController {
     
     @GetMapping("/respondToRequest/{requestId}")
     public ResponseEntity<Request> respondToRequest(@PathVariable Long requestId, @RequestParam String response) {
-    	return ResponseEntity.ok(requestService.respondToRequest(requestId, response));
+    	Optional<Request> requestResponded = requestService.respondToRequest(requestId, response);
+    	
+    	if (!requestResponded.isPresent()) {
+    		return ResponseEntity.internalServerError().build();
+    	}
+        
+        Request request = requestResponded.get();
+        
+        Long toUserId = request.getOwner().getId();
+        
+        switch (response) {
+	        case "ACCEPT":
+	        	notificationService.createNotification(request.getJoin().getAuthor().getId(), toUserId, EType.TYPE_ACCEPT_REQUEST, EEntity.ENTITY_REQUEST, request.getId());
+	            break;
+	        case "REJECT":
+	        	notificationService.createNotification(request.getJoin().getAuthor().getId(), toUserId, EType.TYPE_REJECT_REQUEST, EEntity.ENTITY_REQUEST, request.getId());
+	            break;
+        }
+        
+    	return ResponseEntity.ok(request);
     }
 }

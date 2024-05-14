@@ -15,6 +15,7 @@ import { MenuNotificationComponent } from '../menu-notification/menu-notificatio
 export class AppHeaderComponent implements OnInit {
   isLoggedIn = false
   username?: string
+  userId?: bigint
   private roles: string[] = []
   showModApp = false
   showAdminApp = false
@@ -42,6 +43,7 @@ export class AppHeaderComponent implements OnInit {
       this.showModApp = this.roles.includes('ROLE_MODERATOR')
 
       this.username = user.username
+      this.userId = user.id
       //console.log("Header username = " + this.username)
     }
 
@@ -67,5 +69,6 @@ export class AppHeaderComponent implements OnInit {
 
   openNotification() {
     const offcanvasRef = this.offcanvasService.open(MenuNotificationComponent, { position: 'end' })
+    offcanvasRef.componentInstance.userId = this.userId
   }
 }

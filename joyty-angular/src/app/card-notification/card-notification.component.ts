@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Notification } from '../models/notification.model';
+import { EnumEntity } from '../utils/EnumEntity';
+import { EnumType } from '../utils/EnumType';
 
 @Component({
   selector: 'app-card-notification',
@@ -8,4 +10,6 @@ import { Notification } from '../models/notification.model';
 })
 export class CardNotificationComponent {
   @Input() notification?: Notification
+  enumEntity = EnumEntity
+  enumType = EnumType
 }

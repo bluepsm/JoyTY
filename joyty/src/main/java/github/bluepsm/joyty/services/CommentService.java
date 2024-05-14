@@ -70,7 +70,7 @@ public class CommentService {
         }
     }
     
-    public Comment createComment(Long postId, Long userId, String body) {
+    public Optional<Comment> createComment(Long postId, Long userId, String body) {
         Post post = postRepository.findById(postId).get();
         User user = userRepository.findById(userId).get();
         
@@ -78,7 +78,7 @@ public class CommentService {
         comment.setPost(post);
         comment.setUser(user);
         
-        return commentRepository.save(comment);
+        return Optional.of(commentRepository.save(comment));
     }
     
     public Optional<List<Comment>> getCommentsByPostId(Long postId) {

@@ -1,5 +1,9 @@
 export interface Notification {
-    title: string;
+    id: bigint;
+    type: string;
+    entity: string;
+    entityId: bigint;
     created_at: Date;
-    description: string;
+    toUser: any;
+    fromUser: any;
 }

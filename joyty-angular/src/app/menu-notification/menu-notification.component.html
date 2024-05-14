@@ -34,8 +34,8 @@
 <div class="offcanvas-body bg-secondary">
     <!-- <button type="button" class="btn btn-outline-dark" (click)="activeOffcanvas.close('Close click')">Close</button> -->
     <ng-container>
-        <div [@listAnimation]="notificationsMockup.length">
-            <div *ngFor="let notification of notificationsMockup">
+        <div [@listAnimation]="notifications?.length">
+            <div *ngFor="let notification of notifications">
                 <app-card-notification [notification]="notification"></app-card-notification>
             </div>
         </div>

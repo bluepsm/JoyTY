@@ -98,7 +98,7 @@ public class RequestService {
 //        return request;
 //    }
     
-    public Request createRequest(Long postId, Long userId, String body) {
+    public Optional<Request> createRequest(Long postId, Long userId, String body) {
         Post post = postRepository.findById(postId).get();
         User user = userRepository.findById(userId).get();
         
@@ -107,7 +107,7 @@ public class RequestService {
         request.setJoin(post);
         request.setOwner(user);
         
-        return requestRepository.save(request);
+        return Optional.of(requestRepository.save(request));
     }
     
     public Optional<List<Request>> getRequestByUserId(Long userId) {
@@ -120,7 +120,7 @@ public class RequestService {
         return requestRepository.findByJoinId(postId);
     }
     
-    public Request respondToRequest(Long requestId, String response) {
+    public Optional<Request> respondToRequest(Long requestId, String response) {
         Request request = requestRepository.findById(requestId).get();
         Post post = request.getJoin();
         User user = request.getOwner();
@@ -149,6 +149,6 @@ public class RequestService {
         request.setCreated_at(created_at);
         requestRepository.save(request);
         
-        return request;
+        return Optional.of(request);
     }
 }

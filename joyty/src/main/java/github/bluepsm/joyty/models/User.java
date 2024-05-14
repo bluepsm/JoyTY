@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import jakarta.persistence.CascadeType;
+import github.bluepsm.joyty.models.notification.Notification;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -115,8 +115,15 @@ public class User implements Serializable{
 	@JsonIgnore
 	@ManyToMany(mappedBy = "members", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
 	private Set<Post> parties;
-	 
-
+	
+	@JsonIgnore
+    @ManyToMany(mappedBy = "toUsers", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Notification> notificationRecieve;
+	
+	@JsonIgnore
+    @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Notification> notificationTo;
+	
     /* @PrePersist
     protected void onCreate() {
         created_at = System.currentTimeMillis();

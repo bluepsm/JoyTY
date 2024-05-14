@@ -19,9 +19,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import github.bluepsm.joyty.models.Comment;
+import github.bluepsm.joyty.models.User;
+import github.bluepsm.joyty.models.notification.EEntity;
+import github.bluepsm.joyty.models.notification.EType;
 import github.bluepsm.joyty.payload.request.CreateCommentRequest;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 import github.bluepsm.joyty.services.CommentService;
+import github.bluepsm.joyty.services.notification.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,6 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 public class CommentController {
 	@Autowired
 	private CommentService commentService;
+	
+	@Autowired
+	private NotificationService notificationService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Comment>> getAllComments() {
@@ -99,9 +106,18 @@ public class CommentController {
     		return ResponseEntity.internalServerError().build();
     	}
     		
-        Comment createdComment = commentService.createComment(commentRequest.getPostId(), userId.get(), commentRequest.getBody());
+        Optional<Comment> createdComment = commentService.createComment(commentRequest.getPostId(), userId.get(), commentRequest.getBody());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
+        if (!createdComment.isPresent()) {
+    		return ResponseEntity.internalServerError().build();
+    	}
+        
+        Comment comment = createdComment.get();
+        
+        Long toUserId = comment.getPost().getAuthor().getId();
+        
+        notificationService.createNotification(userId.get(), toUserId, EType.TYPE_COMMENT, EEntity.ENTITY_COMMENT, comment.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
     
     @GetMapping("/getCommentByPost/{postId}")
