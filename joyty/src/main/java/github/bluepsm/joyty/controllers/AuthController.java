@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.crypto.SecretKey;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
@@ -290,4 +292,5 @@ public class AuthController {
 			return ResponseEntity.ok(false);
 		}
     }
+	
 }

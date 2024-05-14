@@ -22,6 +22,9 @@ import { AppHeaderComponent } from './app-header/app-header.component';
 import { CommentComponent } from './comment/comment.component';
 import { JoinModalComponent } from './join-modal/join-modal.component';
 import { JoinRequestModalComponent } from './join-request-modal/join-request-modal.component';
+import { CardNotificationComponent } from './card-notification/card-notification.component';
+import { MenuNotificationComponent } from './menu-notification/menu-notification.component';
+import { SuprSendInboxModule } from '@suprsend/ngx-inbox';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,8 @@ import { JoinRequestModalComponent } from './join-request-modal/join-request-mod
     CommentComponent,
     JoinModalComponent,
     JoinRequestModalComponent,
+    CardNotificationComponent,
+    MenuNotificationComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +54,11 @@ import { JoinRequestModalComponent } from './join-request-modal/join-request-mod
     SharedModule,
     NgbModule,
     NgbToastModule,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    SuprSendInboxModule.forRoot({
+      workspaceKey: "4rUbfPUss4H1Jnac5v2A",
+      workspaceSecret: "SS.WSS.gMJ6E7aDoyjZlol59yqig2sKY2sgWz0BNW1Mg2Gp",
+    })
   ],
   providers: [httpInterceptorProvider],
   bootstrap: [AppComponent]

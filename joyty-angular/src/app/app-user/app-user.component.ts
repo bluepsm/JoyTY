@@ -23,7 +23,6 @@ export class AppUserComponent implements OnInit {
   userData?: any
   joinRequest?: any
   joinRequestId: number[] = []
-
   private modalService = inject(NgbModal)
 
   public post = {
@@ -44,7 +43,7 @@ export class AppUserComponent implements OnInit {
     private userService: UserService,
     private postService: PostService,
     private storageService: StorageService,
-    private joinRequestService: JoinService
+    private joinRequestService: JoinService,
   ) {}
 
   ngOnInit(): void {

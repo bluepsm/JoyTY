@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { StorageService } from '../services/storage.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { EventBusService } from '../shared/event-bus.service';
 import { Subscription } from 'rxjs';
+import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { MenuNotificationComponent } from '../menu-notification/menu-notification.component';
 
 @Component({
   selector: 'app-app-header',
@@ -17,6 +19,8 @@ export class AppHeaderComponent implements OnInit {
   showModApp = false
   showAdminApp = false
   eventBusSub?: Subscription
+
+  private offcanvasService = inject(NgbOffcanvas)
 
   constructor(
     private router: Router,
@@ -59,5 +63,9 @@ export class AppHeaderComponent implements OnInit {
         console.log(err)
       }
     })
+  }
+
+  openNotification() {
+    const offcanvasRef = this.offcanvasService.open(MenuNotificationComponent, { position: 'end' })
   }
 }

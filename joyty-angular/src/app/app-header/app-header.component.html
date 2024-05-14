@@ -34,17 +34,26 @@
                         <a href="/login" class="nav-link" routerLink="login">Login</a>
                     </li>
                 } @else {
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <strong>{{ username }}</strong>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/profile" routerLink="profile">Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <!-- <li><a class="dropdown-item text-danger" (click)="logOut()">Logout</a></li> -->
-                            <li><button class="dropdown-item text-danger" type="button" (click)="logOut()">Logout</button></li>
-                        </ul>
-                    </li>
+                    <div class="d-flex gap-2">
+                        <button 
+                            type="button" 
+                            class="btn btn-outline-light" 
+                            (click)="openNotification()"
+                        >
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <strong>{{ username }}</strong>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="/profile" routerLink="profile">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <!-- <li><a class="dropdown-item text-danger" (click)="logOut()">Logout</a></li> -->
+                                <li><button class="dropdown-item text-danger" type="button" (click)="logOut()">Logout</button></li>
+                            </ul>
+                        </li>
+                    </div>
                 }
             </ul>
         </div>
