@@ -116,7 +116,15 @@ public class CommentController {
         
         Long toUserId = comment.getPost().getAuthor().getId();
         
-        notificationService.createNotification(userId.get(), toUserId, EType.TYPE_COMMENT, EEntity.ENTITY_COMMENT, comment.getId());
+        notificationService.createNotification(
+								        		userId.get(), 
+								        		toUserId, 
+								        		EType.TYPE_COMMENT, 
+								        		EEntity.ENTITY_COMMENT, 
+								        		comment.getId(),
+								        		EEntity.ENTITY_POST,
+								        		comment.getPost().getId()
+								        	);
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
     

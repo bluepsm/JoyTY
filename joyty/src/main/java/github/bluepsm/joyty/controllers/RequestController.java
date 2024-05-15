@@ -116,7 +116,15 @@ public class RequestController {
         
         Long toUserId = request.getJoin().getAuthor().getId();
         
-        notificationService.createNotification(userId.get(), toUserId, EType.TYPE_SEND_REQUEST, EEntity.ENTITY_REQUEST, request.getId());
+        notificationService.createNotification(
+								        		userId.get(), 
+								        		toUserId, 
+								        		EType.TYPE_SEND_REQUEST, 
+								        		EEntity.ENTITY_REQUEST, 
+								        		request.getId(),
+								        		EEntity.ENTITY_POST,
+								        		request.getJoin().getId()
+								        		);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(request);
     }
@@ -157,10 +165,26 @@ public class RequestController {
         
         switch (response) {
 	        case "ACCEPT":
-	        	notificationService.createNotification(request.getJoin().getAuthor().getId(), toUserId, EType.TYPE_ACCEPT_REQUEST, EEntity.ENTITY_REQUEST, request.getId());
+	        	notificationService.createNotification(
+									        			request.getJoin().getAuthor().getId(), 
+									        			toUserId, 
+									        			EType.TYPE_ACCEPT_REQUEST, 
+									        			EEntity.ENTITY_REQUEST, 
+									        			request.getId(),
+									        			EEntity.ENTITY_POST,
+									        			request.getJoin().getId()
+									        			);
 	            break;
 	        case "REJECT":
-	        	notificationService.createNotification(request.getJoin().getAuthor().getId(), toUserId, EType.TYPE_REJECT_REQUEST, EEntity.ENTITY_REQUEST, request.getId());
+	        	notificationService.createNotification(
+									        			request.getJoin().getAuthor().getId(), 
+									        			toUserId, 
+									        			EType.TYPE_REJECT_REQUEST, 
+									        			EEntity.ENTITY_REQUEST, 
+									        			request.getId(),
+									        			EEntity.ENTITY_POST,
+									        			request.getJoin().getId()
+									        			);
 	            break;
         }
         

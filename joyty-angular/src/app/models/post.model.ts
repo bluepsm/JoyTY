@@ -1,10 +1,10 @@
 export class Post {
     id?: any;
     body?: string;
-    meeting_location?: string;
-    meeting_city?: string;
-    meeting_state?: string;
-    meeting_country?: string;
+    place_name?: string;
+    place_address?: string;
+    place_latitude?: number;
+    place_longtitude?: number;
     meeting_datetime?: Date;
     party_size?: number;
     joinner?: number;

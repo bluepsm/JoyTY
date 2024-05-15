@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -16,16 +17,16 @@ public class CreatePostRequest {
 	private String body;
 	
 	@NotBlank
-	private String meeting_location;
-	
+    private String place_name;
+    
 	@NotBlank
-	private String meeting_city;
-	
-	@NotBlank
-	private String meeting_state;
-	
-	@NotBlank
-	private String meeting_country;
+    private String place_address;
+    
+    @NotNull
+    private Double place_latitude;
+    
+    @NotNull
+    private Double place_longtitude;
 	
 	@NotNull 
 	private Date meeting_datetime;

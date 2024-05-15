@@ -59,6 +59,14 @@ public class Notification implements Serializable {
 	@NotNull
 	private Long entityId;
 	
+	@Column(name = "relatedEntity")
+	@Enumerated(EnumType.STRING)
+	private EEntity relatedEntity;
+	
+	@Column(name = "relatedEntityId")
+	@NotNull
+	private Long relatedEntityId;
+	
 	@Column(name = "created_at")
     @CreatedDate
     private Long created_at;
@@ -78,9 +86,11 @@ public class Notification implements Serializable {
 	
 	public Notification() {}
 	
-	public Notification(EType type, EEntity entity, Long entityId) {
+	public Notification(EType type, EEntity entity, Long entityId, EEntity relatedEntity, Long relatedEntityId) {
 		this.type = type;
 		this.entity = entity;
 		this.entityId = entityId;
+		this.relatedEntity = relatedEntity;
+		this.relatedEntityId = relatedEntityId;
 	}
 }

@@ -9,7 +9,7 @@
                     {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
                 </span>
                 <p class="card-text">
-                    <strong>{{ notification?.fromUser.username }}</strong> is commented(ID: {{ notification?.entityId }}) on your post.
+                    <strong>{{ notification?.fromUser.username }}</strong> is commented(ID: {{ notification?.entityId }}) on your post(ID: {{ notification?.relatedEntityId }}).
                 </p>
             }
         } @else if (notification?.entity === enumEntity.ENTITY_REQUEST.toString()) {
@@ -21,7 +21,7 @@
                     {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
                 </span>
                 <p class="card-text">
-                    <strong>{{ notification?.fromUser.username }}</strong> is wanting to join on your party! (Request ID: {{ notification?.entityId }}).
+                    <strong>{{ notification?.fromUser.username }}</strong> is wanting to join on your party! (Request ID: {{ notification?.entityId }}, Post ID: {{ notification?.relatedEntityId }}).
                 </p>
             } @else if (notification?.type === enumType.TYPE_ACCEPT_REQUEST.toString()) {
                 <h3 class="text-warning fw-bold card-title">
@@ -31,7 +31,7 @@
                     {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
                 </span>
                 <p class="card-text">
-                    <strong>{{ notification?.fromUser.username }}</strong> is accepted your request to join on their party! (Request ID: {{ notification?.entityId }}).
+                    <strong>{{ notification?.fromUser.username }}</strong> is accepted your request to join on their party! (Request ID: {{ notification?.entityId }}, Post ID: {{ notification?.relatedEntityId }}).
                 </p>
             } @else if (notification?.type === enumType.TYPE_REJECT_REQUEST.toString()) {
                 <h3 class="text-warning fw-bold card-title">
@@ -41,7 +41,7 @@
                     {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
                 </span>
                 <p class="card-text">
-                    <strong>{{ notification?.fromUser.username }}</strong> is rejected your request to join on their party (Request ID: {{ notification?.entityId }}).
+                    <strong>{{ notification?.fromUser.username }}</strong> is rejected your request to join on their party (Request ID: {{ notification?.entityId }}, Post ID: {{ notification?.relatedEntityId }}).
                 </p>
             }
         }

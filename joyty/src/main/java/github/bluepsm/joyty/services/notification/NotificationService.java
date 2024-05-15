@@ -26,8 +26,16 @@ public class NotificationService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public Optional<Notification> createNotification(Long fromUserId, Long toUserId, EType type, EEntity entity, Long entityId) {
-		Notification notification = new Notification(type, entity, entityId);
+	public Optional<Notification> createNotification(
+													Long fromUserId, 
+													Long toUserId, 
+													EType type, 
+													EEntity entity, 
+													Long entityId,
+													EEntity relatedEntity, 
+													Long relatedEntityId
+													) {
+		Notification notification = new Notification(type, entity, entityId, relatedEntity, relatedEntityId);
 		
 		//log.info(notification.toString());
 		

@@ -115,17 +115,19 @@ public class PostService {
         
         //log.info(tags.toString());
         
+        log.info(createPostRequest.getMeeting_datetime().toString());
+        
         String body = createPostRequest.getBody();
-        String meeting_location = createPostRequest.getMeeting_location();
-        String meeting_city = createPostRequest.getMeeting_city();
-        String meeting_state = createPostRequest.getMeeting_state();
-        String meeting_country = createPostRequest.getMeeting_country();
+        String place_name = createPostRequest.getPlace_name();
+        String place_address = createPostRequest.getPlace_address();
+        Double place_latitude = createPostRequest.getPlace_latitude();
+        Double place_longtitude = createPostRequest.getPlace_longtitude();
         Date meeting_datetime = createPostRequest.getMeeting_datetime();
         Integer party_size = createPostRequest.getParty_size();
         BigDecimal cost_estimate = createPostRequest.getCost_estimate();
         Boolean cost_share = createPostRequest.getCost_share();
         
-        Post post = new Post(body, party_size, meeting_location, meeting_city, meeting_state, meeting_country, meeting_datetime, cost_estimate, cost_share);
+        Post post = new Post(body, party_size, place_name, place_address, place_latitude, place_longtitude, meeting_datetime, cost_estimate, cost_share);
         
         post.setAuthor(user.get());
         post.setTags(tags);

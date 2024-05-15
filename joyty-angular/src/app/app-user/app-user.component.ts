@@ -10,6 +10,7 @@ import { StorageService } from '../services/storage.service';
 import { JoinModalComponent } from '../join-modal/join-modal.component';
 import { JoinService } from '../services/join.service';
 import { JoinRequestModalComponent } from '../join-request-modal/join-request-modal.component';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-app-user',
@@ -27,16 +28,20 @@ export class AppUserComponent implements OnInit {
 
   public post = {
     body: "Test",
-    meeting_country: "United States",
-    meeting_state: "California",
-    meeting_city: "San Francisco",
-    meeting_location: "Golden Gate bridge",
+    place_name: "Test Place",
+    place_address: "Test Place, Test Street, Test City, Test State, Test Country",
+    place_latitude: 0,
+    place_longtitude: 0,
     meeting_date: new NgbDate(2024, 3, 18),
     meeting_time: { hour: 17, minute: 30 },
     party_size: 3,
     cost_estimate: 300,
     cost_share: false,
     tags: [1, 2],
+  }
+
+  mapOptions: google.maps.MapOptions = {
+    disableDefaultUI: true,
   }
 
   constructor(
@@ -69,10 +74,10 @@ export class AppUserComponent implements OnInit {
         const newPostForm: FormGroup = new FormGroup({
           body: new FormControl(form.controls['body'].value),
           party_size: new FormControl(form.controls['party_size'].value),
-          meeting_location: new FormControl(form.controls['meeting_location'].value),
-          meeting_city: new FormControl(form.controls['meeting_city'].value),
-          meeting_state: new FormControl(form.controls['meeting_state'].value),
-          meeting_country: new FormControl(form.controls['meeting_country'].value),
+          place_name: new FormControl(form.controls['place_name'].value),
+          place_address: new FormControl(form.controls['place_address'].value),
+          place_latitude: new FormControl(form.controls['place_latitude'].value),
+          place_longtitude: new FormControl(form.controls['place_longtitude'].value),
           meeting_datetime: new FormControl(this.date),
           cost_estimate: new FormControl(form.controls['cost_estimate'].value),
           cost_share: new FormControl(form.controls['cost_share'].value),

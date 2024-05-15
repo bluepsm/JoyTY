@@ -3,6 +3,8 @@ export interface Notification {
     type: string;
     entity: string;
     entityId: bigint;
+    relatedEntity: string;
+    relatedEntityId: bigint;
     created_at: Date;
     toUser: any;
     fromUser: any;

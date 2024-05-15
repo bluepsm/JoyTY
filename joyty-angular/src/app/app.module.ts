@@ -24,7 +24,7 @@ import { JoinModalComponent } from './join-modal/join-modal.component';
 import { JoinRequestModalComponent } from './join-request-modal/join-request-modal.component';
 import { CardNotificationComponent } from './card-notification/card-notification.component';
 import { MenuNotificationComponent } from './menu-notification/menu-notification.component';
-import { SuprSendInboxModule } from '@suprsend/ngx-inbox';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   declarations: [
@@ -55,10 +55,7 @@ import { SuprSendInboxModule } from '@suprsend/ngx-inbox';
     NgbModule,
     NgbToastModule,
     NgTemplateOutlet,
-    SuprSendInboxModule.forRoot({
-      workspaceKey: "4rUbfPUss4H1Jnac5v2A",
-      workspaceSecret: "SS.WSS.gMJ6E7aDoyjZlol59yqig2sKY2sgWz0BNW1Mg2Gp",
-    })
+    GoogleMapsModule,
   ],
   providers: [httpInterceptorProvider],
   bootstrap: [AppComponent]

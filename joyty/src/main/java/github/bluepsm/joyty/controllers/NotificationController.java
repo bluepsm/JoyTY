@@ -26,17 +26,17 @@ public class NotificationController {
 	@Autowired
 	NotificationService notificationService;
 	
-	@GetMapping("/test")
-	public ResponseEntity<Notification> testNotification() {
-		Optional<Notification> notification = notificationService.createNotification(1L, 2L, EType.TYPE_SEND_REQUEST, EEntity.ENTITY_REQUEST, 1L);
-		
-		if (!notification.isPresent()) {
-			return ResponseEntity.internalServerError().build();
-		}
-		
-        return ResponseEntity.ok(notification.get());
-    }
-	
+//	@GetMapping("/test")
+//	public ResponseEntity<Notification> testNotification() {
+//		Optional<Notification> notification = notificationService.createNotification(1L, 2L, EType.TYPE_SEND_REQUEST, EEntity.ENTITY_REQUEST, 1L);
+//		
+//		if (!notification.isPresent()) {
+//			return ResponseEntity.internalServerError().build();
+//		}
+//		
+//        return ResponseEntity.ok(notification.get());
+//    }
+
 	@GetMapping("/getNotificationByUserId/{userId}")
 	public ResponseEntity<List<Notification>> getNotificationByUserId(@PathVariable Long userId) {
 		Optional<List<Notification>> notifications = notificationService.getNotificationByUserId(userId);

@@ -46,17 +46,17 @@ public class Post implements Serializable {
     @NotNull
     private Integer party_size;
 
-    @Column(name = "meeting_location")
-    private String meeting_location;
-
-    @Column(name = "meeting_city")
-    private String meeting_city;
+    @Column(name = "place_name")
+    private String place_name;
     
-    @Column(name = "meeting_state")
-    private String meeting_state;
-
-    @Column(name = "meeting_country")
-    private String meeting_country;
+    @Column(name = "place_address")
+    private String place_address;
+    
+    @Column(name = "place_latitude")
+    private Double place_latitude;
+    
+    @Column(name = "place_longtitude")
+    private Double place_longtitude;
 
     @Column(name = "meeting_datetime")
     private Date meeting_datetime;
@@ -116,15 +116,23 @@ public class Post implements Serializable {
 
     public Post() {}
 
-    public Post(String body, Integer party_size, String meeting_location, String meeting_city, String meeting_state, String meeting_country, 
-    		Date meeting_datetime, BigDecimal cost_estimate, Boolean cost_share) {
+    public Post(
+    		String body, 
+    		Integer party_size, 
+    		String place_name, 
+    		String place_address, 
+    		Double place_latitude, 
+    		Double place_longtitude, 
+    		Date meeting_datetime, 
+    		BigDecimal cost_estimate, 
+    		Boolean cost_share) {
     	this.body = body;
         this.party_size = party_size;
-        this.meeting_location = meeting_location;
-        this.meeting_city = meeting_city;
-        this.meeting_state = meeting_state;
-        this.meeting_country = meeting_country;
-        this.meeting_datetime = meeting_datetime;
+        this.place_name = place_name;
+		this.place_address = place_address;
+		this.place_latitude = place_latitude;
+		this.place_longtitude = place_longtitude;
+		this.meeting_datetime = meeting_datetime;
         this.cost_estimate = cost_estimate;
         this.cost_share = cost_share;
     }
