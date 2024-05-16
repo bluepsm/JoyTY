@@ -114,17 +114,21 @@ public class CommentController {
         
         Comment comment = createdComment.get();
         
+        Long fromUserId = userId.get();
         Long toUserId = comment.getPost().getAuthor().getId();
         
-        notificationService.createNotification(
-								        		userId.get(), 
-								        		toUserId, 
-								        		EType.TYPE_COMMENT, 
-								        		EEntity.ENTITY_COMMENT, 
-								        		comment.getId(),
-								        		EEntity.ENTITY_POST,
-								        		comment.getPost().getId()
-								        	);
+        if (fromUserId != toUserId) {
+        	notificationService.createNotification(
+        											fromUserId, 
+									        		toUserId, 
+									        		EType.TYPE_COMMENT, 
+									        		EEntity.ENTITY_COMMENT, 
+									        		comment.getId(),
+									        		EEntity.ENTITY_POST,
+									        		comment.getPost().getId()
+									        	);
+        }
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
     

@@ -3,13 +3,13 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross Click')"></button>
 </div>
 <div class="modal-body">
-    <div class="container bg-primary-subtle">
+    <div class="container">
         <div *ngIf="comments">
             <div class="row mb-3" *ngFor="let comment of comments">
-                <div class="col-2 align-content-center bg-warning-subtle">
+                <div class="col-2 align-content-center">
                     Avatar
                 </div>
-                <div class="col-10 p-0 bg-danger-subtle">
+                <div class="col-10 p-0">
                     <div class="card" [ngClass]="{'bg-primary-subtle': comment.user.id === userId}">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
@@ -28,8 +28,8 @@
         </div>
     </div>
 </div>
-<div class="modal-footer bg-danger">
-    <div class="container-fluid bg-danger-subtle">
+<div class="modal-footer">
+    <div class="container-fluid">
         <form [formGroup]="commentForm">
             <div class="input-group">
                 <input 

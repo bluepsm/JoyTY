@@ -1,6 +1,6 @@
 <div class="container-fluid mt-3">
     <div class="row">
-        <div class="col bg-warning-subtle align-content-center">A Side</div>
+        <div class="col align-content-center">A Side</div>
         <div class="col-6 d-flex flex-column justify-content-center">
             <div class="row row-cols-1">
                 <div class="col sticky-top">
@@ -28,10 +28,13 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="row bg-info-subtle">
+                            <div class="row">
                                 <p>{{ post.body }}</p>
                             </div>
-                            <div class="row row-cols-1 bg-secondary-subtle">
+                            <div>
+                                <hr>
+                            </div>
+                            <div class="row row-cols-1">
                                 <div class="col">
                                     <div class="d-flex gap-2">
                                         <i class="bi bi-calendar-event-fill"></i>
@@ -44,9 +47,9 @@
                                         <span>{{ post.place_name }}, {{ post.place_address }}</span>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="row bg-info-subtle justify-content-evenly">
-                                        <div class="col-4 d-flex justify-content-center gap-2 bg-primary-subtle">
+                                <div class="col mt-2 mb-2">
+                                    <div class="row justify-content-evenly">
+                                        <div class="col-4 d-flex justify-content-center gap-2">
                                             <i class="bi bi-people-fill"></i>
                                             <span>{{ post.party_size }}</span>
                                         </div>
@@ -54,7 +57,7 @@
                                             <i class="bi bi-currency-dollar"></i>
                                             <span>{{ post.cost_estimate }}</span>
                                         </div>
-                                        <div class="col-4 d-flex justify-content-center gap-2 bg-primary-subtle">
+                                        <div class="col-4 d-flex justify-content-center gap-2">
                                             <i class="bi bi-currency-exchange"></i>
                                             <div *ngIf="post.cost_share === true; else noShare">
                                                 <span>~ {{ shareCalculate(post.cost_estimate!, post.party_size!) }}</span>
@@ -66,12 +69,12 @@
                                     </div>        
                                 </div>
                             </div>
-                            <div class="row row-cols-1 bg-warning-subtle">
+                            <div class="row row-cols-1">
                                 <div>
                                     <app-map [lat]="post.place_latitude ? post.place_latitude : 0" [lng]="post.place_longtitude ? post.place_longtitude : 0"></app-map>
                                 </div>
                               </div>
-                            <div class="row row-cols-1 bg-danger-subtle">
+                            <div class="row row-cols-1 mt-3">
                                 <div class="d-flex flex-wrap justify-content-start gap-2">
                                     <span class="badge rounded-pill text-bg-info" *ngFor="let tag of post.tags">{{ tag.tagname }}</span>
                                 </div>
@@ -115,6 +118,6 @@
                 </div>
             </div>
         </div>
-        <div class="col bg-danger-subtle align-content-center">B Side</div>
+        <div class="col align-content-center">B Side</div>
     </div>
 </div>
