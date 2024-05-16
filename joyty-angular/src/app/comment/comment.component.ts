@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
 import { NgbActiveModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CommentService } from '../services/comment.service';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -23,7 +23,8 @@ export class CommentComponent implements OnInit {
   constructor(
     private config: NgbModalConfig,
     private commentService: CommentService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private cd: ChangeDetectorRef
   ) {
     this.config.backdrop = 'static'
     this.config.keyboard = false
@@ -61,6 +62,8 @@ export class CommentComponent implements OnInit {
     this.commentService.createComment(this.postId, this.cf['body'].value).subscribe({
       next: data => {
         console.log(data)
+        this.getAllComment(this.postId)
+        this.cd.detectChanges()
       }, error: err => {
         console.log(err)
       }

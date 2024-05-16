@@ -34,12 +34,12 @@ export class ProfileComponent implements OnInit {
   })
 
   nameForm: FormGroup = new FormGroup({
-    first_name: new FormControl(''),
-    last_name: new FormControl('')
+    firstName: new FormControl(''),
+    lastName: new FormControl('')
   })
 
   dateOfBirthForm: FormGroup = new FormGroup({
-    date_of_birth: new FormControl(Date)
+    dateOfBirth: new FormControl(Date)
   })
 
   genderForm: FormGroup = new FormGroup({
@@ -52,11 +52,11 @@ export class ProfileComponent implements OnInit {
 
   passwordForm: FormGroup = new FormGroup({
     password: new FormControl(''),
-    confirm_password: new FormControl('')
+    confirmPassword: new FormControl('')
   })
 
   phoneNumberForm: FormGroup = new FormGroup({
-    phone_number: new FormControl('')
+    phoneNumber: new FormControl('')
   })
 
   locationForm: FormGroup = new FormGroup({
@@ -96,13 +96,13 @@ export class ProfileComponent implements OnInit {
             })
 
             this.nameForm = this.formBuilder.group({
-              first_name: [this.userData.first_name, 
+              firstName: [this.userData.firstName, 
                 [
                   Validators.required,
                   Validators.minLength(3),
                   Validators.maxLength(30)
                 ]],
-              last_name: [this.userData.last_name, 
+              lastName: [this.userData.lastName, 
                 [
                   Validators.required,
                   Validators.minLength(3),
@@ -111,7 +111,7 @@ export class ProfileComponent implements OnInit {
             })
 
             this.dateOfBirthForm = this.formBuilder.group({
-              date_of_birth: [this.userData.date_of_birth, Validators.required]
+              dateOfBirth: [this.userData.dateOfBirth, Validators.required]
             })
 
             this.genderForm = this.formBuilder.group({
@@ -133,17 +133,17 @@ export class ProfileComponent implements OnInit {
                   Validators.required,
                   Validators.minLength(8)
                 ]],
-              confirm_password: ["", 
+              confirmPassword: ["", 
                 [
                   Validators.required
                 ]]
             }, 
             {
-              validators: [this.validationService.match('password', 'confirm_password')]
+              validators: [this.validationService.match('password', 'confirmPassword')]
             })
 
             this.phoneNumberForm = this.formBuilder.group({
-              phone_number: [this.userData.phone_number, 
+              phoneNumber: [this.userData.phoneNumber, 
                 [
                   Validators.required,
                   Validators.pattern('[0-9]{3}-[0-9]{3}-[0-9]{4}')
@@ -286,7 +286,7 @@ export class ProfileComponent implements OnInit {
   }
 
   nameFormSubmit(): void {
-    this.profileService.updateName(this.currentUser.id, this.nf['first_name'].value, this.nf['last_name'].value)
+    this.profileService.updateName(this.currentUser.id, this.nf['firstName'].value, this.nf['lastName'].value)
      .subscribe({
         next: data => {
           console.log(data)
@@ -300,7 +300,7 @@ export class ProfileComponent implements OnInit {
   }
 
   dateOfBirthFormSubmit(): void {
-    let date = new Date(this.df['date_of_birth'].value)
+    let date = new Date(this.df['dateOfBirth'].value)
     let formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US')
     console.log(formattedDate)
     this.profileService.updateDateOfBirth(this.currentUser.id, formattedDate)
@@ -331,7 +331,7 @@ export class ProfileComponent implements OnInit {
   }
 
   phoneNumberFormSubmit(): void {
-    this.profileService.updatePhoneNumber(this.currentUser.id, this.phf['phone_number'].value)
+    this.profileService.updatePhoneNumber(this.currentUser.id, this.phf['phoneNumber'].value)
      .subscribe({
         next: data => {
           console.log(data)

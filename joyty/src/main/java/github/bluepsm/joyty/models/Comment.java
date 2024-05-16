@@ -38,26 +38,21 @@ public class Comment implements Serializable {
     @NotBlank
     private String body;
 
-    @Column(name = "created_at")
+    @Column(name = "createdAt")
     @CreatedDate
-    private Long created_at;
+    private Long createdAt;
 
-    @Column(name = "last_updated")
+    @Column(name = "lastUpdated")
     @LastModifiedDate
-    private Long last_updated;
+    private Long lastUpdated;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "postId")
     private Post post;
-
-    /* @PrePersist
-    protected void onCreate() {
-        created_at = System.currentTimeMillis();
-    } */
 
     public Comment() {}
 

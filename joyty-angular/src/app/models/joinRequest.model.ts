@@ -2,7 +2,7 @@ export class JoinRequest {
     id?: any;
     body?: string;
     status?: string;
-    created_at?: Date;
+    createdAt?: Date;
     owner?: any;
     join?: any;
 }

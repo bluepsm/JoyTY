@@ -28,22 +28,22 @@ public class SignupRequest {
 
     @Size(min = 2, max = 30)
     @NotBlank
-    private String first_name;
+    private String firstName;
 
     @Size(min = 2, max = 30)
     @NotBlank
-    private String last_name;
+    private String lastName;
 
     @NotBlank
     private String gender;
 
     @NotNull
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date date_of_birth;
+    private Date dateOfBirth;
 
     @Size(min = 12, max = 12)
     @NotBlank
-    private String phone_number;
+    private String phoneNumber;
 
     @NotBlank
     private String country;

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Set;
 import java.util.List;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
@@ -14,6 +15,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -37,32 +40,6 @@ public class PostService {
     @Autowired
     private TagRepository tagRepository;
 
-//    public Optional<List<Post>> getAllPosts() {
-//        List<Post> posts = postRepository.findAll();
-//        return Optional.of(posts);
-//    }
-
-//    @Cacheable(value = "posts", key = "#id", unless = "#result == null")
-//    public Optional<Post> getPostById(Long id) {
-//        log.info("Redis is Retrieve Post ID: {}", id);
-//        return postRepository.findById(id);
-//    }
-
-//    public Post createPost(Long userId, Post post, Long[] tagsId) {
-//        Optional<User> user = userRepository.findById(userId);
-//        Set<Tag> tags = new HashSet<Tag>();
-//
-//        for (Long tagId : tagsId) {
-//            Tag tag = tagRepository.findById(tagId).get();
-//            tags.add(tag);
-//        }
-//
-//        post.setAuthor(user.get());
-//        post.setTags(tags);
-//
-//        return postRepository.save(post);
-//    }
-
     @CachePut(value = "posts", key = "#postId")
     public Optional<Post> updatePostById(Long postId, Post post) {
         Optional<Post> postOpt = postRepository.findById(postId);
@@ -74,8 +51,8 @@ public class PostService {
         post.setId(postId);
         
         // Keep the existing created_at timestamp
-        Long created_at = postOpt.get().getCreated_at();
-        post.setCreated_at(created_at);
+        Long createdAt = postOpt.get().getCreatedAt();
+        post.setCreatedAt(createdAt);
 
         // Keep the post owner data
         User user = postOpt.get().getAuthor();
@@ -115,35 +92,69 @@ public class PostService {
         
         //log.info(tags.toString());
         
-        log.info(createPostRequest.getMeeting_datetime().toString());
+        log.info(createPostRequest.getMeetingDatetime().toString());
         
         String body = createPostRequest.getBody();
-        String place_name = createPostRequest.getPlace_name();
-        String place_address = createPostRequest.getPlace_address();
-        Double place_latitude = createPostRequest.getPlace_latitude();
-        Double place_longtitude = createPostRequest.getPlace_longtitude();
-        Date meeting_datetime = createPostRequest.getMeeting_datetime();
-        Integer party_size = createPostRequest.getParty_size();
-        BigDecimal cost_estimate = createPostRequest.getCost_estimate();
-        Boolean cost_share = createPostRequest.getCost_share();
+        String placeName = createPostRequest.getPlaceName();
+        String placeAddress = createPostRequest.getPlaceAddress();
+        Double placeLatitude = createPostRequest.getPlaceLatitude();
+        Double placeLongtitude = createPostRequest.getPlaceLongtitude();
+        Date meetingDatetime = createPostRequest.getMeetingDatetime();
+        Integer partySize = createPostRequest.getPartySize();
+        BigDecimal costEstimate = createPostRequest.getCostEstimate();
+        Boolean costShare = createPostRequest.getCostShare();
         
-        Post post = new Post(body, party_size, place_name, place_address, place_latitude, place_longtitude, meeting_datetime, cost_estimate, cost_share);
+        Post post = new Post(body, 
+			        		partySize, 
+			        		placeName, 
+			        		placeAddress, 
+			        		placeLatitude, 
+			        		placeLongtitude, 
+			        		meetingDatetime, 
+			        		costEstimate, 
+			        		costShare);
         
         post.setAuthor(user.get());
         post.setTags(tags);
         post.setJoinner(0);
-        post.setMeeting_done(false);
+        post.setMeetingDone(false);
         
         return postRepository.save(post);
     }
     
-    public Optional<List<Post>> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+    public Optional<List<Post>> getAllPosts(String[] sort) {
+    	List<Order> orders = new ArrayList<Order>();
+
+        if (sort[0].contains(",")) {
+          // will sort more than 2 columns
+          for (String sortOrder : sort) {
+            // sortOrder="column, direction"
+            String[] _sort = sortOrder.split(",");
+            orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+          }
+        } else {
+          // sort=[column, direction]
+          orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+        }
+        
+        log.info(orders.toString());
+        
+        List<Post> posts = postRepository.findAll(Sort.by(orders));
         return Optional.of(posts);
     }
     
     public Optional<Post> getPostById(Long postId) {
         //log.info("Redis is Retrieve Post ID: {}", id);
         return postRepository.findById(postId);
+    }
+    
+    private Sort.Direction getSortDirection(String direction) {
+    	if (direction.equals("desc")) {
+    		return Sort.Direction.DESC;
+    	} else if (direction.equals("asc")) {
+    		return Sort.Direction.ASC;
+    	}
+    	
+    	return Sort.Direction.DESC;
     }
 }

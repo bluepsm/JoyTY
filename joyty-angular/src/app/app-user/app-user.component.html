@@ -24,7 +24,7 @@
                                     <i class="bi bi-person-circle"></i>
                                     <strong>{{ post.author.username }}</strong>
                                 </div>
-                                <div class="col text-end">{{ post.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
+                                <div class="col text-end">{{ post.createdAt | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -38,29 +38,29 @@
                                 <div class="col">
                                     <div class="d-flex gap-2">
                                         <i class="bi bi-calendar-event-fill"></i>
-                                        <span>{{ post.meeting_datetime | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</span>
+                                        <span>{{ post.meetingDatetime | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</span>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="d-flex gap-2">
                                         <i class="bi bi-geo-alt-fill"></i>
-                                        <span>{{ post.place_name }}, {{ post.place_address }}</span>
+                                        <span>{{ post.placeName }}, {{ post.placeAddress }}</span>
                                     </div>
                                 </div>
                                 <div class="col mt-2 mb-2">
                                     <div class="row justify-content-evenly">
                                         <div class="col-4 d-flex justify-content-center gap-2">
                                             <i class="bi bi-people-fill"></i>
-                                            <span>{{ post.party_size }}</span>
+                                            <span>{{ post.partySize }}</span>
                                         </div>
                                         <div class="col-4 d-flex justify-content-center gap-2">
                                             <i class="bi bi-currency-dollar"></i>
-                                            <span>{{ post.cost_estimate }}</span>
+                                            <span>{{ post.costEstimate }}</span>
                                         </div>
                                         <div class="col-4 d-flex justify-content-center gap-2">
                                             <i class="bi bi-currency-exchange"></i>
-                                            <div *ngIf="post.cost_share === true; else noShare">
-                                                <span>~ {{ shareCalculate(post.cost_estimate!, post.party_size!) }}</span>
+                                            <div *ngIf="post.costShare === true; else noShare">
+                                                <span>~ {{ shareCalculate(post.costEstimate!, post.partySize!) }}</span>
                                             </div>
                                             <ng-template #noShare>
                                                 <span>No Sharing</span>
@@ -71,7 +71,7 @@
                             </div>
                             <div class="row row-cols-1">
                                 <div>
-                                    <app-map [lat]="post.place_latitude ? post.place_latitude : 0" [lng]="post.place_longtitude ? post.place_longtitude : 0"></app-map>
+                                    <app-map [lat]="post.placeLatitude ? post.placeLatitude : 0" [lng]="post.placeLongtitude ? post.placeLongtitude : 0"></app-map>
                                 </div>
                               </div>
                             <div class="row row-cols-1 mt-3">

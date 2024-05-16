@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JoinService } from '../services/join.service';
 import { JoinRequest } from '../models/joinRequest.model';
@@ -19,7 +19,8 @@ export class JoinRequestModalComponent implements OnInit {
 
   constructor(
     private joinService: JoinService,
-    private postService: PostService
+    private postService: PostService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +42,9 @@ export class JoinRequestModalComponent implements OnInit {
     this.joinService.respondToRequest(requestId, response).subscribe({
       next: data => {
         console.log(data)
+        this.getPostByPostId(this.postId)
+        this.getAllJoinRequestByPostId(this.postId)
+        this.cd.detectChanges()
       }, error: err => {
         console.log(err)
       }
@@ -58,9 +62,9 @@ export class JoinRequestModalComponent implements OnInit {
     })
   }
 
-  checkAvailable(party_size: number | undefined, joinner: number | undefined): number | undefined {
-    if (party_size !== undefined && joinner !== undefined) {
-      return party_size - joinner
+  checkAvailable(partySize: number | undefined, joinner: number | undefined): number | undefined {
+    if (partySize !== undefined && joinner !== undefined) {
+      return partySize - joinner
     } else {
       return undefined
     }

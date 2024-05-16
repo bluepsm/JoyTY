@@ -83,27 +83,27 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="first_name">First Name:</label>
+            <label for="firstName">First Name:</label>
             <input
               type="text"
               class="form-control"
-              name="first_name"
-              [(ngModel)]="form.first_name"
+              name="firstName"
+              [(ngModel)]="form.firstName"
               required
               minlength="3"
               maxlength="30"
-              #first_name="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && first_name.errors}"
+              #firstName="ngModel"
+              [ngClass]="{'is-invalid': f.submitted && firstName.errors}"
             />
-            @if (first_name.errors && f.submitted) {
+            @if (firstName.errors && f.submitted) {
                 <div class="invalid-feedback">
-                    @if (first_name.errors['required']) {
+                    @if (firstName.errors['required']) {
                         <div>First name is required!</div>
                     }
-                    @if (first_name.errors['minlength']) {
+                    @if (firstName.errors['minlength']) {
                         <div>First name must be at least 3 character.</div>
                     }
-                    @if (first_name.errors['maxlength']) {
+                    @if (firstName.errors['maxlength']) {
                         <div>First name must be at most 30 character.</div>
                     }
                 </div>
@@ -111,27 +111,27 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="last_name">Last Name:</label>
+            <label for="lastName">Last Name:</label>
             <input
               type="text"
               class="form-control"
-              name="last_name"
-              [(ngModel)]="form.last_name"
+              name="lastName"
+              [(ngModel)]="form.lastName"
               required
               minlength="3"
               maxlength="30"
-              #last_name="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && last_name.errors}"
+              #lastName="ngModel"
+              [ngClass]="{'is-invalid': f.submitted && lastName.errors}"
             />
-            @if (last_name.errors && f.submitted) {
+            @if (lastName.errors && f.submitted) {
                 <div class="invalid-feedback">
-                    @if (last_name.errors['required']) {
+                    @if (lastName.errors['required']) {
                         <div>Last name is required!</div>
                     }
-                    @if (last_name.errors['minlength']) {
+                    @if (lastName.errors['minlength']) {
                         <div>Last name must be at least 3 character.</div>
                     }
-                    @if (last_name.errors['maxlength']) {
+                    @if (lastName.errors['maxlength']) {
                         <div>Last name must be at most 30 character.</div>
                     }
                 </div>
@@ -139,23 +139,23 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="phone_number">Phone Number:</label>
+            <label for="phoneNumber">Phone Number:</label>
             <input
               type="tel"
               class="form-control"
-              name="phone_number"
-              [(ngModel)]="form.phone_number"
+              name="phoneNumber"
+              [(ngModel)]="form.phoneNumber"
               required
               pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-              #phone_number="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && phone_number.errors}"
+              #phoneNumber="ngModel"
+              [ngClass]="{'is-invalid': f.submitted && phoneNumber.errors}"
             />
-            @if (phone_number.errors && f.submitted) {
+            @if (phoneNumber.errors && f.submitted) {
                 <div class="invalid-feedback">
-                    @if (phone_number.errors['required']) {
+                    @if (phoneNumber.errors['required']) {
                         <div>Phone number is required!</div>
                     }
-                    @if (phone_number.errors['pattern']) {
+                    @if (phoneNumber.errors['pattern']) {
                         <div>Phone number must be a valid number.</div>
                     }
                 </div>
@@ -219,23 +219,23 @@
         </div>
         
         <div class="form-group mb-3">
-            <label for="date_of_birth">Date of birth:</label>
+            <label for="dateOfBirth">Date of birth:</label>
             <input
                 type="text"
                 class="form-control"
-                name="date_of_birth"
-                id="date_of_birth"
+                name="dateOfBirth"
+                id="dateOfBirth"
                 placeholder="YYYY-MM-DD"
                 bsDatepicker
-                [(ngModel)]="form.date_of_birth"
+                [(ngModel)]="form.dateOfBirth"
                 required
-                #date_of_birth="ngModel"
+                #dateOfBirth="ngModel"
                 [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', isAnimated: true, adaptivePosition: true}"
-                [ngClass]="{'is-invalid': f.submitted && date_of_birth.errors}"
+                [ngClass]="{'is-invalid': f.submitted && dateOfBirth.errors}"
             />
-            @if (date_of_birth.errors && f.submitted) {
+            @if (dateOfBirth.errors && f.submitted) {
                 <div class="invalid-feedback">
-                    @if (date_of_birth.errors['required']) {
+                    @if (dateOfBirth.errors['required']) {
                         <div>Date of birth is required!</div>
                     }
                 </div>

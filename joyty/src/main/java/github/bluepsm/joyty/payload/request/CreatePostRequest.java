@@ -17,28 +17,28 @@ public class CreatePostRequest {
 	private String body;
 	
 	@NotBlank
-    private String place_name;
+    private String placeName;
     
 	@NotBlank
-    private String place_address;
+    private String placeAddress;
     
     @NotNull
-    private Double place_latitude;
+    private Double placeLatitude;
     
     @NotNull
-    private Double place_longtitude;
+    private Double placeLongtitude;
 	
 	@NotNull 
-	private Date meeting_datetime;
+	private Date meetingDatetime;
 	 
 	@NotNull
-	private Integer party_size;
+	private Integer partySize;
 	
 	@NotNull 
-	private BigDecimal cost_estimate;
+	private BigDecimal costEstimate;
 	  
 	@NotNull 
-	private Boolean cost_share;
+	private Boolean costShare;
 	  
 	private Set<Long> tags;
 }

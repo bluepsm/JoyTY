@@ -54,29 +54,29 @@ public class User implements Serializable{
     @NotBlank
     private String email;
 
-    @Column(name = "first_name", length = 30)
+    @Column(name = "firstName", length = 30)
     @Size(min = 2, max = 30)
     @NotBlank
-    private String first_name;
+    private String firstName;
 
-    @Column(name = "last_name", length = 30)
+    @Column(name = "lastName", length = 30)
     @Size(min = 2, max = 30)
     @NotBlank
-    private String last_name;
+    private String lastName;
 
     @Column(name = "gender")
     @NotBlank
     private String gender;
 
-    @Column(name = "date_of_birth")
+    @Column(name = "dateOfBirth")
     @NotNull
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date date_of_birth;
+    private Date dateOfBirth;
 
-    @Column(name = "phone_number", length = 12)
+    @Column(name = "phoneNumber", length = 12)
     @Size(min = 12, max = 12)
     @NotBlank
-    private String phone_number;
+    private String phoneNumber;
 
     @Column(name = "country")
     @NotBlank
@@ -89,15 +89,15 @@ public class User implements Serializable{
     private String city;
 
     // UNIX time
-    @Column(name = "created_at")
+    @Column(name = "createdAt")
     @CreatedDate
-    private Long created_at;
+    private Long createdAt;
 
     //@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable( name = "user_role", 
-		joinColumns = @JoinColumn(name = "user_id"),
-		inverseJoinColumns = @JoinColumn(name = "role_id") ) 
+	@JoinTable( name = "userRole", 
+		joinColumns = @JoinColumn(name = "userId"),
+		inverseJoinColumns = @JoinColumn(name = "roleId") ) 
 	private Set<Role> roles;
 	 
 	@JsonIgnore
@@ -123,24 +123,29 @@ public class User implements Serializable{
 	@JsonIgnore
     @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Notification> notificationTo;
-	
-    /* @PrePersist
-    protected void onCreate() {
-        created_at = System.currentTimeMillis();
-    } */
 
     public User() {}
 
-    public User(String username, String password, String email, String first_name, String last_name, String gender, 
-    		Date date_of_birth, String phone_number, String country, String state, String city) {
+    public User(
+    		String username, 
+    		String password, 
+    		String email, 
+    		String firstName, 
+    		String lastName, 
+    		String gender, 
+    		Date dateOfBirth, 
+    		String phoneNumber, 
+    		String country, 
+    		String state, 
+    		String city) {
     	this.username = username;
         this.password = password;
         this.email = email;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = gender;
-        this.date_of_birth = date_of_birth;
-        this.phone_number = phone_number;
+        this.dateOfBirth = dateOfBirth;
+        this.phoneNumber = phoneNumber;
         this.country = country;
         this.state = state;
         this.city = city;

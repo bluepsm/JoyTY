@@ -1,18 +1,18 @@
 export class Post {
     id?: any;
     body?: string;
-    place_name?: string;
-    place_address?: string;
-    place_latitude?: number;
-    place_longtitude?: number;
-    meeting_datetime?: Date;
-    party_size?: number;
+    placeName?: string;
+    placeAddress?: string;
+    placeLatitude?: number;
+    placeLongtitude?: number;
+    meetingDatetime?: Date;
+    partySize?: number;
     joinner?: number;
-    cost_estimate?: bigint;
-    cost_share?: boolean;
-    meeting_done?: boolean;
+    costEstimate?: bigint;
+    costShare?: boolean;
+    meetingDone?: boolean;
     tags?: any;
     author?: any;
-    created_at?: Date;
-    last_updated?: Date;
+    createdAt?: Date;
+    lastUpdated?: Date;
 }

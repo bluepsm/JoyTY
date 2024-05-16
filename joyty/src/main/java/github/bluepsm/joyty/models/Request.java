@@ -38,16 +38,16 @@ public class Request implements Serializable {
     @Column(name = "status", columnDefinition = "varchar(32) default 'PENDING'")
     private ERequest status = ERequest.PENDING;
 
-    @Column(name = "created_at")
+    @Column(name = "createdAt")
     @CreatedDate
-    private Long created_at;
+    private Long createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User owner;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "postId")
     private Post join;
 
     /* @PrePersist

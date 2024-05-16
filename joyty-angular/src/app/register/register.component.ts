@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Country, State, City, ICountry, IState, ICity } from 'country-state-city';
 import { formatDate } from '@angular/common';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,11 +16,11 @@ export class RegisterComponent {
     username: null, 
     password: null, 
     email: null,
-    first_name: null,
-    last_name: null,
+    firstName: null,
+    lastName: null,
     gender: null,
-    date_of_birth: null,
-    phone_number: null,
+    dateOfBirth: null,
+    phoneNumber: null,
     country: null,
     state: null,
     city: null
@@ -36,7 +37,7 @@ export class RegisterComponent {
   selectedState?: any
   selectedCity?: any
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onCountryChange(): void {
     //console.log("Selected country: " + this.selectedCountry)
@@ -78,11 +79,11 @@ export class RegisterComponent {
       username, 
       password,
       email,
-      first_name,
-      last_name,
+      firstName,
+      lastName,
       gender,
-      date_of_birth,
-      phone_number,
+      dateOfBirth,
+      phoneNumber,
       country,
       state,
       city
@@ -93,11 +94,11 @@ export class RegisterComponent {
       "Username: " + username + "\n" +
       "password: " + password + "\n" +
       "email: " + email + "\n" +
-      "first_name: " + first_name + "\n" +
-      "last_name: " + last_name + "\n" +
+      "firstName: " + firstName + "\n" +
+      "lastName: " + lastName + "\n" +
       "gender: " + gender + "\n" +
-      "date_of_birth: " + formatDate(date_of_birth, 'dd-MM-yyyy', 'en-US') + "\n" +
-      "phone_number: " + phone_number + "\n" +
+      "dateOfBirth: " + formatDate(dateOfBirth, 'dd-MM-yyyy', 'en-US') + "\n" +
+      "phoneNumber: " + phoneNumber + "\n" +
       "country: " + country + "\n" +
       "state: " + state + "\n" +
       "city: " + city
@@ -108,11 +109,11 @@ export class RegisterComponent {
       username, 
       password,
       email,
-      first_name,
-      last_name,
+      firstName,
+      lastName,
       gender,
-      date_of_birth,
-      phone_number,
+      dateOfBirth,
+      phoneNumber,
       country,
       state,
       city
@@ -121,6 +122,7 @@ export class RegisterComponent {
         console.log(data)
         this.success = true
         this.fail = false
+        this.router.navigate(['/login'])
       }, error: err => {
         this.errorMsg = err.error.message
         this.fail = true

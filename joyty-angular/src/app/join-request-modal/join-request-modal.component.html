@@ -17,7 +17,7 @@
                                     <div>
                                         <strong>{{ joinRequest.owner.username }}</strong>
                                     </div>
-                                    <div class="text-end">{{ joinRequest.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
+                                    <div class="text-end">{{ joinRequest.createdAt | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -27,8 +27,8 @@
                     </div>
                     <div *ngIf="joinRequest.status === 'PENDING'; else respond" class="col-3 d-flex justify-content-center align-self-center">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-success" (click)="respondToRequest(joinRequest.id, 'ACCEPT')" [disabled]="checkAvailable(post?.party_size, post?.joinner) === 0">Accept</button>
-                            <button type="button" class="btn btn-danger" (click)="respondToRequest(joinRequest.id, 'REJECT')" [disabled]="checkAvailable(post?.party_size, post?.joinner) === 0">Reject</button>
+                            <button type="button" class="btn btn-success" (click)="respondToRequest(joinRequest.id, 'ACCEPT')" [disabled]="checkAvailable(post?.partySize, post?.joinner) === 0">Accept</button>
+                            <button type="button" class="btn btn-danger" (click)="respondToRequest(joinRequest.id, 'REJECT')" [disabled]="checkAvailable(post?.partySize, post?.joinner) === 0">Reject</button>
                         </div>
                     </div>
                     <ng-template #respond>
@@ -50,8 +50,8 @@
     <div class="container p-0">
         <div class="d-flex justify-content-between">
             <div>
-                <div>Party Size: {{ post?.party_size }}</div>
-                <div>Availiable: {{ checkAvailable(post?.party_size, post?.joinner) }}</div>
+                <div>Party Size: {{ post?.partySize }}</div>
+                <div>Availiable: {{ checkAvailable(post?.partySize, post?.joinner) }}</div>
             </div>
             <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
         </div>

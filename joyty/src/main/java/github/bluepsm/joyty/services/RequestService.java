@@ -55,8 +55,8 @@ public class RequestService {
         request.setId(id);
         
         // Keep the existing created_at timestamp
-        Long created_at = requestOpt.get().getCreated_at();
-        request.setCreated_at(created_at);
+        Long createdAt = requestOpt.get().getCreatedAt();
+        request.setCreatedAt(createdAt);
 
         return Optional.of(requestRepository.save(request));
     }
@@ -124,9 +124,9 @@ public class RequestService {
         Request request = requestRepository.findById(requestId).get();
         Post post = request.getJoin();
         User user = request.getOwner();
-        Long created_at = request.getCreated_at();
+        Long createdAt = request.getCreatedAt();
         Integer numberOfMember = post.getMembers().size();
-        Integer partySize = post.getParty_size();
+        Integer partySize = post.getPartySize();
 
         switch (response) {
             case "ACCEPT":
@@ -146,7 +146,7 @@ public class RequestService {
                 log.info("response is not matching.");
         };
         
-        request.setCreated_at(created_at);
+        request.setCreatedAt(createdAt);
         requestRepository.save(request);
         
         return Optional.of(request);

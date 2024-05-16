@@ -1,5 +1,6 @@
 package github.bluepsm.joyty.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -102,8 +105,8 @@ public class PostController {
     }
     
     @GetMapping("/all")
-    public ResponseEntity<List<Post>> getAllPosts() {
-        Optional<List<Post>> posts = postService.getAllPosts();
+    public ResponseEntity<List<Post>> getAllPosts(@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
+    	Optional<List<Post>> posts = postService.getAllPosts(sort);
         
         if(!posts.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -122,4 +125,5 @@ public class PostController {
 
         return ResponseEntity.ok(post.get());
     }
+    
 }

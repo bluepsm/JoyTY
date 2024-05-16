@@ -3,11 +3,11 @@ export class User {
     username?: string;
     password?: string;
     email?: string;
-    first_name?: string;
-    last_name?: string;
+    firstName?: string;
+    lastName?: string;
     gender?: string;
-    date_of_birth?: Date;
-    phone_number?: string;
+    dateOfBirth?: Date;
+    phoneNumber?: string;
     country?: string;
     state?: string;
     city?: string;

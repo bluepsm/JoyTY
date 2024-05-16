@@ -69,7 +69,7 @@
                                 <h2 class="accordion-header" id="fullNameHeading">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fullNameCollapse" aria-expanded="false" aria-controls="fullNameCollapse">
                                         <div class="col-sm-3" for="fullNameShow">Full Name:</div>
-                                        <div id="fullNameShow">{{ userData.first_name }} {{ userData.last_name }}</div>
+                                        <div id="fullNameShow">{{ userData.firstName }} {{ userData.lastName }}</div>
                                     </button>
                                 </h2>
                                 <div class="accordion-collapse collapse" id="fullNameCollapse" aria-labelledby="fullNameHeading" data-bs-parent="#personalInfoAccordion">
@@ -81,20 +81,20 @@
                                                     <input 
                                                         type="text"
                                                         class="form-control"
-                                                        name="first_name"
-                                                        formControlName="first_name"
-                                                        [ngClass]="{'is-invalid': nf['first_name'].errors}"
+                                                        name="firstName"
+                                                        formControlName="firstName"
+                                                        [ngClass]="{'is-invalid': nf['firstName'].errors}"
 
                                                     />
-                                                    @if (nf['first_name'].errors) {
+                                                    @if (nf['firstName'].errors) {
                                                         <div class="invalid-feedback">
-                                                            @if (nf['first_name'].errors['required']) {
+                                                            @if (nf['firstName'].errors['required']) {
                                                                 <div>First name is required!</div>
                                                             }
-                                                            @if (nf['first_name'].errors['minlength']) {
+                                                            @if (nf['firstName'].errors['minlength']) {
                                                                 <div>First name must be at least 3 character.</div>
                                                             }
-                                                            @if (nf['first_name'].errors['maxlength']) {
+                                                            @if (nf['firstName'].errors['maxlength']) {
                                                                 <div>First name must be at most 30 character.</div>
                                                             }
                                                         </div>
@@ -107,20 +107,20 @@
                                                     <input
                                                         type="text"
                                                         class="form-control"
-                                                        name="last_name"
-                                                        formControlName="last_name"
-                                                        [ngClass]="{'is-invalid': nf['last_name'].errors}"
+                                                        name="lastName"
+                                                        formControlName="lastName"
+                                                        [ngClass]="{'is-invalid': nf['lastName'].errors}"
 
                                                     />
-                                                    @if (nf['last_name'].errors) {
+                                                    @if (nf['lastName'].errors) {
                                                         <div class="invalid-feedback">
-                                                            @if (nf['last_name'].errors['required']) {
+                                                            @if (nf['lastName'].errors['required']) {
                                                                 <div>Last name is required!</div>
                                                             }
-                                                            @if (nf['last_name'].errors['minlength']) {
+                                                            @if (nf['lastName'].errors['minlength']) {
                                                                 <div>Last name must be at least 3 character.</div>
                                                             }
-                                                            @if (nf['last_name'].errors['maxlength']) {
+                                                            @if (nf['lastName'].errors['maxlength']) {
                                                                 <div>Last name must be at most 30 character.</div>
                                                             }
                                                         </div>
@@ -138,29 +138,29 @@
                                 <h2 class="accordion-header" id="dobHeading">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dobCollapse" aria-expanded="false" aria-controls="dobCollapse">
                                         <div class="col-sm-3" for="dobShow">Date of birth:</div>
-                                        <div id="dobShow">{{ userData.date_of_birth }}</div>
+                                        <div id="dobShow">{{ userData.dateOfBirth }}</div>
                                     </button>
                                 </h2>
                                 <div class="accordion-collapse collapse" id="dobCollapse" aria-labelledby="dobHeading" data-bs-parent="#personalInfoAccordion">
                                     <div class="accordion-body">
                                         <form [formGroup]="dateOfBirthForm" (ngSubmit)="dateOfBirthFormSubmit()">
                                             <div class="row">
-                                                <label class="col-sm-3 col-form-label" for="date_of_birth">Date of birth:</label>
+                                                <label class="col-sm-3 col-form-label" for="dateOfBirth">Date of birth:</label>
                                                 <div class="col-sm-6">
                                                     <input
                                                         type="text"
                                                         class="form-control"
-                                                        name="date_of_birth"
-                                                        id="date_of_birth"
+                                                        name="dateOfBirth"
+                                                        id="dateOfBirth"
                                                         placeholder="YYYY-MM-DD"
                                                         bsDatepicker
                                                         [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', isAnimated: true, adaptivePosition: true}"
-                                                        formControlName="date_of_birth"
-                                                        [ngClass]="{'is-invalid': df['date_of_birth'].errors}"
+                                                        formControlName="dateOfBirth"
+                                                        [ngClass]="{'is-invalid': df['dateOfBirth'].errors}"
                                                     />
-                                                    @if (df['date_of_birth'].errors) {
+                                                    @if (df['dateOfBirth'].errors) {
                                                         <div class="invalid-feedback">
-                                                            @if (df['date_of_birth'].errors['required']) {
+                                                            @if (df['dateOfBirth'].errors['required']) {
                                                                 <div>Date of birth is required!</div>
                                                             }
                                                         </div>
@@ -319,23 +319,23 @@
                                                 </div>
                                             </div>
                                             <div class="row mt-3">
-                                                <label class="col-sm-3 col-form-label" for="confirm_password">Confirm New Password:</label>
+                                                <label class="col-sm-3 col-form-label" for="confirmPassword">Confirm New Password:</label>
                                                 <div class="col-sm-6">
                                                     <input 
                                                         type="password" 
                                                         class="form-control-plaintext" 
-                                                        id="confirm_password"
-                                                        name="confirm_password"
+                                                        id="confirmPassword"
+                                                        name="confirmPassword"
                                                         placeholder="Confirm your new password."
-                                                        formControlName="confirm_password"
-                                                        [ngClass]="{'is-invalid': pf['confirm_password'].errors}"
+                                                        formControlName="confirmPassword"
+                                                        [ngClass]="{'is-invalid': pf['confirmPassword'].errors}"
                                                     />
-                                                    @if (pf['confirm_password'].errors) {
+                                                    @if (pf['confirmPassword'].errors) {
                                                         <div class="invalid-feedback">
-                                                            @if (pf['confirm_password'].errors['required']) {
+                                                            @if (pf['confirmPassword'].errors['required']) {
                                                                 <div>Please confirm your new password!</div>
                                                             }
-                                                            @if (pf['confirm_password'].errors['matching']) {
+                                                            @if (pf['confirmPassword'].errors['matching']) {
                                                                 <div>Password does not match!</div>
                                                             }
                                                         </div>
@@ -359,7 +359,7 @@
                                 <h2 class="accordion-header" id="phoneNumberHeading">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#phoneNumberCollapse" aria-expanded="false" aria-controls="phoneNumberCollapse">
                                         <div class="col-sm-3" for="phoneNumberShow">Phone Number:</div>
-                                        <div id="phoneNumberShow">{{ userData.phone_number }}</div>
+                                        <div id="phoneNumberShow">{{ userData.phoneNumber }}</div>
                                     </button>
                                 </h2>
                                 <div class="accordion-collapse collapse" id="phoneNumberCollapse" aria-labelledby="phoneNumberHeading" data-bs-parent="#contactAccordion">
@@ -373,15 +373,15 @@
                                                         class="form-control" 
                                                         id="phoneNumber"
                                                         name="phoneNumber"
-                                                        formControlName="phone_number"
-                                                        [ngClass]="{'is-invalid': phf['phone_number'].errors}"
+                                                        formControlName="phoneNumber"
+                                                        [ngClass]="{'is-invalid': phf['phoneNumber'].errors}"
                                                     />
-                                                    @if (phf['phone_number'].errors) {
+                                                    @if (phf['phoneNumber'].errors) {
                                                         <div class="invalid-feedback">
-                                                            @if (phf['phone_number'].errors['required']) {
+                                                            @if (phf['phoneNumber'].errors['required']) {
                                                                 <div>Phone number is required!</div>
                                                             }
-                                                            @if (phf['phone_number'].errors['pattern']) {
+                                                            @if (phf['phoneNumber'].errors['pattern']) {
                                                                 <div>Phone number must be a valid number.</div>
                                                             }
                                                         </div>

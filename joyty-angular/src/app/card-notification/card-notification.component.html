@@ -6,7 +6,7 @@
                     <strong class="text-bg-primary">{{ notification?.fromUser.username }}</strong> is commented on your post
                 </h3>
                 <span class="badge text-bg-warning card-date">
-                    {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
+                    {{ notification?.createdAt | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
                 </span>
                 <p class="card-text">
                     <strong>{{ notification?.fromUser.username }}</strong> is commented(ID: {{ notification?.entityId }}) on your post(ID: {{ notification?.relatedEntityId }}).
@@ -18,7 +18,7 @@
                     <strong class="text-bg-primary">{{ notification?.fromUser.username }}</strong> is sending request to join you!
                 </h3>
                 <span class="badge text-bg-warning card-date">
-                    {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
+                    {{ notification?.createdAt | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
                 </span>
                 <p class="card-text">
                     <strong>{{ notification?.fromUser.username }}</strong> is wanting to join on your party! (Request ID: {{ notification?.entityId }}, Post ID: {{ notification?.relatedEntityId }}).
@@ -28,7 +28,7 @@
                     <strong class="text-bg-primary">{{ notification?.fromUser.username }}</strong> is accepted your request!
                 </h3>
                 <span class="badge text-bg-warning card-date">
-                    {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
+                    {{ notification?.createdAt | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
                 </span>
                 <p class="card-text">
                     <strong>{{ notification?.fromUser.username }}</strong> is accepted your request to join on their party! (Request ID: {{ notification?.entityId }}, Post ID: {{ notification?.relatedEntityId }}).
@@ -38,7 +38,7 @@
                     <strong class="text-bg-primary">{{ notification?.fromUser.username }}</strong> is rejected your request
                 </h3>
                 <span class="badge text-bg-warning card-date">
-                    {{ notification?.created_at | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
+                    {{ notification?.createdAt | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}
                 </span>
                 <p class="card-text">
                     <strong>{{ notification?.fromUser.username }}</strong> is rejected your request to join on their party (Request ID: {{ notification?.entityId }}, Post ID: {{ notification?.relatedEntityId }}).

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, inject, Renderer2, Inject } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, inject, Renderer2, Inject, ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { PostModalComponent } from '../shared/post-modal/post-modal.component';
 import { NgbActiveModal, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -29,15 +29,15 @@ export class AppUserComponent implements OnInit {
 
   public post = {
     body: "Test",
-    place_name: "Test Place",
-    place_address: "Test Place, Test Street, Test City, Test State, Test Country",
-    place_latitude: 0,
-    place_longtitude: 0,
-    meeting_date: new NgbDate(2024, 3, 18),
-    meeting_time: { hour: 17, minute: 30 },
-    party_size: 3,
-    cost_estimate: 300,
-    cost_share: false,
+    placeName: "Test Place",
+    placeAddress: "Test Place, Test Street, Test City, Test State, Test Country",
+    placeLatitude: 0,
+    placeLongtitude: 0,
+    meetingDate: new NgbDate(2024, 3, 18),
+    meetingTime: { hour: 17, minute: 30 },
+    partySize: 3,
+    costEstimate: 300,
+    costShare: false,
     tags: [1, 2],
   }
 
@@ -48,6 +48,7 @@ export class AppUserComponent implements OnInit {
     private joinRequestService: JoinService,
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -64,22 +65,22 @@ export class AppUserComponent implements OnInit {
     modalRef.result.then((form) => {
       if (form) {
         //console.log(form.value)
-        const ngbDate = form.controls['meeting_date'].value
-        const ngbTime = form.controls['meeting_time'].value
+        const ngbDate = form.controls['meetingDate'].value
+        const ngbTime = form.controls['meetingTime'].value
 
         this.date.setFullYear(ngbDate.year, ngbDate.month, ngbDate.day)
         this.date.setHours(ngbTime.hour, ngbTime.minute, 0)
 
         const newPostForm: FormGroup = new FormGroup({
           body: new FormControl(form.controls['body'].value),
-          party_size: new FormControl(form.controls['party_size'].value),
-          place_name: new FormControl(form.controls['place_name'].value),
-          place_address: new FormControl(form.controls['place_address'].value),
-          place_latitude: new FormControl(form.controls['place_latitude'].value),
-          place_longtitude: new FormControl(form.controls['place_longtitude'].value),
-          meeting_datetime: new FormControl(this.date),
-          cost_estimate: new FormControl(form.controls['cost_estimate'].value),
-          cost_share: new FormControl(form.controls['cost_share'].value),
+          partySize: new FormControl(form.controls['partySize'].value),
+          placeName: new FormControl(form.controls['placeName'].value),
+          placeAddress: new FormControl(form.controls['placeAddress'].value),
+          placeLatitude: new FormControl(form.controls['placeLatitude'].value),
+          placeLongtitude: new FormControl(form.controls['placeLongtitude'].value),
+          meetingDatetime: new FormControl(this.date),
+          costEstimate: new FormControl(form.controls['costEstimate'].value),
+          costShare: new FormControl(form.controls['costShare'].value),
           tags: new FormControl(form.controls['tags'].value),
         })
 
@@ -89,6 +90,8 @@ export class AppUserComponent implements OnInit {
           next: data => {
             console.log(data)
             //this.ngOnInit()
+            this.getAllPost()
+            this.cd.detectChanges()
           }, error: err => {
             console.log(err)
           }
@@ -100,7 +103,7 @@ export class AppUserComponent implements OnInit {
   getAllPost() {
     this.postService.getAllPost().subscribe({
       next: data => {
-        //console.log(data)
+        console.log("Fetching all posts")
         this.postData = data
       }, error: err => {
         console.log(err)
@@ -118,6 +121,21 @@ export class AppUserComponent implements OnInit {
     const modalRef = this.modalService.open(JoinModalComponent, { size: 'sm', centered: true, scrollable: true })
     modalRef.componentInstance.postId = postId
     modalRef.componentInstance.userId = this.userData.id
+    modalRef.result.then((form) => {
+      if (form) {
+        console.log(form.value)
+        this.joinRequestService.createJoinRequest(postId, form.controls['body'].value).subscribe({
+          next: data => {
+            console.log(data)
+            //this.ngOnInit()
+            this.getAllJoinRequest(this.userData.id)
+            this.cd.detectChanges()
+          }, error: err => {
+            console.log(err)
+          }
+        })
+      }
+    })
   }
 
   getAllJoinRequest(userId: number) {

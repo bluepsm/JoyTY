@@ -67,21 +67,21 @@ public class Notification implements Serializable {
 	@NotNull
 	private Long relatedEntityId;
 	
-	@Column(name = "created_at")
+	@Column(name = "createdAt")
     @CreatedDate
-    private Long created_at;
+    private Long createdAt;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable( name = "notification_to", 
-		joinColumns = @JoinColumn(name = "notification_id"),
-		inverseJoinColumns = @JoinColumn(name = "user_id") ) 
+	@JoinTable( name = "notificationTo", 
+		joinColumns = @JoinColumn(name = "notificationId"),
+		inverseJoinColumns = @JoinColumn(name = "userId") ) 
 	private Set<User> toUsers;
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable( name = "notification_from", 
-		joinColumns = @JoinColumn(name = "notification_id"),
-		inverseJoinColumns = @JoinColumn(name = "user_id") ) 
+	@JoinTable( name = "notificationFrom", 
+		joinColumns = @JoinColumn(name = "notificationId"),
+		inverseJoinColumns = @JoinColumn(name = "userId") ) 
 	private User fromUser;
 	
 	public Notification() {}

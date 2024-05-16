@@ -34,15 +34,15 @@ export class PostModalComponent implements OnInit {
 
   postForm: FormGroup = new FormGroup({
     body: new FormControl(''),
-    party_size: new FormControl(''),
-    place_name: new FormControl(''),
-    place_address: new FormControl(''),
-    place_latitude: new FormControl(''),
-    place_longtitude: new FormControl(''),
-    meeting_date: new FormControl(''),
-    meeting_time: new FormControl(''),
-    cost_estimate: new FormControl(''),
-    cost_share: new FormControl(false),
+    partySize: new FormControl(''),
+    placeName: new FormControl(''),
+    placeAddress: new FormControl(''),
+    placeLatitude: new FormControl(''),
+    placeLongtitude: new FormControl(''),
+    meetingDate: new FormControl(''),
+    meetingTime: new FormControl(''),
+    costEstimate: new FormControl(''),
+    costShare: new FormControl(false),
     tags: new FormControl(''),
   })
 
@@ -67,31 +67,31 @@ export class PostModalComponent implements OnInit {
       body: ['', [
         Validators.required
       ]],
-      party_size: [1, [
+      partySize: [1, [
         Validators.required
       ]],
-      place_name: ['', [
+      placeName: ['', [
         Validators.required
       ]],
-      place_address: ['', [
+      placeAddress: ['', [
         Validators.required
       ]],
-      place_latitude: ['', [
+      placeLatitude: ['', [
         Validators.required
       ]],
-      place_longtitude: ['', [
+      placeLongtitude: ['', [
         Validators.required
       ]],
-      meeting_date: [this.ngbDate, [
+      meetingDate: [this.ngbDate, [
         Validators.required
       ]],
-      meeting_time: [this.time, [
+      meetingTime: [this.time, [
         Validators.required
       ]],
-      cost_estimate: [0, [
+      costEstimate: [0, [
         Validators.required
       ]],
-      cost_share: [true, [
+      costShare: [true, [
         Validators.required
       ]],
       tags: ['', [
@@ -103,15 +103,15 @@ export class PostModalComponent implements OnInit {
       console.log(this.post)
       
       this.pf['body'].setValue(this.post['body'])
-      this.pf['party_size'].setValue(this.post['party_size'])
-      this.pf['place_name'].setValue(this.post['place_name'])
-      this.pf['place_address'].setValue(this.post['place_address'])
-      this.pf['place_latitude'].setValue(this.post['place_latitude'])
-      this.pf['place_longtitude'].setValue(this.post['place_longtitude'])
-      this.pf['meeting_date'].setValue(this.post['meeting_date'])
-      this.pf['meeting_time'].setValue(this.post['meeting_time'])
-      this.pf['cost_estimate'].setValue(this.post['cost_estimate'])
-      this.pf['cost_share'].setValue(this.post['cost_share'])
+      this.pf['partySize'].setValue(this.post['partySize'])
+      this.pf['placeName'].setValue(this.post['placeName'])
+      this.pf['placeAddress'].setValue(this.post['placeAddress'])
+      this.pf['placeLatitude'].setValue(this.post['placeLatitude'])
+      this.pf['placeLongtitude'].setValue(this.post['placeLongtitude'])
+      this.pf['meetingDate'].setValue(this.post['meetingDate'])
+      this.pf['meetingTime'].setValue(this.post['meetingTime'])
+      this.pf['costEstimate'].setValue(this.post['costEstimate'])
+      this.pf['costShare'].setValue(this.post['costShare'])
       this.pf['tags'].setValue(this.post['tags'])
 
       // for (let country of this.countries) {
@@ -218,16 +218,16 @@ export class PostModalComponent implements OnInit {
   }
 
   onPlaceChange(place: PlaceSearchResult) {
-    this.pf['place_name'].setValue(place.name)
-    this.pf['place_address'].setValue(place.address)
-    this.pf['place_latitude'].setValue(place.location?.lat())
-    this.pf['place_longtitude'].setValue(place.location?.lng())
+    this.pf['placeName'].setValue(place.name)
+    this.pf['placeAddress'].setValue(place.address)
+    this.pf['placeLatitude'].setValue(place.location?.lat())
+    this.pf['placeLongtitude'].setValue(place.location?.lng())
 
     console.log("In Post Form")
-    console.log("Place Name: " + this.pf['place_name'].value)
-    console.log("Place Address: " + this.pf['place_address'].value)
-    console.log("Place Latitude: " + this.pf['place_latitude'].value)
-    console.log("Place Longtitude: " + this.pf['place_longtitude'].value)
+    console.log("Place Name: " + this.pf['placeName'].value)
+    console.log("Place Address: " + this.pf['placeAddress'].value)
+    console.log("Place Latitude: " + this.pf['placeLatitude'].value)
+    console.log("Place Longtitude: " + this.pf['placeLongtitude'].value)
   }
 
 }

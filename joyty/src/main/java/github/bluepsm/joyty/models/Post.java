@@ -41,52 +41,52 @@ public class Post implements Serializable {
     @NotBlank
     private String body;
 
-    @Column(name = "party_size")
+    @Column(name = "partySize")
     @Min(1)
     @NotNull
-    private Integer party_size;
+    private Integer partySize;
 
-    @Column(name = "place_name")
-    private String place_name;
+    @Column(name = "placeName")
+    private String placeName;
     
-    @Column(name = "place_address")
-    private String place_address;
+    @Column(name = "placeAddress")
+    private String placeAddress;
     
-    @Column(name = "place_latitude")
-    private Double place_latitude;
+    @Column(name = "placeLatitude")
+    private Double placeLatitude;
     
-    @Column(name = "place_longtitude")
-    private Double place_longtitude;
+    @Column(name = "placeLongtitude")
+    private Double placeLongtitude;
 
     @Column(name = "meeting_datetime")
-    private Date meeting_datetime;
+    private Date meetingDatetime;
 
-    @Column(name = "cost_estimate", columnDefinition = "money")
-    private BigDecimal cost_estimate;
+    @Column(name = "costEstimate", columnDefinition = "money")
+    private BigDecimal costEstimate;
 
-    @Column(name = "cost_share")
-    private Boolean cost_share;
+    @Column(name = "costShare")
+    private Boolean costShare;
 
     @Column(name = "joinner", columnDefinition = "int default 0")
     @Min(0)
     @NotNull
     private Integer joinner;
 
-    @Column(name = "meeting_done", columnDefinition = "bit default 0")
-    private Boolean meeting_done;
+    @Column(name = "meetingDone", columnDefinition = "bit default 0")
+    private Boolean meetingDone;
 
-    @Column(name = "created_at")
+    @Column(name = "createdAt")
     @CreatedDate
-    private Long created_at;
+    private Long createdAt;
 
-    @Column(name = "last_updated")
+    @Column(name = "lastUpdated")
     @LastModifiedDate
-    private Long last_updated;
+    private Long lastUpdated;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "post_tag",
-        joinColumns = @JoinColumn(name = "post_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    @JoinTable(name = "postTag",
+        joinColumns = @JoinColumn(name = "postId"),
+        inverseJoinColumns = @JoinColumn(name = "tagId")
     )
     private Set<Tag> tags;
 
@@ -104,36 +104,31 @@ public class Post implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "party",
-        joinColumns = @JoinColumn(name = "post_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
+        joinColumns = @JoinColumn(name = "postId"),
+        inverseJoinColumns = @JoinColumn(name = "userId")
     )
     private Set<User> members;
-
-    /* @PrePersist
-    protected void onCreate() {
-        created_at = System.currentTimeMillis();
-    } */
 
     public Post() {}
 
     public Post(
     		String body, 
-    		Integer party_size, 
-    		String place_name, 
-    		String place_address, 
-    		Double place_latitude, 
-    		Double place_longtitude, 
-    		Date meeting_datetime, 
-    		BigDecimal cost_estimate, 
-    		Boolean cost_share) {
+    		Integer partySize, 
+    		String placeName, 
+    		String placeAddress, 
+    		Double placeLatitude, 
+    		Double placeLongtitude, 
+    		Date meetingDatetime, 
+    		BigDecimal costEstimate, 
+    		Boolean costShare) {
     	this.body = body;
-        this.party_size = party_size;
-        this.place_name = place_name;
-		this.place_address = place_address;
-		this.place_latitude = place_latitude;
-		this.place_longtitude = place_longtitude;
-		this.meeting_datetime = meeting_datetime;
-        this.cost_estimate = cost_estimate;
-        this.cost_share = cost_share;
+        this.partySize = partySize;
+        this.placeName = placeName;
+		this.placeAddress = placeAddress;
+		this.placeLatitude = placeLatitude;
+		this.placeLongtitude = placeLongtitude;
+		this.meetingDatetime = meetingDatetime;
+        this.costEstimate = costEstimate;
+        this.costShare = costShare;
     }
 }

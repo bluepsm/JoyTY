@@ -21,14 +21,14 @@ export class PostService {
 
   createPost(postForm: FormGroup): Observable<any> {
     const body = postForm.controls['body'].value
-    const place_name = postForm.controls['place_name'].value
-    const place_address = postForm.controls['place_address'].value
-    const place_latitude = postForm.controls['place_latitude'].value
-    const place_longtitude = postForm.controls['place_longtitude'].value
-    const meeting_datetime = postForm.controls['meeting_datetime'].value
-    const party_size = postForm.controls['party_size'].value
-    const cost_estimate = postForm.controls['cost_estimate'].value
-    const cost_share = postForm.controls['cost_share'].value
+    const placeName = postForm.controls['placeName'].value
+    const placeAddress = postForm.controls['placeAddress'].value
+    const placeLatitude = postForm.controls['placeLatitude'].value
+    const placeLongtitude = postForm.controls['placeLongtitude'].value
+    const meetingDatetime = postForm.controls['meetingDatetime'].value
+    const partySize = postForm.controls['partySize'].value
+    const costEstimate = postForm.controls['costEstimate'].value
+    const costShare = postForm.controls['costShare'].value
     const tags = postForm.controls['tags'].value
 
     //console.log("In PostService")
@@ -37,14 +37,14 @@ export class PostService {
     return this.http.post(POST_API + '/create', 
       {
         body,
-        place_name,
-        place_address,
-        place_latitude,
-        place_longtitude,
-        meeting_datetime,
-        party_size,
-        cost_estimate,
-        cost_share,
+        placeName,
+        placeAddress,
+        placeLatitude,
+        placeLongtitude,
+        meetingDatetime,
+        partySize,
+        costEstimate,
+        costShare,
         tags,
       }, httpOptions)
   }

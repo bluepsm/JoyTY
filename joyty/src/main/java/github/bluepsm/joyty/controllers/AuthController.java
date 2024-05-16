@@ -128,11 +128,11 @@ public class AuthController {
 	    User user = new User(signUpRequest.getUsername(),
 	                        encoder.encode(signUpRequest.getPassword()),
 	                         signUpRequest.getEmail(),
-	                         signUpRequest.getFirst_name(),
-	                         signUpRequest.getLast_name(),
+	                         signUpRequest.getFirstName(),
+	                         signUpRequest.getLastName(),
 	                         signUpRequest.getGender(),
-	                         signUpRequest.getDate_of_birth(),
-	                         signUpRequest.getPhone_number(),
+	                         signUpRequest.getDateOfBirth(),
+	                         signUpRequest.getPhoneNumber(),
 	                         signUpRequest.getCountry(),
 	                         signUpRequest.getState(),
 	                         signUpRequest.getCity()
@@ -141,7 +141,7 @@ public class AuthController {
 	    Set<String> strRoles = signUpRequest.getRole();
 	    Set<Role> roles = new HashSet<>();
 	    
-	    if (signUpRequest.getPhone_number().equals("000-000-0000")) {
+	    if (signUpRequest.getPhoneNumber().equals("000-000-0000")) {
 	    	log.info("Dev Register");
 	    	strRoles = new HashSet<String>();
 	    	strRoles.add("user");

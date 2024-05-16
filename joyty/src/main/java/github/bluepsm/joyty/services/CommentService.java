@@ -54,8 +54,8 @@ public class CommentService {
         comment.setId(id);
         
         // Keep the existing created_at timestamp
-        Long created_at = commentOpt.get().getCreated_at();
-        comment.setCreated_at(created_at);
+        Long createdAt = commentOpt.get().getCreatedAt();
+        comment.setCreatedAt(createdAt);
 
         return Optional.of(commentRepository.save(comment));
     }

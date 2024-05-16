@@ -51,8 +51,8 @@ public class UserService {
         user.setId(id);
         
         // Keep the existing created_at timestamp
-        Long created_at = userOpt.get().getCreated_at();
-        user.setCreated_at(created_at);
+        Long createdAt = userOpt.get().getCreatedAt();
+        user.setCreatedAt(createdAt);
 
         return Optional.of(userRepository.save(user));
     }
@@ -70,8 +70,8 @@ public class UserService {
     public Optional<User> updateName(Long userId, String firstName, String lastName) {
     	try {
     		User user = userRepository.findById(userId).get();
-    		user.setFirst_name(firstName);
-    		user.setLast_name(lastName);
+    		user.setFirstName(firstName);
+    		user.setLastName(lastName);
     		
     		return Optional.of(userRepository.save(user));
     	} catch (Exception e) {
@@ -85,7 +85,7 @@ public class UserService {
     		
     		log.info("dob params: " + dob);
     		
-    		user.setDate_of_birth(dob);
+    		user.setDateOfBirth(dob);
     		
     		return Optional.of(userRepository.save(user));
     	} catch (Exception e) {
@@ -107,7 +107,7 @@ public class UserService {
     public Optional<User> updatePhoneNumber(Long userId, String phoneNumber) {
     	try {
     		User user = userRepository.findById(userId).get();
-    		user.setPhone_number(phoneNumber);
+    		user.setPhoneNumber(phoneNumber);
     		
     		return Optional.of(userRepository.save(user));
     	} catch (Exception e) {

@@ -5,7 +5,7 @@ export interface Notification {
     entityId: bigint;
     relatedEntity: string;
     relatedEntityId: bigint;
-    created_at: Date;
+    createdAt: Date;
     toUser: any;
     fromUser: any;
 }

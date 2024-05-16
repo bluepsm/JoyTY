@@ -1,8 +1,8 @@
 export class Comment {
     id?: any;
     body?: string;
-    created_at?: Date;
-    last_updated?: Date;
+    createdAt?: Date;
+    lastUpdated?: Date;
     user?: any;
     post?: any;
 }

@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body">
     <div class="container">
-        <form [formGroup]="joinForm" (ngSubmit)="joinFormSubmit">
+        <form [formGroup]="joinForm">
             <div class="row">
                 <textarea 
                     class="form-control" 
@@ -19,6 +19,6 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
-    <button type="button" class="btn btn-outline-primary" [disabled]="joinForm.invalid" (click)="joinFormSubmit()">Send</button>
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">Close</button>
+    <button type="button" class="btn btn-outline-primary" [disabled]="joinForm.invalid" (click)="activeModal.close(joinForm)">Send</button>
 </div>

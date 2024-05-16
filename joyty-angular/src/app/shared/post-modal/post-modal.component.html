@@ -132,15 +132,15 @@
                         ngbDatepicker
                         #dp="ngbDatepicker"
                         
-                        formControlName="meeting_date"
+                        formControlName="meetingDate"
                         [footerTemplate]="datePickerFooter"
                         [placement]="'right'"
-                        [ngClass]="{'is-invalid': pf['meeting_date'].errors}"
+                        [ngClass]="{'is-invalid': pf['meetingDate'].errors}"
                     />
                     <button class="btn btn-outline-secondary bi bi-calendar3" (click)="dp.toggle()" type="button"></button>
-                    @if (pf['meeting_date'].errors) {
+                    @if (pf['meetingDate'].errors) {
                         <div class="invalid-feedback">
-                            @if (pf['meeting_date'].errors['required']) {
+                            @if (pf['meetingDate'].errors['required']) {
                                 <div>Date is required!</div>
                             }
                         </div>
@@ -148,20 +148,20 @@
                 </div>
                 <ng-template #datePickerFooter>
                     <hr class="my-0" />
-                    <button class="btn btn-primary btn-sm m-2 float-start" (click)="pf['meeting_date'].setValue(today); dp.close()">Today</button>
+                    <button class="btn btn-primary btn-sm m-2 float-start" (click)="pf['meetingDate'].setValue(today); dp.close()">Today</button>
                     <button class="btn btn-secondary btn-sm m-2 float-end" (click)="dp.close()">Close</button>
                 </ng-template>
             </div>
             <div class="col">
                 <ngb-timepicker 
                     name="time" 
-                    formControlName="meeting_time"
+                    formControlName="meetingTime"
                     [minuteStep]="5" 
-                    [ngClass]="{'is-invalid': pf['meeting_time'].errors}"
+                    [ngClass]="{'is-invalid': pf['meetingTime'].errors}"
                 />
-                @if (pf['meeting_time'].errors) {
+                @if (pf['meetingTime'].errors) {
                     <div class="invalid-feedback">
-                        @if (pf['meeting_time'].errors['required']) {
+                        @if (pf['meetingTime'].errors['required']) {
                             <div>Time is required!</div>
                         }
                     </div>
@@ -181,14 +181,14 @@
                             placeholder="Size" 
                             min="1" 
                             value="1"
-                            formControlName="party_size"
-                            [ngClass]="{'is-invalid': pf['party_size'].errors}"
+                            formControlName="partySize"
+                            [ngClass]="{'is-invalid': pf['partySize'].errors}"
                         >
                         <label for="size">Size</label>
                     </div>
-                    @if (pf['party_size'].errors) {
+                    @if (pf['partySize'].errors) {
                         <div class="invalid-feedback">
-                            @if (pf['party_size'].errors['required']) {
+                            @if (pf['partySize'].errors['required']) {
                                 <div>Size is required!</div>
                             }
                         </div>
@@ -207,14 +207,14 @@
                             placeholder="Cost" 
                             min="0" 
                             value="0"
-                            formControlName="cost_estimate"
-                            [ngClass]="{'is-invalid': pf['cost_estimate'].errors}"
+                            formControlName="costEstimate"
+                            [ngClass]="{'is-invalid': pf['costEstimate'].errors}"
                         >
                         <label for="cost">Cost</label>
                     </div>
-                    @if (pf['cost_estimate'].errors) {
+                    @if (pf['costEstimate'].errors) {
                         <div class="invalid-feedback">
-                            @if (pf['cost_estimate'].errors['required']) {
+                            @if (pf['costEstimate'].errors['required']) {
                                 <div>Cost is required!</div>
                             }
                         </div>
@@ -230,12 +230,12 @@
                         class="form-check-input" 
                         type="checkbox"
                         value=true 
-                        id="cost_share"
-                        name="cost_share"
-                        formControlName="cost_share"
+                        id="costShare"
+                        name="costShare"
+                        formControlName="costShare"
                         checked
                     >
-                    <label class="form-check-label" for="cost_share">
+                    <label class="form-check-label" for="costShare">
                         Cost Share
                     </label>
                 </div>
