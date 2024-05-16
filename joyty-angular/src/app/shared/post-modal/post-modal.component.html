@@ -27,7 +27,7 @@
         <div class="row mb-3">
             <div class="col">
                 <app-place-auto-complete (placeChanged)="place = $event; onPlaceChange(place)"></app-place-auto-complete>
-                <app-map [mapOptions]="mapOptions" [place]="place"></app-map>
+                <app-map [place]="place"></app-map>
             </div>
         </div>
         <!-- <div class="row mb-3">

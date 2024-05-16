@@ -1,5 +1,15 @@
 import { Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
-import { MatFormField } from '@angular/material/form-field';
+import { Loader } from "@googlemaps/js-api-loader"
+
+const loader = new Loader({
+  apiKey: "AIzaSyBquu5-za-CcYezPdeO-c8GLHcRDDHouCM",
+  libraries: ["places"],
+  version: "weekly",
+})
+loader.load().then(async () => {
+  //const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+  console.log("Google Maps API loaded")
+});
 
 export interface PlaceSearchResult {
   address: string
@@ -22,8 +32,7 @@ export class PlaceAutoCompleteComponent implements OnInit {
 
   constructor(private ngZone: NgZone) { }
 
-  ngOnInit(): void {
-      
+  ngOnInit(): void {    
   }
 
   ngAfterViewInit(): void {

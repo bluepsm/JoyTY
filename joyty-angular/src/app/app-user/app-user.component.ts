@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, inject, Renderer2, Inject } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { PostModalComponent } from '../shared/post-modal/post-modal.component';
 import { NgbActiveModal, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +11,12 @@ import { JoinModalComponent } from '../join-modal/join-modal.component';
 import { JoinService } from '../services/join.service';
 import { JoinRequestModalComponent } from '../join-request-modal/join-request-modal.component';
 import { MapComponent } from '../map/map.component';
+import { DOCUMENT } from '@angular/common';
+// import { Loader } from "@googlemaps/js-api-loader"
+
+
+
+//declare const google: any
 
 @Component({
   selector: 'app-app-user',
@@ -40,18 +46,22 @@ export class AppUserComponent implements OnInit {
     tags: [1, 2],
   }
 
-  mapOptions: google.maps.MapOptions = {
-    disableDefaultUI: true,
-  }
-
   constructor(
     private userService: UserService,
     private postService: PostService,
     private storageService: StorageService,
     private joinRequestService: JoinService,
+    @Inject(DOCUMENT) private document: Document,
+    private renderer2: Renderer2,
   ) {}
 
   ngOnInit(): void {
+    // const mapApiUrl = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBquu5-za-CcYezPdeO-c8GLHcRDDHouCM'
+    // this.loadScript(mapApiUrl).then(() => {
+    //   this.initMap()
+    // })
+    
+
     this.getAllPost()
     //console.log("Data from storage service: " + JSON.stringify(this.storageService.getUser()))
     this.userData = this.storageService.getUser()
@@ -160,4 +170,25 @@ export class AppUserComponent implements OnInit {
       return costPerPersonInt
     }
   }
+
+  // private loadScript(url: any) {
+  //   return new Promise((resolve, reject) => {
+  //     const script = this.renderer2.createElement('script')
+  //     script.type = 'text/javascript'
+  //     script.src = url
+  //     script.text = ''
+  //     script.async = true
+  //     script.defer = true
+  //     script.onload = resolve
+  //     script.onerror = reject
+  //     this.renderer2.appendChild(this.document.body, script)
+  //   })
+  // }
+
+  // private initMap() {
+  //   const map = new google.maps.Map(this.document.getElementById('map'))
+  // }
+
 }
+
+

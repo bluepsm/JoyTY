@@ -48,9 +48,9 @@ export class PostModalComponent implements OnInit {
 
   selectedTags?: Tag[]
 
-  mapOptions: google.maps.MapOptions = {
-    disableDefaultUI: true,
-  }
+  // mapOptions: google.maps.MapOptions = {
+  //   disableDefaultUI: true,
+  // }
 
   place: PlaceSearchResult = {address: ''}
 

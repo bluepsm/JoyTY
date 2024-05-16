@@ -1,6 +1,17 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMap } from '@angular/google-maps';
 import { PlaceSearchResult } from '../shared/place-auto-complete/place-auto-complete.component';
+import { Loader } from "@googlemaps/js-api-loader"
+
+const loader = new Loader({
+  apiKey: "AIzaSyBquu5-za-CcYezPdeO-c8GLHcRDDHouCM",
+  libraries: ["places"],
+  version: "weekly",
+})
+loader.load().then(async () => {
+  //const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+  console.log("Google Maps API loaded")
+});
 
 @Component({
   selector: 'app-map',
@@ -10,8 +21,8 @@ import { PlaceSearchResult } from '../shared/place-auto-complete/place-auto-comp
 export class MapComponent implements OnInit {
   @ViewChild("map", { static: true })
   map!: GoogleMap;
+
   @Input() place: PlaceSearchResult | undefined
-  @Input() mapOptions: google.maps.MapOptions = {}
   @Input() lat: number = 13.75674949725114
   @Input() lng: number = 100.50185329412409
 
@@ -20,7 +31,8 @@ export class MapComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.mapOptions.center = {lat: this.lat, lng: this.lng}
+    // this.mapOptions.center = {lat: this.lat, lng: this.lng}
+    this.initMap()
   }
 
   ngOnChanges() {
@@ -28,6 +40,19 @@ export class MapComponent implements OnInit {
     //Add '${implements OnChanges}' to the class.
     const place = this.place?.location
     this.markerPosition = place!
-    this.map.panTo(place!)
+    if (this.map.googleMap) {
+      this.map.panTo(place!)
+    }
+  }
+
+  private initMap(): void {
+    const mapOptions: google.maps.MapOptions = {
+      disableDefaultUI: true,
+      center: {lat: this.lat, lng: this.lng},
+    }
+    this.map.options = mapOptions
+    this.map.height = '400px'
+    this.map.width = '100%'
+    this.map.mapId = '1234567890'
   }
 }
