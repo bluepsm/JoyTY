@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HTTP_INTERCEPTORS, HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { Observable, catchError, switchMap, throwError, map, delay, takeUntil, timer, finalize, share, of, merge, first, combineLatest, startWith, distinctUntilChanged, timeout } from "rxjs";
+import { Observable, catchError, switchMap, throwError, map, timeout, finalize, of, delay, merge, first, debounceTime, combineLatest, timer, takeUntil, share, startWith, distinctUntilChanged } from "rxjs";
 import { AuthService } from "../services/auth.service";
 import { StorageService } from "../services/storage.service";
 import { EventBusService } from "../shared/event-bus.service";
@@ -18,64 +18,50 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         private loadingService: LoadingService,
     ) {}
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        req = req.clone({
+    intercept(req$: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        req$ = req$.clone({
             withCredentials: true
         });
 
-        this.loadingService.setLoading(true, req.url)
+        const res$ = next.handle(req$)
+        .pipe(
+            //delay(1050),
+            timeout(10000),
+            catchError((error) => {
+                this.loadingService.setLoading(false, req$.url)
 
-        const res = next.handle(req)
-            .pipe(
-                //delay(1200),
-                //timeout(10000),
-                catchError((error) => {
-                    if (error instanceof HttpErrorResponse && !req.url.includes('auth/signin') && error.status === 401) {
-                        return this.handle401Error(req, next)
-                    }
+                if (error instanceof HttpErrorResponse && !req$.url.includes('auth/signin') && error.status === 401) {
+                    return this.handle401Error(req$, next)
+                }
 
-                    this.loadingService.setLoading(false, req.url)
+                return throwError(() => error)
+            }),
+            share(),
+        )
 
-                    return throwError(() => error)
+        const showLoading$ = merge(
+            timer(1000).pipe(
+                map(() => {
+                    this.loadingService.setLoading(true, req$.url)
                 }),
-                map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
-                    if (evt instanceof HttpResponse) {
-                        this.loadingService.setLoading(false, req.url)
-                    }
-                    return evt
+                takeUntil(res$),
+            ),
+            combineLatest([res$, timer(2000)]).pipe(
+                map(() => {
+                    this.loadingService.setLoading(false, req$.url)
                 }),
-                //share()
-        );
+            )
+        ).pipe(
+            startWith(
+                this.loadingService.setLoading(false, req$.url)
+            ),
+            distinctUntilChanged(),
+        )
+        
+        res$.subscribe()
+        showLoading$.subscribe()
 
-        // merge(
-        //     timer(1000).pipe(
-        //         map(() => {
-        //             //console.log("1 second passed.")
-        //             this.loadingService.setLoading(true, req.url)
-        //         }),
-        //         takeUntil(res),
-        //     ),
-        //     combineLatest([res, timer(2000)]).pipe(
-        //         map(() => {
-        //             this.loadingService.setLoading(false, req.url)
-        //         })
-
-        //         // map<[HttpEvent<any>, any], any>((evt: [HttpEvent<any>, any]) => {
-        //         //     if (evt instanceof HttpResponse) {
-        //         //         this.loadingService.setLoading(false, req.url)
-        //         //     }
-        //         //     return evt
-        //         // })
-        //     )
-        // ).pipe(
-        //     startWith(this.loadingService.setLoading(false, req.url)),
-        //     distinctUntilChanged()
-        // ).subscribe()
-
-        //res.subscribe()
-        //showLoading.subscribe()
-
-        return res
+        return res$
     };
 
     private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
