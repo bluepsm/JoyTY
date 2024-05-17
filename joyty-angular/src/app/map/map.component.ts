@@ -8,10 +8,11 @@ const loader = new Loader({
   libraries: ["places"],
   version: "weekly",
 })
-loader.load().then(async () => {
-  //const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
-  console.log("Google Maps API loaded")
-});
+loader.load()
+// loader.load().then(async () => {
+//   //const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+//   console.log("Google Maps API loaded - DEVELOPMENT ONLY")
+// });
 
 @Component({
   selector: 'app-map',
@@ -31,7 +32,6 @@ export class MapComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // this.mapOptions.center = {lat: this.lat, lng: this.lng}
     this.initMap()
   }
 

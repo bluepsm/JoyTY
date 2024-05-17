@@ -1,5 +1,5 @@
 export class JoinRequest {
-    id?: any;
+    id?: bigint;
     body?: string;
     status?: string;
     createdAt?: Date;

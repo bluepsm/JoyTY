@@ -19,11 +19,11 @@ export class CommentService {
 
   constructor(private http: HttpClient) { }
 
-  getAllComments(postId: number): Observable<Comment[]> {
+  getAllComments(postId: bigint): Observable<Comment[]> {
     return this.http.get<Comment[]>(COMMENT_API + '/getCommentByPost/' + postId, httpOptions)
   }
 
-  createComment(postId: number, body: string): Observable<any> {
+  createComment(postId: bigint, body: string): Observable<any> {
     return this.http.post(COMMENT_API + '/create', {postId, body}, httpOptions)
   }
 }

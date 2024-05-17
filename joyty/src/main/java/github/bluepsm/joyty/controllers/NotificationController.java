@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import github.bluepsm.joyty.models.Comment;
@@ -38,8 +39,8 @@ public class NotificationController {
 //    }
 
 	@GetMapping("/getNotificationByUserId/{userId}")
-	public ResponseEntity<List<Notification>> getNotificationByUserId(@PathVariable Long userId) {
-		Optional<List<Notification>> notifications = notificationService.getNotificationByUserId(userId);
+	public ResponseEntity<List<Notification>> getNotificationByUserId(@PathVariable Long userId, @RequestParam(defaultValue = "createdAt,desc") String[] sort) {
+		Optional<List<Notification>> notifications = notificationService.getNotificationByUserId(userId, sort);
 		
 		if (!notifications.isPresent()) {
 			return ResponseEntity.internalServerError().build();

@@ -31,9 +31,6 @@ export class PostService {
     const costShare = postForm.controls['costShare'].value
     const tags = postForm.controls['tags'].value
 
-    //console.log("In PostService")
-    //console.log("In PostService")
-
     return this.http.post(POST_API + '/create', 
       {
         body,
@@ -53,7 +50,7 @@ export class PostService {
     return this.http.get<Post[]>(POST_API + '/all', httpOptions)
   }
 
-  getPostByPostId(postId: number): Observable<Post> {
+  getPostByPostId(postId: bigint): Observable<Post> {
     return this.http.get<Post>(POST_API + '/' + postId, httpOptions)
   }
 }

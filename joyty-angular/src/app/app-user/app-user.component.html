@@ -86,20 +86,20 @@
                                     <button 
                                         class="btn btn-sm btn-outline-primary" 
                                         type="button" 
-                                        (click)="openJoinRequestModal(post.id)"
+                                        (click)="openJoinRequestModal(post.id!)"
                                         >
                                         Requests
                                     </button>
                                 </div>
                                 <ng-template #notOwnPost>
-                                    <div *ngIf="checkJoinRequestHasBeenSent(post.id); else notSent">
+                                    <div *ngIf="checkJoinRequestHasBeenSent(post.id!); else notSent">
                                         <span>Join request has been sent</span>
                                     </div>
                                     <ng-template #notSent>
                                         <button 
                                             class="btn btn-sm btn-outline-primary" 
                                             type="button" 
-                                            (click)="openJoinModal(post.id)"
+                                            (click)="openJoinModal(post.id!)"
                                             >
                                             Join
                                         </button>
@@ -108,7 +108,7 @@
                                 <button 
                                     class="btn btn-sm btn-outline-secondary" 
                                     type="button" 
-                                    (click)="openCommentModal(post.id)"
+                                    (click)="openCommentModal(post.id!)"
                                 >
                                     Comments
                                 </button>

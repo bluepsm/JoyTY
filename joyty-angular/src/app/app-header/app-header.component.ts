@@ -6,6 +6,7 @@ import { EventBusService } from '../shared/event-bus.service';
 import { Subscription } from 'rxjs';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { MenuNotificationComponent } from '../menu-notification/menu-notification.component';
+import { ToastService } from '../shared/toast/toast.service';
 
 @Component({
   selector: 'app-app-header',
@@ -28,11 +29,10 @@ export class AppHeaderComponent implements OnInit {
     private storageService: StorageService,
     private authService: AuthService,
     private eventBusService: EventBusService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
-    //console.log("Header OnInit")
-
     this.isLoggedIn = this.storageService.isLoggedIn()
 
     if (this.isLoggedIn) {
@@ -44,7 +44,6 @@ export class AppHeaderComponent implements OnInit {
 
       this.username = user.username
       this.userId = user.id
-      //console.log("Header username = " + this.username)
     }
 
     this.eventBusSub = this.eventBusService.on('logout', () => {
@@ -53,15 +52,15 @@ export class AppHeaderComponent implements OnInit {
   }
 
   logOut(): void {
-    //console.log("logOut")
     this.authService.logout().subscribe({
-      next: res => {
-        console.log(res)
+      next: () => {
+        this.toastService.showStatusToast("Logout successfully")
         this.storageService.clean()
         this.router.navigate(["/home"])
         this.ngOnInit()
         //window.location.reload()
       }, error: err => {
+        this.toastService.showErrorToast("Logout fail: " + err.error.message)
         console.log(err)
       }
     })

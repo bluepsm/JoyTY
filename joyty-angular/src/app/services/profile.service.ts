@@ -20,39 +20,39 @@ export class ProfileService {
 
   constructor(private http: HttpClient) {}
 
-  getUserProfile(userId: any): Observable<User> {
+  getUserProfile(userId: bigint): Observable<User> {
     return this.http.get<User>(USER_API_URL + userId)
   }
 
-  updateUsername(userId: any, username: string): Observable<any> {
+  updateUsername(userId: bigint, username: string): Observable<any> {
     return this.http.patch<any>(AUTH_API_URL + 'updateUsername', { userId, username }, httpOptions)
   }
 
-  updateEmail(userId: any, email: string): Observable<any> {
+  updateEmail(userId: bigint, email: string): Observable<any> {
     return this.http.patch<any>(AUTH_API_URL + 'updateEmail', { userId, email }, httpOptions)
   }
 
-  updatePassword(userId: any, password: string): Observable<any> {
+  updatePassword(userId: bigint, password: string): Observable<any> {
     return this.http.patch<any>(AUTH_API_URL + 'resetPassword', { userId, password }, httpOptions)
   }
 
-  updateName(userId: any, firstName: string, lastName: string): Observable<any> {
+  updateName(userId: bigint, firstName: string, lastName: string): Observable<any> {
     return this.http.patch<any>(USER_API_URL + 'updateName', { userId, firstName, lastName }, httpOptions)
   }
 
-  updateDateOfBirth(userId: any, dateOfBirth: any): Observable<any> {
+  updateDateOfBirth(userId: bigint, dateOfBirth: any): Observable<any> {
     return this.http.patch<any>(USER_API_URL + 'updateDateOfBirth', { userId, dateOfBirth }, httpOptions)
   }
 
-  updateGender(userId: any, gender: string): Observable<any> {
+  updateGender(userId: bigint, gender: string): Observable<any> {
     return this.http.patch<any>(USER_API_URL + 'updateGender', { userId, gender }, httpOptions)
   }
 
-  updatePhoneNumber(userId: any, phoneNumber: string): Observable<any> {
+  updatePhoneNumber(userId: bigint, phoneNumber: string): Observable<any> {
     return this.http.patch<any>(USER_API_URL + 'updatePhoneNumber', { userId, phoneNumber }, httpOptions)
   }
 
-  updateLocation(userId: any, country: string, state: string, city: string): Observable<any> {
+  updateLocation(userId: bigint, country: string, state: string, city: string): Observable<any> {
     return this.http.patch<any>(USER_API_URL + 'updateLocation', { userId, country, state, city }, httpOptions)
   }
 }

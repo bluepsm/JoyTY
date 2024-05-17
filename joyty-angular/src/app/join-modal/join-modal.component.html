@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title">Join</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
 </div>
 <div class="modal-body">
     <div class="container">
@@ -19,6 +19,6 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">Close</button>
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close()">Close</button>
     <button type="button" class="btn btn-outline-primary" [disabled]="joinForm.invalid" (click)="activeModal.close(joinForm)">Send</button>
 </div>

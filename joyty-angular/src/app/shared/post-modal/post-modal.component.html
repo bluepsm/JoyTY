@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">POST</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross Click')"></button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
 </div>
 <div class="modal-body">
     <form [formGroup]="postForm">
@@ -30,98 +30,6 @@
                 <app-map [place]="place"></app-map>
             </div>
         </div>
-        <!-- <div class="row mb-3">
-            <label class="col-3 col-form-label" for="country">Country:</label>
-            <div class="col">
-                <select 
-                    class="form-select" 
-                    id="country"
-                    name="country"
-                    (change)="onCountryChange($event)" 
-                    [(ngModel)]="selectedCountry"
-                    [ngModelOptions]="{standalone: true}"
-                    [ngClass]="{'is-invalid': pf['meeting_country'].errors}"
-                >
-                    <option [ngValue]="null">-- Select Your Country --</option>
-                    <option *ngFor="let country of countries" [ngValue]="country">{{ country.flag }}&nbsp;&nbsp;{{ country.name }}</option>
-                </select>
-                @if (pf['meeting_country'].errors) {
-                    <div class="invalid-feedback">
-                        @if (pf['meeting_country'].errors['required']) {
-                            <div>Country is required!</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label class="col-3 col-form-label" for="state">State:</label>
-            <div class="col">
-                <select 
-                    class="form-select" 
-                    id="state"
-                    name="state"
-                    (change)="onStateChange($event)" 
-                    [(ngModel)]="selectedState"
-                    [ngModelOptions]="{standalone: true}"
-                    [ngClass]="{'is-invalid': pf['meeting_state'].errors}"
-                >
-                    <option [ngValue]="null">-- Select Your State --</option>
-                    <option *ngFor="let state of states" [ngValue]="state">{{ state.name }}</option>
-                </select>
-                @if (pf['meeting_state'].errors) {
-                    <div class="invalid-feedback">
-                        @if (pf['meeting_state'].errors['required']) {
-                            <div>State is required!</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label class="col-3 col-form-label" for="city">City:</label>
-            <div class="col">
-                <select 
-                    class="form-select" 
-                    id="city"
-                    name="city"
-                    (change)="onCityChange($event)" 
-                    [(ngModel)]="selectedCity"
-                    [ngModelOptions]="{standalone: true}"
-                    [ngClass]="{'is-invalid': pf['meeting_city'].errors}"
-                >
-                    <option [ngValue]="null">-- Select Your City --</option>
-                    <option *ngFor="let city of cities" [ngValue]="city">{{ city.name }}</option>
-                </select>
-                @if (pf['meeting_city'].errors) {
-                    <div class="invalid-feedback">
-                        @if (pf['meeting_city'].errors['required']) {
-                            <div>City is required!</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label class="col-3 col-form-label" for="location">Location:</label>
-            <div class="col">
-                <input
-                    type="text"
-                    class="form-control" 
-                    id="location"
-                    name="location"
-                    formControlName="meeting_location"
-                    [ngClass]="{'is-invalid': pf['meeting_location'].errors}"
-                >
-                @if (pf['meeting_location'].errors) {
-                    <div class="invalid-feedback">
-                        @if (pf['meeting_location'].errors['required']) {
-                            <div>Location is required!</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div> -->
         <div class="row mb-3 align-items-center">
             <div class="col">
                 <div class="input-group">
@@ -255,5 +163,5 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-outline-success" (click)="activeModal.close(postForm)">Save</button>
-    <button type="button" class="btn btn-outline-danger" (click)="activeModal.dismiss('Cross Click')">Cancel</button>
+    <button type="button" class="btn btn-outline-danger" (click)="activeModal.close()">Cancel</button>
 </div>

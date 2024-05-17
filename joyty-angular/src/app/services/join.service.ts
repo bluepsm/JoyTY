@@ -18,19 +18,19 @@ export class JoinService {
 
   constructor(private http: HttpClient) { }
 
-  createJoinRequest(postId: number, body: String): Observable<any> {
+  createJoinRequest(postId: bigint, body: String): Observable<any> {
     return this.http.post(JOIN_API + '/create', {postId, body}, httpOptions)
   }
 
-  getAllRequestByUserId(userId: number): Observable<JoinRequest[]> {
+  getAllRequestByUserId(userId: bigint): Observable<JoinRequest[]> {
     return this.http.get<JoinRequest[]>(JOIN_API + '/getJoinRequestByUserId/' + userId, httpOptions)
   }
 
-  getAllRequestByPostId(postId: number): Observable<JoinRequest[]> {
+  getAllRequestByPostId(postId: bigint): Observable<JoinRequest[]> {
     return this.http.get<JoinRequest[]>(JOIN_API + '/getJoinRequestByPostId/' + postId, httpOptions)
   }
 
-  respondToRequest(requestId: number, response: string): Observable<any> {
+  respondToRequest(requestId: bigint, response: string): Observable<any> {
     return this.http.get(JOIN_API + '/respondToRequest/' + requestId + '?response=' + response, httpOptions)
   }
 }

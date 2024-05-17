@@ -1,5 +1,5 @@
 export class Comment {
-    id?: any;
+    id?: bigint;
     body?: string;
     createdAt?: Date;
     lastUpdated?: Date;

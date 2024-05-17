@@ -4,6 +4,7 @@ import { JoinService } from '../services/join.service';
 import { JoinRequest } from '../models/joinRequest.model';
 import { Post } from '../models/post.model';
 import { PostService } from '../services/post.service';
+import { ToastService } from '../shared/toast/toast.service';
 
 @Component({
   selector: 'app-join-request-modal',
@@ -12,7 +13,7 @@ import { PostService } from '../services/post.service';
 })
 export class JoinRequestModalComponent implements OnInit {
   activeModal = inject(NgbActiveModal)
-  @Input() public postId!: number
+  @Input() public postId!: bigint
 
   post?: Post
   joinRequests?: JoinRequest[]
@@ -20,7 +21,8 @@ export class JoinRequestModalComponent implements OnInit {
   constructor(
     private joinService: JoinService,
     private postService: PostService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -28,35 +30,37 @@ export class JoinRequestModalComponent implements OnInit {
     this.getPostByPostId(this.postId)
   }
 
-  getAllJoinRequestByPostId(postId: number) {
+  getAllJoinRequestByPostId(postId: bigint) {
     this.joinService.getAllRequestByPostId(postId).subscribe({
       next: data => {
         this.joinRequests = data
       }, error: err => {
+        this.toastService.showErrorToast("Error fetching join requests: " + err.error.message)
         console.log(err)
       }
     })
   }
 
-  respondToRequest(requestId: number, response: string) {
+  respondToRequest(requestId: bigint, response: string) {
     this.joinService.respondToRequest(requestId, response).subscribe({
-      next: data => {
-        console.log(data)
+      next: () => {
+        this.toastService.showStatusToast('Request responded!')
         this.getPostByPostId(this.postId)
         this.getAllJoinRequestByPostId(this.postId)
         this.cd.detectChanges()
       }, error: err => {
+        this.toastService.showErrorToast('Error responding to request: ' + err.error.message)
         console.log(err)
       }
     })
   }
 
-  getPostByPostId(postId: number) {
+  getPostByPostId(postId: bigint) {
     this.postService.getPostByPostId(postId).subscribe({
       next: data => {
         this.post = data
-        //console.log(data)
       }, error: err => {
+        this.toastService.showErrorToast("Error fetching post: " + err.error.message)
         console.log(err)
       }
     })

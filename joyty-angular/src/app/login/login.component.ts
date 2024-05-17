@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
+import { ToastService } from '../shared/toast/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,12 @@ export class LoginComponent implements OnInit{
   errorMsg = ''
   roles: string[] = []
 
-  constructor(private authService: AuthService, private storageService: StorageService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private storageService: StorageService, 
+    private router: Router,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
       if (this.storageService.isLoggedIn()) {
@@ -32,16 +38,16 @@ export class LoginComponent implements OnInit{
 
     this.authService.login(username, password).subscribe({
       next: data => {
-        //console.log("login complete")
+        this.toastService.showStatusToast("Login successfully")
         this.storageService.saveUser(data)
         this.fail = false
         this.isLoggedIn = true
         this.roles = this.storageService.getUser().roles
         this.router.navigate(['/user'])
-        this.reloadPage()
+        //this.reloadPage()
       }, error: err => {
-        //console.log("login error")
         this.errorMsg = err.error.message
+        this.toastService.showErrorToast("Login fail: " + this.errorMsg)
         this.fail = true
       }
     })

@@ -1,5 +1,5 @@
 export class Post {
-    id?: any;
+    id?: bigint;
     body?: string;
     placeName?: string;
     placeAddress?: string;

@@ -17,4 +17,12 @@ export class ToastService {
 	clear() {
 		this.toasts.splice(0, this.toasts.length);
 	}
+
+	showStatusToast(message: String) {
+		this.show(message, { classname: 'bg-dark text-light', delay: 5000 })
+	}
+	
+	showErrorToast(message: String) {
+		this.show(message, { classname: 'bg-danger text-light', delay: 15000 })
+	}
 }

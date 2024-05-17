@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { NgbActiveModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TagService } from '../../services/tag.service';
 import { Tag } from '../../models/tag.model';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-tag-modal',
@@ -17,6 +18,7 @@ export class TagModalComponent implements OnInit {
   constructor(
     private config: NgbModalConfig,
     private tagService: TagService,
+    private toastService: ToastService
   ) {
     this.config.backdrop = 'static'
     this.config.keyboard = false
@@ -27,29 +29,25 @@ export class TagModalComponent implements OnInit {
   }
 
   getAllTags() {
-    console.log("getAllTags")
     this.tagService.getAllTags().subscribe({
       next: data => {
-        console.log(data)
         this.tags = data
       }, error: err => {
+        this.toastService.showErrorToast("Error fetching tags: " + err.error.message)
         console.log(err)
       }
     })
   }
 
   selectTag(tag: Tag) {
-    //console.log(tag.tagname)
     if (this.selectedTags.includes(tag)) {
       this.selectedTags = this.removeTagById(this.selectedTags, tag.id)
     } else {
       this.selectedTags.push(tag)
     }
-    //console.log(this.selectedTags)
   }
 
   removeTagById(tags: Tag[], removeId: any): Tag[] {
-    //console.log("Delete")
     return tags.filter(tag => tag.id !== removeId)
   }
 }

@@ -137,8 +137,6 @@ public class PostService {
           orders.add(new Order(getSortDirection(sort[1]), sort[0]));
         }
         
-        log.info(orders.toString());
-        
         List<Post> posts = postRepository.findAll(Sort.by(orders));
         return Optional.of(posts);
     }

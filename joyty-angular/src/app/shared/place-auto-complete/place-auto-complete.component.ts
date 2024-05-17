@@ -6,10 +6,11 @@ const loader = new Loader({
   libraries: ["places"],
   version: "weekly",
 })
-loader.load().then(async () => {
-  //const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
-  console.log("Google Maps API loaded")
-});
+loader.load()
+// loader.load().then(async () => {
+//   //const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+//   console.log("Google Maps API loaded - DEVELOPMENT ONLY")
+// });
 
 export interface PlaceSearchResult {
   address: string

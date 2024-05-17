@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Country, State, City, ICountry, IState, ICity } from 'country-state-city';
-import { formatDate } from '@angular/common';
 import { Router } from '@angular/router';
+import { ToastService } from '../shared/toast/toast.service';
 
 
 @Component({
@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-
   form: any = {
     username: null, 
     password: null, 
@@ -37,14 +36,16 @@ export class RegisterComponent {
   selectedState?: any
   selectedCity?: any
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private toastService: ToastService
+  ) {}
 
   onCountryChange(): void {
-    //console.log("Selected country: " + this.selectedCountry)
     this.states = State.getStatesOfCountry(JSON.parse(this.selectedCountry).isoCode)
     this.selectedState = null
     this.form.country = JSON.parse(this.selectedCountry).name
-    //console.log("State from selected country: " + this.states)
   }
 
   onStateChange(): void {
@@ -73,7 +74,6 @@ export class RegisterComponent {
   }
 
   onSubmit(): void {
-
     const 
     {
       username, 
@@ -89,20 +89,20 @@ export class RegisterComponent {
       city
     } = this.form
 
-    console.log
-    (
-      "Username: " + username + "\n" +
-      "password: " + password + "\n" +
-      "email: " + email + "\n" +
-      "firstName: " + firstName + "\n" +
-      "lastName: " + lastName + "\n" +
-      "gender: " + gender + "\n" +
-      "dateOfBirth: " + formatDate(dateOfBirth, 'dd-MM-yyyy', 'en-US') + "\n" +
-      "phoneNumber: " + phoneNumber + "\n" +
-      "country: " + country + "\n" +
-      "state: " + state + "\n" +
-      "city: " + city
-    )
+    // console.log
+    // (
+    //   "Username: " + username + "\n" +
+    //   "password: " + password + "\n" +
+    //   "email: " + email + "\n" +
+    //   "firstName: " + firstName + "\n" +
+    //   "lastName: " + lastName + "\n" +
+    //   "gender: " + gender + "\n" +
+    //   "dateOfBirth: " + formatDate(dateOfBirth, 'dd-MM-yyyy', 'en-US') + "\n" +
+    //   "phoneNumber: " + phoneNumber + "\n" +
+    //   "country: " + country + "\n" +
+    //   "state: " + state + "\n" +
+    //   "city: " + city
+    // )
 
     this.authService.register
     (
@@ -118,13 +118,14 @@ export class RegisterComponent {
       state,
       city
     ).subscribe({
-      next: data => {
-        console.log(data)
+      next: () => {
+        this.toastService.showStatusToast("Registration successfully")
         this.success = true
         this.fail = false
         this.router.navigate(['/login'])
       }, error: err => {
         this.errorMsg = err.error.message
+        this.toastService.showErrorToast("Registration fail: " + this.errorMsg)
         this.fail = true
       }
     })

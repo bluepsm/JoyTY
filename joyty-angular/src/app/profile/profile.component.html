@@ -503,13 +503,10 @@
                 </div>
             </div>
         </div>
-        <!-- <button class="btn btn-primary" (click)="showStatusToast()">Test Toast</button>
-        <button class="btn btn-danger" (click)="showErrorToast()">Test Error Toast</button> -->
     } @else {
         <p>Please login.</p>
     }
 </div>
-<app-toast aria-live="polite" aria-atomic="true"></app-toast>
 <app-confirm-dialog 
     #updateUsernameConfirm 
     (newConfirmationEvent)="getUpdateUsernameConfirmation($event)" 

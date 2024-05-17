@@ -1,7 +1,6 @@
-import { Component, OnInit, TemplateRef, ViewChild, inject, Renderer2, Inject, ChangeDetectorRef } from '@angular/core';
-import { UserService } from '../services/user.service';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { PostModalComponent } from '../shared/post-modal/post-modal.component';
-import { NgbActiveModal, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PostService } from '../services/post.service';
 import { Post } from '../models/post.model';
@@ -10,8 +9,7 @@ import { StorageService } from '../services/storage.service';
 import { JoinModalComponent } from '../join-modal/join-modal.component';
 import { JoinService } from '../services/join.service';
 import { JoinRequestModalComponent } from '../join-request-modal/join-request-modal.component';
-import { MapComponent } from '../map/map.component';
-import { DOCUMENT } from '@angular/common';
+import { ToastService } from '../shared/toast/toast.service';
 
 @Component({
   selector: 'app-app-user',
@@ -24,47 +22,27 @@ export class AppUserComponent implements OnInit {
   date = new Date()
   userData?: any
   joinRequest?: any
-  joinRequestId: number[] = []
+  joinRequestId: bigint[] = []
   private modalService = inject(NgbModal)
 
-  public post = {
-    body: "Test",
-    placeName: "Test Place",
-    placeAddress: "Test Place, Test Street, Test City, Test State, Test Country",
-    placeLatitude: 0,
-    placeLongtitude: 0,
-    meetingDate: new NgbDate(2024, 3, 18),
-    meetingTime: { hour: 17, minute: 30 },
-    partySize: 3,
-    costEstimate: 300,
-    costShare: false,
-    tags: [1, 2],
-  }
-
   constructor(
-    private userService: UserService,
     private postService: PostService,
     private storageService: StorageService,
     private joinRequestService: JoinService,
-    @Inject(DOCUMENT) private document: Document,
-    private renderer2: Renderer2,
+    private toastService: ToastService,
     private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.getAllPost()
-    //console.log("Data from storage service: " + JSON.stringify(this.storageService.getUser()))
     this.userData = this.storageService.getUser()
     this.getAllJoinRequest(this.userData.id)
-    //console.log(this.joinRequestId)
   }
 
   openPostModal() {
     const modalRef = this.modalService.open(PostModalComponent, { size: 'lg', centered: true, scrollable: true })
-    modalRef.componentInstance.post = this.post
     modalRef.result.then((form) => {
       if (form) {
-        //console.log(form.value)
         const ngbDate = form.controls['meetingDate'].value
         const ngbTime = form.controls['meetingTime'].value
 
@@ -84,15 +62,13 @@ export class AppUserComponent implements OnInit {
           tags: new FormControl(form.controls['tags'].value),
         })
 
-        console.log(newPostForm.value)
-
         this.postService.createPost(newPostForm).subscribe({
-          next: data => {
-            console.log(data)
-            //this.ngOnInit()
+          next: () => {
+            this.toastService.showStatusToast("Post created successfully")
             this.getAllPost()
             this.cd.detectChanges()
           }, error: err => {
+            this.toastService.showErrorToast("Error creating post: " + err.error.message)
             console.log(err)
           }
         })
@@ -103,34 +79,33 @@ export class AppUserComponent implements OnInit {
   getAllPost() {
     this.postService.getAllPost().subscribe({
       next: data => {
-        console.log("Fetching all posts")
         this.postData = data
       }, error: err => {
+        this.toastService.showErrorToast("Error fetching posts: " + err.error.message)
         console.log(err)
       }
     })
   }
 
-  openCommentModal(postId: number) {
+  openCommentModal(postId: bigint) {
     const modalRef = this.modalService.open(CommentComponent, { size: 'xl', centered: true, scrollable: true })
     modalRef.componentInstance.postId = postId
     modalRef.componentInstance.userId = this.userData.id
   }
 
-  openJoinModal(postId: number) {
+  openJoinModal(postId: bigint) {
     const modalRef = this.modalService.open(JoinModalComponent, { size: 'sm', centered: true, scrollable: true })
     modalRef.componentInstance.postId = postId
     modalRef.componentInstance.userId = this.userData.id
     modalRef.result.then((form) => {
       if (form) {
-        console.log(form.value)
         this.joinRequestService.createJoinRequest(postId, form.controls['body'].value).subscribe({
-          next: data => {
-            console.log(data)
-            //this.ngOnInit()
+          next: () => {
+            this.toastService.showStatusToast("Join request sent successfully")
             this.getAllJoinRequest(this.userData.id)
             this.cd.detectChanges()
           }, error: err => {
+            this.toastService.showErrorToast("Error sending join request: " + err.error.message)
             console.log(err)
           }
         })
@@ -138,21 +113,21 @@ export class AppUserComponent implements OnInit {
     })
   }
 
-  getAllJoinRequest(userId: number) {
+  getAllJoinRequest(userId: bigint) {
     this.joinRequestService.getAllRequestByUserId(userId).subscribe({
       next: data => {
         this.joinRequest = data
         for (let joinRequest of data) {
           this.joinRequestId.push(joinRequest.join.id)
         }
-        //console.log(data)
       }, error: err => {
+        this.toastService.showErrorToast("Error fetching join requests: " + err.error.message)
         console.log(err)
       }
     })
   }
 
-  checkJoinRequestHasBeenSent(postId: number): boolean {
+  checkJoinRequestHasBeenSent(postId: bigint): boolean {
     if (this.joinRequestId.includes(postId)) {
       return true
     } else {
@@ -160,7 +135,7 @@ export class AppUserComponent implements OnInit {
     }
   }
 
-  openJoinRequestModal(postId: number) {
+  openJoinRequestModal(postId: bigint) {
     const modalRef = this.modalService.open(JoinRequestModalComponent, { size: 'lg', centered: true, scrollable: true })
     modalRef.componentInstance.postId = postId
   }
@@ -172,12 +147,8 @@ export class AppUserComponent implements OnInit {
       numberOfPeople += 1;
 
       let costPerPersonInt: number = Math.ceil(Number(cost) / numberOfPeople);
-      //console.log(`Cost per person (${numberOfPeople} persons): ${costPerPersonInt}`);
 
       return costPerPersonInt
     }
   }
-
 }
-
-

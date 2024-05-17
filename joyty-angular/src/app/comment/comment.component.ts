@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CommentService } from '../services/comment.service';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Comment } from '../models/comment.model';
+import { ToastService } from '../shared/toast/toast.service';
 
 @Component({
   selector: 'app-comment',
@@ -10,8 +11,8 @@ import { Comment } from '../models/comment.model';
   styleUrl: './comment.component.css'
 })
 export class CommentComponent implements OnInit {
-  @Input() public postId!: number
-  @Input() public userId!: number
+  @Input() public postId!: bigint
+  @Input() public userId!: bigint
   activeModal = inject(NgbActiveModal)
 
   comments?: Comment[]
@@ -24,31 +25,26 @@ export class CommentComponent implements OnInit {
     private config: NgbModalConfig,
     private commentService: CommentService,
     private formBuilder: FormBuilder,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private toastService: ToastService,
   ) {
     this.config.backdrop = 'static'
     this.config.keyboard = false
   }
 
   ngOnInit(): void {
-    //console.log(this.postId)
-
     this.getAllComment(this.postId)
-
-    //console.log(this.userId)
-    //console.log(this.comments)
-
     this.commentForm = this.formBuilder.group({
       body: ['', [Validators.required]]
     })
   }
 
-  getAllComment(postId: number) {
+  getAllComment(postId: bigint) {
     this.commentService.getAllComments(postId).subscribe({
       next: data => {
         this.comments = data
-        //console.log(data)
       }, error: err => {
+        this.toastService.showErrorToast("Error fetching comments: " + err.error.message)
         console.log(err)
       }
     })
@@ -60,11 +56,12 @@ export class CommentComponent implements OnInit {
 
   commentFormSubmit() {
     this.commentService.createComment(this.postId, this.cf['body'].value).subscribe({
-      next: data => {
-        console.log(data)
+      next: () => {
+        this.toastService.showStatusToast("Comment created successfully")
         this.getAllComment(this.postId)
         this.cd.detectChanges()
       }, error: err => {
+        this.toastService.showErrorToast("Error creating comment: " + err.error.message)
         console.log(err)
       }
     })

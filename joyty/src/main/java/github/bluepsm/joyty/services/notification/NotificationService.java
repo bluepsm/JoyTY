@@ -1,11 +1,14 @@
 package github.bluepsm.joyty.services.notification;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import github.bluepsm.joyty.models.Tag;
@@ -54,7 +57,31 @@ public class NotificationService {
 		return Optional.of(notificationRepository.save(notification));
 	}
 	
-	public Optional<List<Notification>> getNotificationByUserId(Long userId) {
-		return Optional.of(notificationRepository.findByToUsersId(userId));
+	public Optional<List<Notification>> getNotificationByUserId(Long userId, String[] sort) {
+		List<Order> orders = new ArrayList<Order>();
+
+        if (sort[0].contains(",")) {
+          // will sort more than 2 columns
+          for (String sortOrder : sort) {
+            // sortOrder="column, direction"
+            String[] _sort = sortOrder.split(",");
+            orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+          }
+        } else {
+          // sort=[column, direction]
+          orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+        }
+        
+		return Optional.of(notificationRepository.findByToUsersId(userId, Sort.by(orders)));
 	}
+	
+	private Sort.Direction getSortDirection(String direction) {
+    	if (direction.equals("desc")) {
+    		return Sort.Direction.DESC;
+    	} else if (direction.equals("asc")) {
+    		return Sort.Direction.ASC;
+    	}
+    	
+    	return Sort.Direction.DESC;
+    }
 }

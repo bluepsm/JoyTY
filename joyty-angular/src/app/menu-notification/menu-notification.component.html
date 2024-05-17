@@ -1,34 +1,10 @@
-<!-- <div 
-    class="offcanvas offcanvas-end bg-secondary"
-    data-bs-backdrop="static"
-    tabindex="-1"
-    id="offcanvasNotifications"
-    aria-labelledby="offcanvasNotificationsLabel"
->
-    <div class="offcanvas-header">
-        <h2 class="h5 text-white offcanvas-title" id="offcanvasNotificationsLabel">
-            All Notifications
-        </h2>
-        <button 
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <ng-container *ngFor="let notification of notificationsMockup">
-            <app-card-notification [notification]="notification"></app-card-notification>
-        </ng-container>
-    </div>
-</div> -->
-
 <div class="offcanvas-header bg-secondary">
     <h5 class="offcanvas-title text-white">Notifications</h5>
     <button
         type="button"
         class="btn-close text-reset"
         aria-label="Close"
-        (click)="activeOffcanvas.dismiss('Cross click')"
+        (click)="activeOffcanvas.close()"
     ></button>
 </div>
 <div class="offcanvas-body bg-secondary">

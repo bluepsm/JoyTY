@@ -1,6 +1,6 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { AbstractControl, Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Country, State, City, ICountry, IState, ICity } from 'country-state-city';
 import { StorageService } from '../services/storage.service';
@@ -73,121 +73,119 @@ export class ProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private validationService: ValidationService,
     private toastService: ToastService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-      this.currentUser = this.storageService.getUser()
-      //console.log(this.currentUser.id)
+    this.currentUser = this.storageService.getUser()
+    this.getUserData(this.currentUser.id)
+  }
 
-      this.profileService.getUserProfile(this.currentUser.id)
-        .subscribe({
-          next: data => {
-            this.userData = data
+  getUserData(userId: bigint) {
+    this.profileService.getUserProfile(userId).subscribe({
+      next: data => {
+        this.userData = data
 
-            this.usernameForm = this.formBuilder.group({
-              username: [this.userData.username, 
-                [
-                  Validators.required,
-                  Validators.minLength(3),
-                  Validators.maxLength(20),
-                  //this.validationService.existsByUsername(this.authService)
-                  this.validationService.existsByUsername()
-                ]]
-            })
-
-            this.nameForm = this.formBuilder.group({
-              firstName: [this.userData.firstName, 
-                [
-                  Validators.required,
-                  Validators.minLength(3),
-                  Validators.maxLength(30)
-                ]],
-              lastName: [this.userData.lastName, 
-                [
-                  Validators.required,
-                  Validators.minLength(3),
-                  Validators.maxLength(30)
-                ]]
-            })
-
-            this.dateOfBirthForm = this.formBuilder.group({
-              dateOfBirth: [this.userData.dateOfBirth, Validators.required]
-            })
-
-            this.genderForm = this.formBuilder.group({
-              gender: [this.userData.gender, Validators.required]
-            })
-
-            this.emailForm = this.formBuilder.group({
-              email: [this.userData.email, 
-                [
-                  Validators.required,
-                  Validators.email,
-                  this.validationService.existsByEmail()
-                ]]
-            })
-
-            this.passwordForm = this.formBuilder.group({
-              password: ["", 
-                [
-                  Validators.required,
-                  Validators.minLength(8)
-                ]],
-              confirmPassword: ["", 
-                [
-                  Validators.required
-                ]]
-            }, 
-            {
-              validators: [this.validationService.match('password', 'confirmPassword')]
-            })
-
-            this.phoneNumberForm = this.formBuilder.group({
-              phoneNumber: [this.userData.phoneNumber, 
-                [
-                  Validators.required,
-                  Validators.pattern('[0-9]{3}-[0-9]{3}-[0-9]{4}')
-                ]]
-            })
-
-            this.locationForm = this.formBuilder.group({
-              country: [this.userData.country, Validators.required],
-              state: [this.userData.state, Validators.required],
-              city: [this.userData.city, Validators.required]
-            })
-
-            for (let country of this.countries) {
-              if (country.name === this.lf['country'].value) {
-                this.selectedCountry = country
-                //console.log(this.selectedCountry)
-              }
-            }
-            
-            if (this.selectedCountry !== null) {
-              this.states = State.getStatesOfCountry(this.selectedCountry.isoCode)
-              for (let state of this.states) {
-                if (state.name === this.lf['state'].value) {
-                  this.selectedState = state
-                  //console.log(this.selectedState)
-                }
-              }
-            }
-            
-            if (this.selectedState !== null) {
-              this.cities = City.getCitiesOfState(this.selectedCountry.isoCode, this.selectedState.isoCode)
-              for (let city of this.cities) {
-                if (city.name === this.lf['city'].value) {
-                  this.selectedCity = city
-                  //console.log(this.selectedCity)
-                }
-              }
-            }
-
-          }, error: err => {
-            console.log(err)
-          }
-
+        this.usernameForm = this.formBuilder.group({
+          username: [this.userData.username, 
+            [
+              Validators.required,
+              Validators.minLength(3),
+              Validators.maxLength(20),
+              this.validationService.existsByUsername()
+            ]]
         })
+
+        this.nameForm = this.formBuilder.group({
+          firstName: [this.userData.firstName, 
+            [
+              Validators.required,
+              Validators.minLength(3),
+              Validators.maxLength(30)
+            ]],
+          lastName: [this.userData.lastName, 
+            [
+              Validators.required,
+              Validators.minLength(3),
+              Validators.maxLength(30)
+            ]]
+        })
+
+        this.dateOfBirthForm = this.formBuilder.group({
+          dateOfBirth: [this.userData.dateOfBirth, Validators.required]
+        })
+
+        this.genderForm = this.formBuilder.group({
+          gender: [this.userData.gender, Validators.required]
+        })
+
+        this.emailForm = this.formBuilder.group({
+          email: [this.userData.email, 
+            [
+              Validators.required,
+              Validators.email,
+              this.validationService.existsByEmail()
+            ]]
+        })
+
+        this.passwordForm = this.formBuilder.group({
+          password: ["", 
+            [
+              Validators.required,
+              Validators.minLength(8)
+            ]],
+          confirmPassword: ["", 
+            [
+              Validators.required
+            ]]
+        }, 
+        {
+          validators: [this.validationService.match('password', 'confirmPassword')]
+        })
+
+        this.phoneNumberForm = this.formBuilder.group({
+          phoneNumber: [this.userData.phoneNumber, 
+            [
+              Validators.required,
+              Validators.pattern('[0-9]{3}-[0-9]{3}-[0-9]{4}')
+            ]]
+        })
+
+        this.locationForm = this.formBuilder.group({
+          country: [this.userData.country, Validators.required],
+          state: [this.userData.state, Validators.required],
+          city: [this.userData.city, Validators.required]
+        })
+
+        for (let country of this.countries) {
+          if (country.name === this.lf['country'].value) {
+            this.selectedCountry = country
+          }
+        }
+        
+        if (this.selectedCountry !== null) {
+          this.states = State.getStatesOfCountry(this.selectedCountry.isoCode)
+          for (let state of this.states) {
+            if (state.name === this.lf['state'].value) {
+              this.selectedState = state
+            }
+          }
+        }
+        
+        if (this.selectedState !== null) {
+          this.cities = City.getCitiesOfState(this.selectedCountry.isoCode, this.selectedState.isoCode)
+          for (let city of this.cities) {
+            if (city.name === this.lf['city'].value) {
+              this.selectedCity = city
+            }
+          }
+        }
+
+      }, error: err => {
+        this.toastService.showErrorToast("Error fetching user data: " + err.error.message)
+        console.log(err)
+      }
+    })
   }
 
   get uf(): { [key: string]: AbstractControl } {
@@ -225,8 +223,6 @@ export class ProfileComponent implements OnInit {
   onCountryChange($event: Event): void {
     setTimeout(() => {
       if (this.selectedCountry !== null) {
-        //console.log("selected country: " + this.selectedCountry)
-
         this.states = State.getStatesOfCountry(this.selectedCountry.isoCode)
         this.lf['country'].setValue(this.selectedCountry.name)
       } else {
@@ -242,8 +238,6 @@ export class ProfileComponent implements OnInit {
   onStateChange($event: Event): void {
     setTimeout(() => {
       if (this.selectedState !== null) {
-        //console.log("selected state: " + this.selectedState)
-
         this.cities = City.getCitiesOfState(this.selectedCountry.isoCode, this.selectedState.isoCode)
         this.lf['state'].setValue(this.selectedState.name)
       } else {
@@ -257,30 +251,21 @@ export class ProfileComponent implements OnInit {
   onCityChange($event: Event): void {
     setTimeout(() => {
       if (this.selectedCity !== null) {
-        //console.log("selected city: " + this.selectedCity.name)
-
         this.lf['city'].setValue(this.selectedCity.name)
       } else {
         this.lf['city'].setValue("")
       }
-
-      // console.log("Location Form")
-      // console.log("Country: " + this.lf['country'].value)
-      // console.log("State: " + this.lf['state'].value)
-      // console.log("City: " + this.lf['city'].value)
     })  
   }
 
   usernameFormSubmit(): void {
     this.profileService.updateUsername(this.currentUser.id, this.uf['username'].value)
      .subscribe({
-        next: data => {
-          console.log(data)
-          this.showStatusToast("Username Update Successfully.")
-          //this.ngOnInit()
+        next: () => {
+          this.toastService.showStatusToast("Username Update Successfully.")
         }, error: err => {
+          this.toastService.showErrorToast("Cannot Update Username.")
           console.log(err)
-          this.showErrorToast("Cannot Update Username.")
         }
       })
   }
@@ -288,13 +273,13 @@ export class ProfileComponent implements OnInit {
   nameFormSubmit(): void {
     this.profileService.updateName(this.currentUser.id, this.nf['firstName'].value, this.nf['lastName'].value)
      .subscribe({
-        next: data => {
-          console.log(data)
-          this.showStatusToast("Name Update Successfully.")
-          this.ngOnInit()
+        next: () => {
+          this.toastService.showStatusToast("Name Update Successfully.")
+          this.getUserData(this.currentUser.id)
+          this.cd.detectChanges()
         }, error: err => {
+          this.toastService.showErrorToast("Cannot Update Name.")
           console.log(err)
-          this.showErrorToast("Cannot Update Name.")
         }
       })
   }
@@ -305,13 +290,13 @@ export class ProfileComponent implements OnInit {
     console.log(formattedDate)
     this.profileService.updateDateOfBirth(this.currentUser.id, formattedDate)
      .subscribe({
-        next: data => {
-          console.log(data)
-          this.showStatusToast("Date Of Birth Update Successfully.")
-          this.ngOnInit()
+        next: () => {
+          this.toastService.showStatusToast("Date Of Birth Update Successfully.")
+          this.getUserData(this.currentUser.id)
+          this.cd.detectChanges()
         }, error: err => {
+          this.toastService.showErrorToast("Cannot Update Date Of Birth.")
           console.log(err)
-          this.showErrorToast("Cannot Update Date Of Birth.")
         }
       })
   }
@@ -319,13 +304,13 @@ export class ProfileComponent implements OnInit {
   genderFormSubmit(): void {
     this.profileService.updateGender(this.currentUser.id, this.gf['gender'].value)
      .subscribe({
-        next: data => {
-          console.log(data)
-          this.showStatusToast("Gender Update Successfully.")
-          this.ngOnInit()
+        next: () => {
+          this.toastService.showStatusToast("Gender Update Successfully.")
+          this.getUserData(this.currentUser.id)
+          this.cd.detectChanges()
         }, error: err => {
+          this.toastService.showErrorToast("Cannot Update Gender.")
           console.log(err)
-          this.showErrorToast("Cannot Update Gender.")
         }
       })
   }
@@ -333,13 +318,13 @@ export class ProfileComponent implements OnInit {
   phoneNumberFormSubmit(): void {
     this.profileService.updatePhoneNumber(this.currentUser.id, this.phf['phoneNumber'].value)
      .subscribe({
-        next: data => {
-          console.log(data)
-          this.showStatusToast("Phone Number Update Successfully.")
-          this.ngOnInit()
+        next: () => {
+          this.toastService.showStatusToast("Phone Number Update Successfully.")
+          this.getUserData(this.currentUser.id)
+          this.cd.detectChanges()
         }, error: err => {
+          this.toastService.showErrorToast("Cannot Update Phone Number.")
           console.log(err)
-          this.showErrorToast("Cannot Update Phone Number.")
         }
       })
   }
@@ -347,13 +332,13 @@ export class ProfileComponent implements OnInit {
   emailFormSubmit(): void {
     this.profileService.updateEmail(this.currentUser.id, this.ef['email'].value)
      .subscribe({
-        next: data => {
-          console.log(data)
-          this.showStatusToast("Email Update Successfully.")
-          this.ngOnInit()
+        next: () => {
+          this.toastService.showStatusToast("Email Update Successfully.")
+          this.getUserData(this.currentUser.id)
+          this.cd.detectChanges()
         }, error: err => {
+          this.toastService.showErrorToast("Cannot Update Email.")
           console.log(err)
-          this.showErrorToast("Cannot Update Email.")
         }
       })
   }
@@ -362,13 +347,11 @@ export class ProfileComponent implements OnInit {
     console.log(this.pf['password'].value)
     this.profileService.updatePassword(this.currentUser.id, this.pf['password'].value)
      .subscribe({
-        next: data => {
-          console.log(data)
-          this.showStatusToast("Password Update Successfully.")
-          //this.ngOnInit()
+        next: () => {
+          this.toastService.showStatusToast("Password Update Successfully.")
         }, error: err => {
+          this.toastService.showErrorToast("Cannot Update Password.")
           console.log(err)
-          this.showErrorToast("Cannot Update Password.")
         }
       })
   }
@@ -376,25 +359,15 @@ export class ProfileComponent implements OnInit {
   locationFormSubmit(): void {
     this.profileService.updateLocation(this.currentUser.id, this.lf['country'].value, this.lf['state'].value, this.lf['city'].value)
      .subscribe({
-        next: data => {
-          console.log(data)
-          this.showStatusToast("Location Update Successfully.")
-          this.ngOnInit()
+        next: () => {
+          this.toastService.showStatusToast("Location Update Successfully.")
+          this.getUserData(this.currentUser.id)
+          this.cd.detectChanges()
         }, error: err => {
+          this.toastService.showErrorToast("Cannot Update Location.")
           console.log(err)
-          this.showErrorToast("Cannot Update Location.")
         }
       })
-  }
-
-  showStatusToast(message: String) {
-    //console.log("Toast fn")
-    this.toastService.show(message, { classname: 'bg-dark text-light', delay: 5000 })
-  }
-
-  showErrorToast(message: String) {
-    //console.log("Toast fn")
-    this.toastService.show(message, { classname: 'bg-danger text-light', delay: 15000 })
   }
 
   @ViewChild('updateUsernameConfirm') private updateUsernameConfirm!: ConfirmDialogComponent
@@ -413,11 +386,8 @@ export class ProfileComponent implements OnInit {
 
   getUpdateUsernameConfirmation(value: any) {
     if (value == 'OK') {
-      console.log("OK From getUpdateUsernameConfirmation");
       this.usernameFormSubmit();
       this.logOut();
-    } else {
-      console.log("CANCEL From getUpdateUsernameConfirmation");
     }
   }
 
@@ -437,22 +407,20 @@ export class ProfileComponent implements OnInit {
 
   getUpdatePasswordConfirmation(value: any) {
     if (value == 'OK') {
-      console.log("OK From getUpdatePasswordConfirmation");
       this.passwordFormSubmit();
       this.logOut();
-    } else {
-      console.log("CANCEL From getUpdatePasswordConfirmation");
     }
   }
 
   logOut(): void {
     this.authService.logout().subscribe({
-      next: res => {
-        console.log(res);
+      next: () => {
+        this.toastService.showStatusToast("Logout Successfully.")
         this.storageService.clean();
         //window.location.reload()
         this.router.navigate(["/login"]);
       }, error: err => {
+        this.toastService.showErrorToast("Logout Fail: " + err.error.message)
         console.log(err);
       }
     });

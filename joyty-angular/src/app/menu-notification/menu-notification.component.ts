@@ -3,6 +3,7 @@ import { Notification } from '../models/notification.model';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { animateListItems } from '../../animations/animation';
 import { NotificationService } from '../services/notification.service';
+import { ToastService } from '../shared/toast/toast.service';
 
 @Component({
   selector: 'app-menu-notification',
@@ -17,7 +18,8 @@ export class MenuNotificationComponent implements OnInit {
   notifications?: Notification[]
 
   constructor(
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -28,8 +30,8 @@ export class MenuNotificationComponent implements OnInit {
     this.notificationService.getAllNotifications(this.userId!).subscribe({
       next: data => {
         this.notifications = data
-        //console.log(data)
       }, error: err => {
+        this.toastService.showErrorToast("Error fetching notifications: " + err.error.message)
         console.log(err)
       }
     })

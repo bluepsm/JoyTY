@@ -1,4 +1,4 @@
 export class Tag {
-    id?: any;
+    id?: bigint;
     tagname?: string;
 }
