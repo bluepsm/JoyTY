@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../shared/toast/toast.service';
+import { HeaderService, UserState } from '../services/header.service';
 
 @Component({
   selector: 'app-login',
@@ -14,23 +15,19 @@ export class LoginComponent implements OnInit{
     username: null,
     password: null
   }
-  isLoggedIn = false
-  fail = false
-  errorMsg = ''
-  roles: string[] = []
 
   constructor(
     private authService: AuthService, 
     private storageService: StorageService, 
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private headerService: HeaderService,
   ) {}
 
   ngOnInit(): void {
-      if (this.storageService.isLoggedIn()) {
-        this.isLoggedIn = true
-        this.roles = this.storageService.getUser().roles
-      }
+    if (this.storageService.isLoggedIn()) {
+      this.router.navigate(['/user'])
+    }
   }
 
   onSubmit(): void {
@@ -40,15 +37,20 @@ export class LoginComponent implements OnInit{
       next: data => {
         this.toastService.showStatusToast("Login successfully")
         this.storageService.saveUser(data)
-        this.fail = false
-        this.isLoggedIn = true
-        this.roles = this.storageService.getUser().roles
+
+        let userState = {
+          isLoggedIn: true,
+          userId: data.id,
+          username: data.username,
+          userRoles: data.roles
+        }
+        this.headerService.setUserState(userState)
+
         this.router.navigate(['/user'])
         //this.reloadPage()
       }, error: err => {
-        this.errorMsg = err.error.message
-        this.toastService.showErrorToast("Login fail: " + this.errorMsg)
-        this.fail = true
+        this.toastService.showErrorToast("Login fail: " + err.error.message)
+        console.log(err)
       }
     })
   }

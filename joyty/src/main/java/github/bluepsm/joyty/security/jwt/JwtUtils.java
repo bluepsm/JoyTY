@@ -1,6 +1,9 @@
 package github.bluepsm.joyty.security.jwt;
 
 import java.security.Key;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import jakarta.servlet.http.Cookie;
@@ -40,6 +43,11 @@ public class JwtUtils {
 	    return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
 	}
 	
+//	public ResponseCookie generateCookie(String name, String value, String path) {
+//		ResponseCookie cookie = ResponseCookie.from(name, value).path(path).httpOnly(true).build();
+//		return cookie;
+//	}
+	
 	public ResponseCookie generateCookie(String name, String value, String path) {
 		ResponseCookie cookie = ResponseCookie.from(name, value).path(path).maxAge(24*60*60).httpOnly(true).build();
 		return cookie;
@@ -59,7 +67,9 @@ public class JwtUtils {
 		return generateCookie(jwtRefreshCookie, refreshToken, "/api/auth/refreshtoken");
 	}
 	
-	public String generateTokenFromUsername(String username) {   
+	public String generateTokenFromUsername(String username) {
+		Date date = new Date((new Date()).getTime() + jwtExpirationMs);
+		//System.out.println(date.toString());
 		return Jwts.builder()
 	              .setSubject(username)
 	              .setIssuedAt(new Date())

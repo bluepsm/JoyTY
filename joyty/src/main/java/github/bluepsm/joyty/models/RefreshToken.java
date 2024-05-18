@@ -1,6 +1,7 @@
 package github.bluepsm.joyty.models;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class RefreshToken {
 	private String token;
 	
 	@Column(nullable = false)
-	private Instant expiryDate;
+	private ZonedDateTime expiryDate;
 	
 	public RefreshToken() {}
 }
