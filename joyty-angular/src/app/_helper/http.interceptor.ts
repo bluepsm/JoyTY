@@ -23,6 +23,24 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             withCredentials: true
         });
 
+        // this.loadingService.setLoading(true, req$.url)
+
+        // return next.handle(req$).pipe(
+        //     catchError((error) => {
+        //         this.loadingService.setLoading(false, req$.url)
+
+        //         if (error instanceof HttpErrorResponse && !req$.url.includes('auth/signin') && error.status === 401) {
+        //             return this.handle401Error(req$, next)
+        //         }
+
+        //         return throwError(() => error)
+        //     }),
+        //     finalize(() => {
+        //         this.loadingService.setLoading(false, req$.url)
+        //     })
+            
+        // )
+
         const res$ = next.handle(req$)
         .pipe(
             //delay(1050),

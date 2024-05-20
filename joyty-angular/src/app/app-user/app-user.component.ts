@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { PostModalComponent } from '../shared/post-modal/post-modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PostService } from '../services/post.service';
 import { Post } from '../models/post.model';
@@ -10,6 +10,7 @@ import { JoinModalComponent } from '../join-modal/join-modal.component';
 import { JoinService } from '../services/join.service';
 import { JoinRequestModalComponent } from '../join-request-modal/join-request-modal.component';
 import { ToastService } from '../shared/toast/toast.service';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-app-user',
@@ -62,16 +63,20 @@ export class AppUserComponent implements OnInit {
           tags: new FormControl(form.controls['tags'].value),
         })
 
-        this.postService.createPost(newPostForm).subscribe({
-          next: () => {
-            this.toastService.showStatusToast("Post created successfully")
-            this.getAllPost()
-            this.cd.detectChanges()
-          }, error: err => {
-            this.toastService.showErrorToast("Error creating post: " + err.error.message)
-            console.log(err)
-          }
-        })
+        this.createPost(newPostForm)
+      }
+    })
+  }
+
+  createPost(newPostForm: FormGroup) {
+    this.postService.createPost(newPostForm).subscribe({
+      next: () => {
+        this.toastService.showStatusToast("Post created successfully")
+        this.getAllPost()
+        this.cd.detectChanges()
+      }, error: err => {
+        this.toastService.showErrorToast("Error creating post: " + err.message)
+        console.log(err)
       }
     })
   }
@@ -81,7 +86,7 @@ export class AppUserComponent implements OnInit {
       next: data => {
         this.postData = data
       }, error: err => {
-        this.toastService.showErrorToast("Error fetching posts: " + err.error.message)
+        this.toastService.showErrorToast("Error fetching posts: " + err.message)
         console.log(err)
       }
     })
@@ -105,7 +110,7 @@ export class AppUserComponent implements OnInit {
             this.getAllJoinRequest(this.userData.id)
             this.cd.detectChanges()
           }, error: err => {
-            this.toastService.showErrorToast("Error sending join request: " + err.error.message)
+            this.toastService.showErrorToast("Error sending join request: " + err.message)
             console.log(err)
           }
         })
@@ -121,7 +126,7 @@ export class AppUserComponent implements OnInit {
           this.joinRequestId.push(joinRequest.join.id)
         }
       }, error: err => {
-        this.toastService.showErrorToast("Error fetching join requests: " + err.error.message)
+        this.toastService.showErrorToast("Error fetching join requests: " + err.message)
         console.log(err)
       }
     })
@@ -150,5 +155,74 @@ export class AppUserComponent implements OnInit {
 
       return costPerPersonInt
     }
+  }
+
+  openDeleteConfirmModal(postId: bigint) {
+    const modalRef = this.modalService.open(ConfirmDialogComponent, { size: 'sm' , centered: true })
+    modalRef.componentInstance.modalStyle = "modal-style-danger"
+    modalRef.componentInstance.modalTitle = "Delete Confirmation"
+    modalRef.componentInstance.modalBody = "Are you sure you want to delete this post?"
+    modalRef.componentInstance.modalButtonColor = "btn-danger"
+
+    modalRef.result.then((confirm) => {
+      if (confirm) {
+        this.deletePost(postId)
+      }
+    })
+  }
+
+  openEditPostModal(post: Post) {
+    const modalRef = this.modalService.open(PostModalComponent, { size: 'lg', centered: true, scrollable: true })
+    modalRef.componentInstance.post = post
+    modalRef.result.then((form) => {
+      if (form) {
+        const ngbDate = form.controls['meetingDate'].value
+        const ngbTime = form.controls['meetingTime'].value
+
+        this.date.setFullYear(ngbDate.year, ngbDate.month, ngbDate.day)
+        this.date.setHours(ngbTime.hour, ngbTime.minute, 0)
+
+        const editPostForm: FormGroup = new FormGroup({
+          body: new FormControl(form.controls['body'].value),
+          partySize: new FormControl(form.controls['partySize'].value),
+          placeName: new FormControl(form.controls['placeName'].value),
+          placeAddress: new FormControl(form.controls['placeAddress'].value),
+          placeLatitude: new FormControl(form.controls['placeLatitude'].value),
+          placeLongtitude: new FormControl(form.controls['placeLongtitude'].value),
+          meetingDatetime: new FormControl(this.date),
+          costEstimate: new FormControl(form.controls['costEstimate'].value),
+          costShare: new FormControl(form.controls['costShare'].value),
+          tags: new FormControl(form.controls['tags'].value),
+        })
+
+        this.updatePost(post.id!, editPostForm)
+      }
+    })
+  }
+
+  updatePost(postId: bigint, editedPostForm: FormGroup) {
+    this.postService.updatePost(postId, editedPostForm).subscribe({
+      next: () => {
+        this.toastService.showStatusToast("Post edited successfully")
+        this.getAllPost()
+        this.cd.detectChanges()
+      }, error: err => {
+        this.toastService.showErrorToast("Error editing post: " + err.message)
+        console.log(err)
+      }
+    })
+  }
+
+  deletePost(postId: bigint) {
+    this.postService.deletePostById(postId).subscribe({
+      next: () => {
+        this.toastService.showStatusToast("Delete post successfully.")
+        this.getAllPost()
+        this.cd.detectChanges()
+      }, error: err => {
+        this.toastService.showErrorToast("Error Delete Post: " + err.message)
+        console.log(err)
+      }
+    })
   }
 }

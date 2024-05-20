@@ -26,4 +26,12 @@ export class CommentService {
   createComment(postId: bigint, body: string): Observable<any> {
     return this.http.post(COMMENT_API + '/create', {postId, body}, httpOptions)
   }
+
+  deleteCommentById(commentId: bigint): Observable<any> {
+    return this.http.delete(COMMENT_API + '/deleteByCommentId/' + commentId, httpOptions)
+  }
+
+  updateComment(commentId: bigint, body: string, postId: bigint): Observable<any> {
+    return this.http.put(COMMENT_API + '/updateCommentById/' + commentId, {postId, body}, httpOptions)
+  }
 }

@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import github.bluepsm.joyty.models.Post;
 import github.bluepsm.joyty.models.User;
@@ -40,41 +41,16 @@ public class PostService {
     @Autowired
     private TagRepository tagRepository;
 
-    @CachePut(value = "posts", key = "#postId")
-    public Optional<Post> updatePostById(Long postId, Post post) {
-        Optional<Post> postOpt = postRepository.findById(postId);
-
-        if(!postOpt.isPresent()) {
-            return Optional.empty();
-        }
-
-        post.setId(postId);
-        
-        // Keep the existing created_at timestamp
-        Long createdAt = postOpt.get().getCreatedAt();
-        post.setCreatedAt(createdAt);
-
-        // Keep the post owner data
-        User user = postOpt.get().getAuthor();
-        post.setAuthor(user);
-
-        // Keep tags
-        Set<Tag> tags = postOpt.get().getTags();
-        post.setTags(tags);
-
-        return Optional.of(postRepository.save(post));
-    }
-
-    @CacheEvict(value = "posts", key = "#id")
-    public boolean deletePostById(Long id) {
-        
-        try {
-            postRepository.deleteById(id);
-            return true;
-        } catch(EmptyResultDataAccessException err) {
-            return false;
-        }
-    }
+//    @CacheEvict(value = "posts", key = "#id")
+//    public boolean deletePostById(Long id) {
+//        
+//        try {
+//            postRepository.deleteById(id);
+//            return true;
+//        } catch(EmptyResultDataAccessException err) {
+//            return false;
+//        }
+//    }
     
     public Post createPost(Long userId, CreatePostRequest createPostRequest) {
     	//log.info("PostService CreatePost");
@@ -154,5 +130,78 @@ public class PostService {
     	}
     	
     	return Sort.Direction.DESC;
+    }
+    
+//    @CachePut(value = "posts", key = "#postId")
+//    public Optional<Post> updatePostById(Long postId, CreatePostRequest post) {
+//        Optional<Post> postOpt = postRepository.findById(postId);
+//
+//        if(!postOpt.isPresent()) {
+//            return Optional.empty();
+//        }
+//
+//        post.setId(postId);
+//        
+//        // Keep the existing created_at timestamp
+//        Long createdAt = postOpt.get().getCreatedAt();
+//        post.setCreatedAt(createdAt);
+//
+//        // Keep the post owner data
+//        User user = postOpt.get().getAuthor();
+//        post.setAuthor(user);
+//
+//        Set<Tag> tags = new HashSet<Tag>();
+//
+//        for (Long tagId : post.getTags()) {
+//            Tag tag = tagRepository.findById(tagId).get();
+//            tags.add(tag);
+//        }
+//        post.setTags(tags);
+//
+//        return Optional.of(postRepository.save(post));
+//    }
+    
+    public Optional<Post> updatePost(Long postId, CreatePostRequest updatePostRequest) {
+    	Optional<Post> postOpt = postRepository.findById(postId);
+    	
+    	if(!postOpt.isPresent()) {
+    		return Optional.empty();
+    	}
+    	
+    	Post post = postOpt.get();
+        
+        Set<Tag> tags = new HashSet<Tag>();
+
+        for (Long tagId : updatePostRequest.getTags()) {
+            Tag tag = tagRepository.findById(tagId).get();
+            tags.add(tag);
+        }
+        
+        post.setBody(updatePostRequest.getBody());
+        post.setPlaceName(updatePostRequest.getPlaceName());
+        post.setPlaceAddress(updatePostRequest.getPlaceAddress());
+        post.setPlaceLatitude(updatePostRequest.getPlaceLatitude());
+        post.setPlaceLongtitude(updatePostRequest.getPlaceLongtitude());
+        post.setMeetingDatetime(updatePostRequest.getMeetingDatetime());
+        post.setPartySize(updatePostRequest.getPartySize());
+        post.setCostEstimate(updatePostRequest.getCostEstimate());
+        post.setCostShare(updatePostRequest.getCostShare());
+        post.setTags(tags);
+        
+        //editedpost.setAuthor(user.get());
+        //editedpost.setTags(tags);
+        //editedpost.setJoinner(0);
+        //editedpost.setMeetingDone(false);
+        
+        return Optional.of(postRepository.save(post));
+    }
+    
+    public boolean deletePostById(Long id) {
+        try {
+            postRepository.deleteById(id);
+            return true;
+        } catch(EmptyResultDataAccessException err) {
+            return false;
+        }
     }
 }

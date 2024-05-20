@@ -25,7 +25,7 @@
                     </li>
                 }
             </ul>
-            <ul class="navbar-nav">
+            <ul class="navbar-nav align-items-center">
                 @if (!isLoggedIn) {
                     <li class="nav-item">
                         <a href="/register" class="nav-link" routerLink="register">SignUp</a>
@@ -34,7 +34,10 @@
                         <a href="/login" class="nav-link" routerLink="login">Login</a>
                     </li>
                 } @else {
-                    <div class="d-flex gap-2">
+                    <li class="nav-item me-2">
+                        <div class="text-white"><strong>{{ username }}</strong></div>
+                    </li>
+                    <li class="nav-item">
                         <button 
                             type="button" 
                             class="btn btn-outline-light" 
@@ -42,18 +45,47 @@
                         >
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <strong>{{ username }}</strong>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="/profile" routerLink="profile">Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <!-- <li><a class="dropdown-item text-danger" (click)="logOut()">Logout</a></li> -->
-                                <li><button class="dropdown-item text-danger" type="button" (click)="logOut()">Logout</button></li>
-                            </ul>
-                        </li>
-                    </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @if (profileImg) {
+                                <img src="data:image/jpeg;base64,{{ profileImg.data }}" alt="Profile image" class="avatar avatar-small">
+                            } @else {
+                                <img src="../../assets/avatar.webp" alt="avatar" class="avatar avatar-small">
+                            }
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/profile" routerLink="profile">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item text-danger" type="button" (click)="logOut()">Logout</button></li>
+                        </ul>
+                    </li>
+                    <!-- <div class="d-flex gap-2 align-items-center">
+                        <div class="text-white">
+                            <p><strong>{{ username }}</strong></p>
+                        </div>
+                        <div>
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-light" 
+                                (click)="openNotification()"
+                            >
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </div>
+                        <div>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="../../assets/avatar.webp" alt="avatar" class="avatar avatar-small">
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/profile" routerLink="profile">Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><button class="dropdown-item text-danger" type="button" (click)="logOut()">Logout</button></li>
+                                </ul>
+                            </li>
+                        </div>
+                    </div> -->
                 }
             </ul>
         </div>

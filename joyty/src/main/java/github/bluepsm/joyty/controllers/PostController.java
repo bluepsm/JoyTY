@@ -68,25 +68,6 @@ public class PostController {
 	 * 
 	 * return ResponseEntity.status(HttpStatus.CREATED).body(createdPost); }
 	 */
-    @PutMapping("/{postId}/update")
-    public ResponseEntity<Post> updatePostById(@PathVariable Long postId, @RequestBody Post newPost) {
-        Optional<Post> updatedPost = postService.updatePostById(postId, newPost);
-
-        if(!updatedPost.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(updatedPost.get());
-    }
-
-    @DeleteMapping("/{postId}/delete")
-    public ResponseEntity<?> deletePostById(@PathVariable Long postId) {
-        if(!postService.deletePostById(postId)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok().build();
-    }
     
     @PostMapping("/create")
     public ResponseEntity<?> createPost(@Valid @RequestBody CreatePostRequest createPostRequest) {
@@ -126,4 +107,23 @@ public class PostController {
         return ResponseEntity.ok(post.get());
     }
     
+    @DeleteMapping("/deleteByPostId/{postId}")
+    public ResponseEntity<?> deletePostById(@PathVariable Long postId) {
+        if(!postService.deletePostById(postId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+    
+    @PutMapping("/update/{postId}")
+    public ResponseEntity<Post> updatePostById(@PathVariable Long postId, @Valid @RequestBody CreatePostRequest updatePostRequest) {
+        Optional<Post> updatedPost = postService.updatePost(postId, updatePostRequest);
+
+        if(!updatedPost.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updatedPost.get());
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import github.bluepsm.joyty.models.notification.Notification;
@@ -87,14 +88,14 @@ public class User implements Serializable{
 
     @Column(name = "city")
     private String city;
-
+    
     // UNIX time
     @Column(name = "createdAt")
     @CreatedDate
     private Long createdAt;
 
     //@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable( name = "userRole", 
 		joinColumns = @JoinColumn(name = "userId"),
 		inverseJoinColumns = @JoinColumn(name = "roleId") ) 
@@ -113,17 +114,25 @@ public class User implements Serializable{
 	private Set<Request> requests;
 	
 	@JsonIgnore
-	@ManyToMany(mappedBy = "members", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+	@ManyToMany(mappedBy = "members", fetch = FetchType.LAZY) 
 	private Set<Post> parties;
 	
 	@JsonIgnore
-    @ManyToMany(mappedBy = "toUsers", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "toUsers", fetch = FetchType.LAZY)
     private Set<Notification> notificationRecieve;
 	
 	@JsonIgnore
     @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Notification> notificationTo;
-
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "fileOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<File> files;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "profileImg", referencedColumnName = "id")
+	private File profileImg;
+	
     public User() {}
 
     public User(

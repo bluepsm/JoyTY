@@ -83,7 +83,7 @@ public class Post implements Serializable {
     @LastModifiedDate
     private Long lastUpdated;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "postTag",
         joinColumns = @JoinColumn(name = "postId"),
         inverseJoinColumns = @JoinColumn(name = "tagId")
@@ -102,7 +102,7 @@ public class Post implements Serializable {
     @OneToMany(mappedBy = "join", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Request> requests;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "party",
         joinColumns = @JoinColumn(name = "postId"),
         inverseJoinColumns = @JoinColumn(name = "userId")

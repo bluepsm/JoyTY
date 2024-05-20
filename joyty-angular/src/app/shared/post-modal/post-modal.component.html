@@ -1,5 +1,9 @@
 <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">POST</h4>
+    @if (edit === true) {
+        <h4 class="modal-title" id="modal-basic-title">EDIT POST</h4>
+    } @else {
+        <h4 class="modal-title" id="modal-basic-title">CREATE POST</h4>
+    }
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
 </div>
 <div class="modal-body">
@@ -26,8 +30,13 @@
         </div>
         <div class="row mb-3">
             <div class="col">
-                <app-place-auto-complete (placeChanged)="place = $event; onPlaceChange(place)"></app-place-auto-complete>
-                <app-map [place]="place"></app-map>
+                @if (edit === true) {
+                    <app-place-auto-complete [placeInit]="place" (placeChanged)="place = $event; onPlaceChange(place)"></app-place-auto-complete>
+                    <app-map [lat]="place.location!.lat()" [lng]="place.location!.lng()" [place]="place"></app-map>
+                } @else {
+                    <app-place-auto-complete (placeChanged)="place = $event; onPlaceChange(place)"></app-place-auto-complete>
+                    <app-map [place]="place"></app-map>
+                }
             </div>
         </div>
         <div class="row mb-3 align-items-center">

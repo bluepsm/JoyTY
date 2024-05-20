@@ -55,4 +55,15 @@ export class ProfileService {
   updateLocation(userId: bigint, country: string, state: string, city: string): Observable<any> {
     return this.http.patch<any>(USER_API_URL + 'updateLocation', { userId, country, state, city }, httpOptions)
   }
+
+  updateProfileImg(userId: bigint, image: File): Observable<any> {
+    const formData: FormData = new FormData()
+    formData.append('image', image)
+
+    return this.http.patch<any>(USER_API_URL + 'updateProfileImg/' + userId, formData)
+  }
+
+  getProfileImgById(userId: bigint): Observable<any> {
+    return this.http.get(USER_API_URL + 'getProfileImgById/' + userId)
+  }
 }

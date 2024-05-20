@@ -25,6 +25,7 @@ import { JoinRequestModalComponent } from './join-request-modal/join-request-mod
 import { CardNotificationComponent } from './card-notification/card-notification.component';
 import { MenuNotificationComponent } from './menu-notification/menu-notification.component';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
     NgbToastModule,
     NgTemplateOutlet,
     GoogleMapsModule,
+    NgbDropdownModule,
   ],
   providers: [httpInterceptorProvider],
   bootstrap: [AppComponent]

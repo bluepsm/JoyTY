@@ -5,6 +5,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 import { TagModalComponent } from '../tag-modal/tag-modal.component';
 import { Tag } from '../../models/tag.model';
 import { PlaceSearchResult } from '../place-auto-complete/place-auto-complete.component';
+import { Post } from '../../models/post.model';
 
 @Component({
   selector: 'app-post-modal',
@@ -14,7 +15,7 @@ import { PlaceSearchResult } from '../place-auto-complete/place-auto-complete.co
 
 @Injectable()
 export class PostModalComponent implements OnInit {
-  @Input() public post?: any
+  @Input() public post?: Post
   
   private modalService = inject(NgbModal)
   activeModal = inject(NgbActiveModal)
@@ -40,6 +41,8 @@ export class PostModalComponent implements OnInit {
   selectedTags?: Tag[]
 
   place: PlaceSearchResult = {address: ''}
+
+  edit: boolean = false
 
   constructor(
     private config: NgbModalConfig,
@@ -86,18 +89,27 @@ export class PostModalComponent implements OnInit {
       ]],
     })
 
-    if (this.post) {      
-      this.pf['body'].setValue(this.post['body'])
-      this.pf['partySize'].setValue(this.post['partySize'])
-      this.pf['placeName'].setValue(this.post['placeName'])
-      this.pf['placeAddress'].setValue(this.post['placeAddress'])
-      this.pf['placeLatitude'].setValue(this.post['placeLatitude'])
-      this.pf['placeLongtitude'].setValue(this.post['placeLongtitude'])
-      this.pf['meetingDate'].setValue(this.post['meetingDate'])
-      this.pf['meetingTime'].setValue(this.post['meetingTime'])
-      this.pf['costEstimate'].setValue(this.post['costEstimate'])
-      this.pf['costShare'].setValue(this.post['costShare'])
-      this.pf['tags'].setValue(this.post['tags'])
+    if (this.post) {   
+      this.edit = true   
+      this.pf['body'].setValue(this.post.body)
+      this.pf['partySize'].setValue(this.post.partySize)
+      this.pf['costEstimate'].setValue(this.post.costEstimate)
+      this.pf['costShare'].setValue(this.post.costShare)
+      this.pf['tags'].setValue(this.post.tags)
+
+      this.place = {
+        name: this.post.placeName!,
+        address: this.post.placeAddress!,
+        location: new google.maps.LatLng(this.post.placeLatitude!, this.post.placeLongtitude!)
+      }      
+      this.onPlaceChange(this.place)
+
+      const datetime = new Date(this.post.meetingDatetime!)
+      const ngbDate: NgbDateStruct = {day: datetime.getDate(), month: datetime.getMonth(), year: datetime.getFullYear()}
+      const ngbTime = { hour: datetime.getHours(), minute:  datetime.getMinutes()}
+
+      this.pf['meetingDate'].setValue(ngbDate)
+      this.pf['meetingTime'].setValue(ngbTime)
     }
   }
 

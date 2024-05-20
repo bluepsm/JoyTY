@@ -83,6 +83,7 @@ public class WebSecurityConfig {
 	              .requestMatchers("/api/comment/**").permitAll()
 	              .requestMatchers("/api/request/**").permitAll()
 	              .requestMatchers("/api/notification/**").permitAll()
+	              .requestMatchers("/api/file/**").permitAll()
 	              .anyRequest().authenticated()
 	        );
 	    

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import github.bluepsm.joyty.models.File;
 import github.bluepsm.joyty.models.User;
 
 public class UserDetailsImpl implements UserDetails {
@@ -24,14 +25,23 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
 
     private String email;
+    
+    private File profileImg;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String password, String email, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(
+    		Long id, String username, 
+    		String password, 
+    		String email,
+    		File profileImg,
+    		Collection<? extends GrantedAuthority> authorities
+    		) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.profileImg = profileImg;
         this.authorities = authorities;
     }
 
@@ -43,7 +53,8 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(user.getId(), 
                                     user.getUsername(), 
                                     user.getPassword(), 
-                                    user.getEmail(), 
+                                    user.getEmail(),
+                                    user.getProfileImg(),
                                     authorities);
     }
 
@@ -68,6 +79,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+    
+    public File getProfileImg() {
+        return profileImg;
     }
 
     @Override

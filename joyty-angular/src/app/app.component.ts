@@ -7,6 +7,8 @@ import { StorageService } from './services/storage.service';
 import { HeaderService } from './services/header.service';
 import { AuthService } from './services/auth.service';
 import { ToastService } from './shared/toast/toast.service';
+import { UserService } from './services/user.service';
+import { ProfileService } from './services/profile.service';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +26,8 @@ export class AppComponent implements OnInit {
     private storageService: StorageService,
     private headerService: HeaderService,
     private authService: AuthService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private profileService: ProfileService,
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +37,7 @@ export class AppComponent implements OnInit {
         isLoggedIn: true,
         userId:  this.storageService.getUser().id,
         username: this.storageService.getUser().username,
-        userRoles: this.storageService.getUser().roles
+        userRoles: this.storageService.getUser().roles,
       }
       this.headerService.setUserState(userState)
       this.router.navigate(['/user'])
@@ -42,6 +45,19 @@ export class AppComponent implements OnInit {
 
     this.eventBusSub = this.eventBusService.on('logout', () => {
       this.logOut()
+    })
+  }
+
+  getUserProfileImg(userId: bigint): any {
+    this.profileService.getProfileImgById(userId).subscribe({
+      next: data => {
+        console.log("Get Profile Image")
+        console.log(data)
+        return data
+      }, error: err => {
+        console.log(err)
+        return null
+      }
     })
   }
 

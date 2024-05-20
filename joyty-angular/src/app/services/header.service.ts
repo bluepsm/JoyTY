@@ -19,7 +19,10 @@ export class HeaderService {
     userRoles: [],
   })
 
+  private profileImg = new BehaviorSubject<any>("")
+
   private userState$ = this.userState.asObservable()
+  private profileImg$ = this.profileImg.asObservable()
 
   constructor() { }
 
@@ -38,5 +41,13 @@ export class HeaderService {
       username: "",
       userRoles: [],
     })
+  }
+
+  getProfileImg(): Observable<any> {
+    return this.profileImg$
+  }
+
+  setProfileImg(latestValue: any) {
+    return this.profileImg.next(latestValue)
   }
 }

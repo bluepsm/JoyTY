@@ -7,13 +7,12 @@ import { NgTemplateOutlet } from '@angular/common';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { PostModalComponent } from './post-modal/post-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbDatepickerModule, NgbDatepickerConfig, NgbTimepickerModule, NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TagModalComponent } from './tag-modal/tag-modal.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from '../map/map.component';
 import { PlaceAutoCompleteComponent } from './place-auto-complete/place-auto-complete.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 

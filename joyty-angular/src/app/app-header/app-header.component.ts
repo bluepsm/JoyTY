@@ -18,6 +18,7 @@ export class AppHeaderComponent implements OnInit {
   userId?: bigint
   username?: string
   roles?: string[]
+  profileImg?: any
   isLoggedIn = false
   showModApp = false
   showAdminApp = false
@@ -38,9 +39,11 @@ export class AppHeaderComponent implements OnInit {
       this.userId = userState.userId
       this.username = userState.username
       this.roles = userState.userRoles
-      
       this.showAdminApp = this.roles.includes('ROLE_ADMIN')
       this.showModApp = this.roles.includes('ROLE_MODERATOR')
+    })
+    this.headerService.getProfileImg().subscribe((profileImg) => {
+      this.profileImg = profileImg
     })
   }
 

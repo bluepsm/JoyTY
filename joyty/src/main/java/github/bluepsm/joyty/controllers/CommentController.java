@@ -67,26 +67,6 @@ public class CommentController {
 //
 //        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
 //    }
-
-    @PutMapping("/{commentId}/update")
-    public ResponseEntity<Comment> updateCommentById(@PathVariable Long commentId, @RequestBody Comment newComment) {
-        Optional<Comment> updatedComment = commentService.updateCommentById(commentId, newComment);
-
-        if(!updatedComment.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(updatedComment.get());
-    }
-
-    @DeleteMapping("/{commentId}/delete")
-    public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
-        if(!commentService.deleteCommentById(commentId)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok().build();
-    }
     
     private Optional<Long> getUserId() {
     	Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -141,5 +121,25 @@ public class CommentController {
         }
 
         return ResponseEntity.ok(comments.get());
+    }
+    
+    @DeleteMapping("/deleteByCommentId/{commentId}")
+    public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
+        if(!commentService.deleteCommentById(commentId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+    
+    @PutMapping("/updateCommentById/{commentId}")
+    public ResponseEntity<Comment> updateCommentById(@PathVariable Long commentId, @RequestBody CreateCommentRequest editingComment) {
+        Optional<Comment> updatedComment = commentService.updateCommentById(commentId, editingComment);
+
+        if(!updatedComment.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updatedComment.get());
     }
 }

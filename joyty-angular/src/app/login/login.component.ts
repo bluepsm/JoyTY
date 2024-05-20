@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit{
           isLoggedIn: true,
           userId: data.id,
           username: data.username,
-          userRoles: data.roles
+          userRoles: data.roles,
         }
         this.headerService.setUserState(userState)
 

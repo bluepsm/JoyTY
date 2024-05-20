@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -11,6 +11,10 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../shared/toast/toast.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FileService } from '../services/file.service';
+import { Observable } from 'rxjs';
+import { HeaderService } from '../services/header.service';
 
 
 @Component({
@@ -65,6 +69,13 @@ export class ProfileComponent implements OnInit {
     city: new FormControl('')
   })
 
+  private modalService = inject(NgbModal)
+
+  currentFile?: File
+  fileInfos?: Observable<any>
+
+  profileImage?: any
+
   constructor(
     private authService: AuthService,
     private storageService: StorageService, 
@@ -73,7 +84,8 @@ export class ProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private validationService: ValidationService,
     private toastService: ToastService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private headerService: HeaderService
   ) {}
 
   ngOnInit(): void {
@@ -84,7 +96,10 @@ export class ProfileComponent implements OnInit {
   getUserData(userId: bigint) {
     this.profileService.getUserProfile(userId).subscribe({
       next: data => {
+        //console.log(data)
         this.userData = data
+
+        this.profileImage = 'data:image/jpeg;base64,' + this.userData.profileImg.data
 
         this.usernameForm = this.formBuilder.group({
           username: [this.userData.username, 
@@ -370,46 +385,34 @@ export class ProfileComponent implements OnInit {
       })
   }
 
-  @ViewChild('updateUsernameConfirm') private updateUsernameConfirm!: ConfirmDialogComponent
-  usernameConfirmModalStyle: string = 'modal-style-warning';
-  usernameConfirmModalTitle: string = 'Update Confirmation';
-  usernameConfirmModalBody: string = "You'll have to login again after the username updated.";
-  usernameConfirmModalButtonColor: string = 'btn-warning';
+  openUsernameConfirmModal() {
+    const modalRef = this.modalService.open(ConfirmDialogComponent, { size: 'sm', centered: true})
+    modalRef.componentInstance.modalStyle = "modal-style-warning"
+    modalRef.componentInstance.modalTitle = "Update Confirmation"
+    modalRef.componentInstance.modalBody = "You'll have to login again after the username updated."
+    modalRef.componentInstance.modalButtonColor = "btn-warning"
 
-  async openUpdateUsernameModal() {
-    return await this.updateUsernameConfirm.open();
+    modalRef.result.then((confirm) => {
+      if (confirm) {
+        this.usernameFormSubmit()
+        this.logOut()
+      }
+    })
   }
 
-  onUsernameSubmit() {
-    this.openUpdateUsernameModal();
-  }
+  openPasswordConfirmModal() {
+    const modalRef = this.modalService.open(ConfirmDialogComponent, { size: 'sm', centered: true})
+    modalRef.componentInstance.modalStyle = "modal-style-warning"
+    modalRef.componentInstance.modalTitle = "Update Confirmation"
+    modalRef.componentInstance.modalBody = "You'll have to login again after the password updated."
+    modalRef.componentInstance.modalButtonColor = "btn-warning"
 
-  getUpdateUsernameConfirmation(value: any) {
-    if (value == 'OK') {
-      this.usernameFormSubmit();
-      this.logOut();
-    }
-  }
-
-  @ViewChild('updatePasswordConfirm') private updatePasswordConfirm!: ConfirmDialogComponent
-  passwordConfirmModalStyle: string = 'modal-style-warning';
-  passwordConfirmModalTitle: string = 'Update Confirmation';
-  passwordConfirmModalBody: string = "You'll have to login again after the password updated.";
-  passwordConfirmModalButtonColor: string = 'btn-warning';
-
-  async openUpdatePasswordModal() {
-    return await this.updatePasswordConfirm.open();
-  }
-
-  onPasswordSubmit() {
-    this.openUpdatePasswordModal();
-  }
-
-  getUpdatePasswordConfirmation(value: any) {
-    if (value == 'OK') {
-      this.passwordFormSubmit();
-      this.logOut();
-    }
+    modalRef.result.then((confirm) => {
+      if (confirm) {
+        this.passwordFormSubmit()
+        this.logOut()
+      }
+    })
   }
 
   logOut(): void {
@@ -426,4 +429,26 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  selectFile(event: any): void {
+    this.currentFile = event.target.files.item(0)
+  }
+
+  updateProfileImg(): void {
+    if (this.currentFile) {
+      this.profileService.updateProfileImg(this.currentUser.id ,this.currentFile).subscribe({
+        next: data => {
+          this.toastService.showStatusToast("Update profile image successfully.")
+          this.getUserData(this.currentUser.id)
+          this.headerService.setProfileImg(data)
+          this.cd.detectChanges()
+          //console.log(data)
+        }, error: err => {
+          this.toastService.showErrorToast("Error update profile image: " + err.message)
+          console.log(err)
+        }, complete: () => {
+          this.currentFile = undefined
+        }
+      })
+    }
+  }
 }

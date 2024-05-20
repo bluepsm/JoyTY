@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { Loader } from "@googlemaps/js-api-loader"
 
 const loader = new Loader({
@@ -27,13 +27,17 @@ export class PlaceAutoCompleteComponent implements OnInit {
   @ViewChild("inputField")
   inputField!: ElementRef;
   @Input() placeholder = "Enter Place"
+  @Input() placeInit?: PlaceSearchResult
   @Output() placeChanged = new EventEmitter<PlaceSearchResult>();
 
   autoComplete: google.maps.places.Autocomplete | undefined;
 
-  constructor(private ngZone: NgZone) { }
+  constructor(
+    private ngZone: NgZone,
+  ) { }
 
   ngOnInit(): void {    
+    
   }
 
   ngAfterViewInit(): void {

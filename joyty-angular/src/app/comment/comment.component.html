@@ -6,21 +6,43 @@
     <div class="container">
         <div *ngIf="comments">
             <div class="row mb-3" *ngFor="let comment of comments">
-                <div class="col-2 align-content-center">
-                    Avatar
+                <div class="col-2 d-flex align-items-center justify-content-center">
+                    <img src="../../assets/avatar.webp" alt="avatar" class="avatar">
                 </div>
                 <div class="col-10 p-0">
                     <div class="card" [ngClass]="{'bg-primary-subtle': comment.user.id === userId}">
                         <div class="card-header">
-                            <div class="d-flex justify-content-between">
-                                <div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-grid w-100">
                                     <strong>{{ comment.user.username }}</strong>
+                                    <div>{{ comment.createdAt | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
                                 </div>
-                                <div class="text-end">{{ comment.createdAt | date:"EEE, MMM dd, yyyy 'at' HH:mm" }}</div>
+                                <div class="d-flex flex-nowrap gap-2 align-items-center">
+                                    <div *ngIf="comment.user.id === userId" ngbDropdown class="d-inline-block">
+                                        @if (edit === true && comment.id === editingCommentId) {
+                                            <span>Editing...</span>
+                                        } @else {
+                                            <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle></button>
+                                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                                <button ngbDropdownItem (click)="editingComment(comment.id!, comment.body!)">Edit</button>
+                                                <button ngbDropdownItem class="text-danger" (click)="openDeleteConfirmModal(comment.id!)">Delete</button>
+                                            </div> 
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
-                            {{ comment.body }}
+                            @if (edit === true && comment.id === editingCommentId) {
+                                <p class="card-text placeholder-glow d-flex gap-2 flex-wrap">
+                                    <span class="placeholder col-6"></span>
+                                    <span class="placeholder col-3"></span>
+                                    <span class="placeholder col-3"></span>
+                                    <span class="placeholder col-5"></span>
+                                </p>
+                            } @else {
+                                {{ comment.body }}
+                            }
                         </div>
                     </div>
                 </div>
@@ -39,7 +61,12 @@
                     formControlName="body"
                     [ngClass]="{'is-invalid': cf['body'].errors}"
                 >
-                <button class="btn btn-outline-secondary" type="button" [disabled]="commentForm.invalid" (click)="commentFormSubmit()">Comment</button>
+                @if (edit === true) {
+                    <button class="btn btn-outline-secondary" type="button" [disabled]="commentForm.invalid" (click)="updateComment()">Edit</button>
+                    <button class="btn btn-outline-danger" type="button" (click)="cancleEditingComment()">Cancel</button>
+                } @else {
+                    <button class="btn btn-outline-secondary" type="button" [disabled]="commentForm.invalid" (click)="commentFormSubmit()">Comment</button>
+                }
             </div>
         </form> 
     </div>

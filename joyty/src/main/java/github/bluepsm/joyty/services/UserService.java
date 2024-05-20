@@ -2,6 +2,7 @@ package github.bluepsm.joyty.services;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.security.spec.EncodedKeySpec;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -15,8 +16,13 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import github.bluepsm.joyty.models.File;
 import github.bluepsm.joyty.models.User;
+import github.bluepsm.joyty.repositories.FileRepository;
 import github.bluepsm.joyty.repositories.UserRepository;
 
 @Slf4j
@@ -24,6 +30,9 @@ import github.bluepsm.joyty.repositories.UserRepository;
 public class UserService {
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private FileRepository fileRepository;
 
     public Optional<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -127,4 +136,30 @@ public class UserService {
 			return Optional.empty();
 		}
     }
+    
+    @Transactional
+    public Optional<User> updateProfileImg(Long userId, MultipartFile image) throws IOException {
+    	try {
+    		User user = userRepository.findById(userId).get();
+    		
+    		String fileName = StringUtils.cleanPath(image.getOriginalFilename());
+    		File fileDB = new File(fileName, image.getContentType(), image.getBytes());
+    		//fileDB.setFileOwner(user);
+    		
+    		try {
+    			File file = fileRepository.save(fileDB);
+    			user.setProfileImg(file);
+    		} catch (Exception e) {
+    			return Optional.empty();
+    		}
+    		
+    		return Optional.of(userRepository.save(user));
+    	} catch (Exception e) {
+			return Optional.empty();
+		}
+    }
+    
+//    public Optional<File> getProfileImgById(Long userId) {
+//    	return userRepository.getProfileImgById(userId);
+//    }
 }

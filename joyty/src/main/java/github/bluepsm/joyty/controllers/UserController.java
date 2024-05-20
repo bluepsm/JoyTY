@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import ch.qos.logback.classic.Logger;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import github.bluepsm.joyty.models.File;
 import github.bluepsm.joyty.models.User;
 import github.bluepsm.joyty.payload.request.ResetPasswordRequest;
 import github.bluepsm.joyty.payload.request.UpdateDobRequest;
@@ -169,4 +171,30 @@ public class UserController {
     		
     	return ResponseEntity.ok(new MessageResponse("Location update successfully!"));
     }
+    
+    @PatchMapping("/updateProfileImg/{userId}")
+    public ResponseEntity<?> updateProfileImg(@PathVariable Long userId, @RequestParam("image") MultipartFile image) {
+    	try {
+    		Optional<User> user = userService.updateProfileImg(userId, image);
+    		
+    		if (!user.isPresent()) {
+        		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update profile image!"));
+        	}
+        		
+        	return ResponseEntity.ok(user.get().getProfileImg());
+    	} catch(Exception e) {
+    		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update profile image!"));
+    	}
+    }
+    
+//    @GetMapping("/getProfileImgById/{userId}")
+//    public ResponseEntity<?> getProfileImgById(@PathVariable Long userId) {
+//    	Optional<File> img = this.userService.getProfileImgById(userId);
+//    	
+//    	if (!img.isPresent()) {
+//    		return ResponseEntity.notFound().build();
+//    	}
+//    	
+//    	return ResponseEntity.ok(img.get());
+//    }
 }

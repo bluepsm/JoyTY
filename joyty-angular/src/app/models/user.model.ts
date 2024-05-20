@@ -11,4 +11,6 @@ export class User {
     country?: string;
     state?: string;
     city?: string;
+    roles?: any;
+    profileImg?: any;
 }

@@ -53,4 +53,35 @@ export class PostService {
   getPostByPostId(postId: bigint): Observable<Post> {
     return this.http.get<Post>(POST_API + '/' + postId, httpOptions)
   }
+
+  deletePostById(postId: bigint): Observable<any> {
+    return this.http.delete(POST_API + '/deleteByPostId/' + postId, httpOptions)
+  }
+
+  updatePost(postId: bigint, postForm: FormGroup): Observable<any> {
+    const body = postForm.controls['body'].value
+    const placeName = postForm.controls['placeName'].value
+    const placeAddress = postForm.controls['placeAddress'].value
+    const placeLatitude = postForm.controls['placeLatitude'].value
+    const placeLongtitude = postForm.controls['placeLongtitude'].value
+    const meetingDatetime = postForm.controls['meetingDatetime'].value
+    const partySize = postForm.controls['partySize'].value
+    const costEstimate = postForm.controls['costEstimate'].value
+    const costShare = postForm.controls['costShare'].value
+    const tags = postForm.controls['tags'].value
+
+    return this.http.put(POST_API + '/update/' + postId, 
+      {
+        body,
+        placeName,
+        placeAddress,
+        placeLatitude,
+        placeLongtitude,
+        meetingDatetime,
+        partySize,
+        costEstimate,
+        costShare,
+        tags,
+      }, httpOptions)
+  }
 }

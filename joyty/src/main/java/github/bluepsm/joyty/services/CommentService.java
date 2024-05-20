@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import github.bluepsm.joyty.models.Comment;
 import github.bluepsm.joyty.models.Post;
 import github.bluepsm.joyty.models.User;
+import github.bluepsm.joyty.payload.request.CreateCommentRequest;
 import github.bluepsm.joyty.repositories.CommentRepository;
 import github.bluepsm.joyty.repositories.PostRepository;
 import github.bluepsm.joyty.repositories.UserRepository;
@@ -44,14 +45,17 @@ public class CommentService {
     }
 
     @CachePut(value = "comments", key = "#id")
-    public Optional<Comment> updateCommentById(Long id, Comment comment) {
-        Optional<Comment> commentOpt = commentRepository.findById(id);
+    public Optional<Comment> updateCommentById(Long commentId, CreateCommentRequest commentRequest) {
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
 
         if(!commentOpt.isPresent()) {
             return Optional.empty();
         }
+        
+        Comment comment = commentOpt.get();
 
-        comment.setId(id);
+        comment.setId(commentId);
+        comment.setBody(commentRequest.getBody());
         
         // Keep the existing created_at timestamp
         Long createdAt = commentOpt.get().getCreatedAt();

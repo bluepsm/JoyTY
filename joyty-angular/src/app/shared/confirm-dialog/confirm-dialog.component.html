@@ -1,36 +1,34 @@
-<ng-template #confirmationModal let-c="close" let-d="dismiss">
-    <div class="modal-header {{ modalStyle }}">
-        <h5 class="modal-title" id="modal-title">
-            {{ modalTitle }}
-        </h5>
-        <button
-            type="button"
-            class="close"
-            aria-describedby="modal-title"
-            (click)="d('CLOSE')"
-        >
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <p>
-            {{ modalBody }}
-        </p>
-    </div>
-    <div class="modal-footer">
-        <button
-            type="button"
-            class="btn btn-outline-secondary"
-            (click)="d('CLOSE')"
-        >
-            Cancel
-        </button>
-        <button
-            type="button"
-            class="btn {{ modalButtonColor }}"
-            (click)="c('OK')"
-        >
-            OK
-        </button>
-    </div>
-</ng-template>
+<div class="modal-header {{ modalStyle }}">
+    <h5 class="modal-title" id="modal-title">
+        {{ modalTitle }}
+    </h5>
+    <button
+        type="button"
+        class="close"
+        aria-describedby="modal-title"
+        (click)="activeModal.close(false)"
+    >
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <p>
+        {{ modalBody }}
+    </p>
+</div>
+<div class="modal-footer">
+    <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="activeModal.close(false)"
+    >
+        Cancel
+    </button>
+    <button
+        type="button"
+        class="btn {{ modalButtonColor }}"
+        (click)="activeModal.close(true)"
+    >
+        OK
+    </button>
+</div>

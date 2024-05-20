@@ -34,7 +34,7 @@ public class Tag implements Serializable {
     private String tagname;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<Post> posts;
 
     public Tag() {}

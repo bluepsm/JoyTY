@@ -108,6 +108,7 @@ public class AuthController {
 	    		.body(new UserInfoResponse(userDetails.getId(),
 	                                   userDetails.getUsername(),
 	                                   userDetails.getEmail(),
+	                                   userDetails.getProfileImg(),
 	                                   roles));
 	}
 
