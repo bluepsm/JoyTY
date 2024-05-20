@@ -37,4 +37,16 @@ export class StorageService {
 
     return false
   }
+
+  public saveProfileImg(profileImg: any): void {
+    const user = window.localStorage.getItem(USER_KEY)
+
+    if (user) {
+      let userObject = JSON.parse(user)
+      userObject.profileImg = profileImg
+
+      window.localStorage.removeItem(USER_KEY)
+      window.localStorage.setItem(USER_KEY, JSON.stringify(userObject))
+    }
+  }
 }

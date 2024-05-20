@@ -33,13 +33,15 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.listenToLoading()
     if (this.storageService.isLoggedIn()) {
+      const user = this.storageService.getUser()
       let userState = {
         isLoggedIn: true,
-        userId:  this.storageService.getUser().id,
-        username: this.storageService.getUser().username,
-        userRoles: this.storageService.getUser().roles,
+        userId:  user.id,
+        username: user.username,
+        userRoles: user.roles,
       }
       this.headerService.setUserState(userState)
+      this.headerService.setProfileImg(user.profileImg)
       this.router.navigate(['/user'])
     }
 

@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit{
           userRoles: data.roles,
         }
         this.headerService.setUserState(userState)
+        this.headerService.setProfileImg(data.profileImg)
 
         this.router.navigate(['/user'])
         //this.reloadPage()

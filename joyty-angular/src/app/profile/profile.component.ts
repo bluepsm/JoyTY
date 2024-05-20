@@ -440,6 +440,7 @@ export class ProfileComponent implements OnInit {
           this.toastService.showStatusToast("Update profile image successfully.")
           this.getUserData(this.currentUser.id)
           this.headerService.setProfileImg(data)
+          this.storageService.saveProfileImg(data)
           this.cd.detectChanges()
           //console.log(data)
         }, error: err => {
