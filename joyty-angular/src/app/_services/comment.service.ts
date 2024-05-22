@@ -33,4 +33,8 @@ export class CommentService {
   updateComment(commentId: bigint, body: string, postId: bigint): Observable<any> {
     return this.http.put(COMMENT_API + '/updateCommentById/' + commentId, {postId, body}, httpOptions)
   }
+
+  getScrollComments(postId: bigint, latestComment: bigint): Observable<any> {
+    return this.http.get<any>(COMMENT_API + '/getScrollComments/' + postId +'?latestComment=' + latestComment, httpOptions)
+  }
 }

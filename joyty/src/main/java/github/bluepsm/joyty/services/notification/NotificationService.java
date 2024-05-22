@@ -7,10 +7,14 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.OffsetScrollPosition;
+import org.springframework.data.domain.ScrollPosition;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Window;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
+import github.bluepsm.joyty.models.Comment;
 import github.bluepsm.joyty.models.Tag;
 import github.bluepsm.joyty.models.User;
 import github.bluepsm.joyty.models.notification.EEntity;
@@ -83,5 +87,26 @@ public class NotificationService {
     	}
     	
     	return Sort.Direction.DESC;
+    }
+	
+	public Window<Notification> getNotificationsUsingOffset(Long userId) {
+    	OffsetScrollPosition offset = ScrollPosition.offset();
+    	Window<Notification> notifications = notificationRepository.findFirst10ByToUsersIdOrderByCreatedAtDesc(userId, offset);
+    	
+    	return notifications;
+    }
+    
+    public Window<Notification> getNextNotificationsUsingOffset(Long userId, Long lastNotification) {
+    	OffsetScrollPosition offset = ScrollPosition.offset(lastNotification);
+    	Window<Notification> nextNotifications = notificationRepository.findFirst10ByToUsersIdOrderByCreatedAtDesc(userId, offset);
+    	
+    	return nextNotifications;
+    }
+    
+    public Window<Notification> getScrollNotifications(Long userId, Long latestNotification) {
+    	OffsetScrollPosition offset = ScrollPosition.offset(latestNotification);
+    	Window<Notification> notifications = notificationRepository.findFirst10ByToUsersIdOrderByCreatedAtDesc(userId, offset);
+    	
+    	return notifications;
     }
 }

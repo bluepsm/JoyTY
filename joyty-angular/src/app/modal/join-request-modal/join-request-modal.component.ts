@@ -16,7 +16,11 @@ export class JoinRequestModalComponent implements OnInit {
   @Input() public postId!: bigint
 
   post?: Post
-  joinRequests?: JoinRequest[]
+  joinRequests: JoinRequest[] = []
+
+  latestRequest: bigint = BigInt(0)
+  lastRequest: boolean = false
+  requestLoading: boolean = false
 
   constructor(
     private joinService: JoinService,
@@ -26,8 +30,31 @@ export class JoinRequestModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getAllJoinRequestByPostId(this.postId)
+    //this.getAllJoinRequestByPostId(this.postId)
+    this.getScrollRequests(this.postId, this.latestRequest)
     this.getPostByPostId(this.postId)
+  }
+
+  getScrollRequests(postId: bigint, latestRequest: bigint) {
+    this.joinService.getScrollRequests(postId, latestRequest).subscribe({
+      next: data => {
+        this.joinRequests = this.joinRequests.concat(data.content)
+        this.latestRequest += BigInt(data.content.length)
+        this.lastRequest = data.last
+        this.requestLoading = false
+      }, error: err => {
+        this.toastService.showErrorToast("Error fetching requests: " + err.message)
+        this.requestLoading = false
+        console.log(err)
+      }
+    })
+  }
+
+  onScroll = () => {
+    if (!this.lastRequest) {
+      this.requestLoading = true
+      this.getScrollRequests(this.postId, this.latestRequest) 
+    }
   }
 
   getAllJoinRequestByPostId(postId: bigint) {

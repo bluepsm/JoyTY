@@ -210,17 +210,10 @@ public class PostService {
         }
     }
     
-    public Window<Post> getPostsUsingOffset() {
-    	OffsetScrollPosition offset = ScrollPosition.offset();
+    public Window<Post> getScrollPosts(Long latestPost) {
+    	OffsetScrollPosition offset = ScrollPosition.offset(latestPost);
     	Window<Post> posts = postRepository.findFirst5AllByOrderByCreatedAtDesc(offset);
     	
     	return posts;
-    }
-    
-    public Window<Post> getNextPostsUsingOffset(Long lastPost) {
-    	OffsetScrollPosition offset = ScrollPosition.offset(lastPost);
-    	Window<Post> nextPosts = postRepository.findFirst5AllByOrderByCreatedAtDesc(offset);
-    	
-    	return nextPosts;
     }
 }

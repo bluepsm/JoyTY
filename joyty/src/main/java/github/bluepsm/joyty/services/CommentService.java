@@ -11,6 +11,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.OffsetScrollPosition;
+import org.springframework.data.domain.ScrollPosition;
+import org.springframework.data.domain.Window;
 import org.springframework.stereotype.Service;
 
 import github.bluepsm.joyty.models.Comment;
@@ -88,5 +91,12 @@ public class CommentService {
     public Optional<List<Comment>> getCommentsByPostId(Long postId) {
         //log.info("Redis is Retrieve Comment ID: {}", id);
         return commentRepository.findByPostId(postId);
+    }
+    
+    public Window<Comment> getScrollComments(Long postId, Long latestComment) {
+    	OffsetScrollPosition offset = ScrollPosition.offset(latestComment);
+    	Window<Comment> comments = commentRepository.findFirst10ByPostIdOrderByCreatedAtAsc(postId, offset);
+    	
+    	return comments;
     }
 }

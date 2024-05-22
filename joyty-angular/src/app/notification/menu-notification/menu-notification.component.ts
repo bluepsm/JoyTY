@@ -15,16 +15,21 @@ export class MenuNotificationComponent implements OnInit {
   activeOffcanvas = inject(NgbActiveOffcanvas)
   @Input() public userId?: bigint
 
-  notifications?: Notification[]
+  notifications: Notification[] = []
 
   private notificationService = inject(NotificationService)
+
+  latestNotification: bigint = BigInt(0)
+  lastNotification: boolean = false
+  notificationLoading: boolean = false
 
   constructor(
     private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
-    this.getAllNotifications()
+    //this.getAllNotifications()
+    this.getScrollNotifications(this.userId!, this.latestNotification)
   }
 
   getAllNotifications() {
@@ -36,5 +41,27 @@ export class MenuNotificationComponent implements OnInit {
         console.log(err)
       }
     })
+  }
+
+  getScrollNotifications(userId: bigint, latestNotification: bigint) {
+    this.notificationService.getScrollNotifications(userId, latestNotification).subscribe({
+      next: data => {
+        this.notifications = this.notifications.concat(data.content)
+        this.latestNotification += BigInt(data.content.length)
+        this.lastNotification = data.last
+        this.notificationLoading = false
+      }, error: err => {
+        this.toastService.showErrorToast("Error fetching notifications: " + err.message)
+        this.notificationLoading = false
+        console.log(err)
+      }
+    })
+  }
+
+  onScroll = () => {
+    if (!this.lastNotification) {
+      this.notificationLoading = true
+      this.getScrollNotifications(this.userId!, this.latestNotification) 
+    }
   }
 }

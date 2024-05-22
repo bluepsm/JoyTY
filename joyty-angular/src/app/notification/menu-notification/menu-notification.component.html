@@ -7,13 +7,22 @@
         (click)="activeOffcanvas.close()"
     ></button>
 </div>
-<div class="offcanvas-body bg-secondary">
+<div class="offcanvas-body bg-secondary" infinite-scroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500" (scrolled)="onScroll()" [scrollWindow]="false">
     <!-- <button type="button" class="btn btn-outline-dark" (click)="activeOffcanvas.close('Close click')">Close</button> -->
     <ng-container>
-        <div [@listAnimation]="notifications?.length">
+        <div [@listAnimation]="notifications.length">
             <div *ngFor="let notification of notifications">
                 <app-card-notification [notification]="notification"></app-card-notification>
             </div>
         </div>
+        @if (!lastNotification) {
+            <div *ngIf="notificationLoading" class="loading-container-inplace d-flex justify-content-center">
+                <div class="loader" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        } @else {
+            <div class="text-sm-center text-white">You have seen all the notifications.</div>
+        }
     </ng-container>
 </div>

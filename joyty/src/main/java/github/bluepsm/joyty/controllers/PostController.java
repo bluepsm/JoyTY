@@ -129,17 +129,10 @@ public class PostController {
         return ResponseEntity.ok(updatedPost.get());
     }
     
-    @GetMapping("/getFirst5Posts")
-    public ResponseEntity<Window<Post>> getFirst5Method1() {
-    	Window<Post> posts = postService.getPostsUsingOffset();
-
-        return ResponseEntity.ok(posts);
-    }
-    
-    @GetMapping("/getNext5Posts/{lastPost}")
-    public ResponseEntity<Window<Post>> getNext5Method1(@PathVariable Long lastPost) {
-    	Window<Post> nextPosts = postService.getNextPostsUsingOffset(lastPost);
-
-        return ResponseEntity.ok(nextPosts);
+    @GetMapping("/getScrollPosts")
+    public ResponseEntity<Window<Post>> getScrollPosts(@RequestParam(defaultValue = "0") Long latestPost) {
+    	Window<Post> posts = postService.getScrollPosts(latestPost);
+    	
+    	return ResponseEntity.ok(posts);
     }
 }

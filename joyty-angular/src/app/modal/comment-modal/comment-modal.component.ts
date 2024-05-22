@@ -17,7 +17,7 @@ export class CommentModalComponent implements OnInit {
   activeModal = inject(NgbActiveModal)
   modalService = inject(NgbModal)
 
-  comments?: Comment[]
+  comments: Comment[] = []
 
   edit: boolean = false
   editingCommentId?: bigint
@@ -25,6 +25,10 @@ export class CommentModalComponent implements OnInit {
   commentForm: FormGroup = new FormGroup({
     body: new FormControl('')
   })
+
+  latestComment: bigint = BigInt(0)
+  lastComment: boolean = false
+  commentLoading: boolean = false
 
   constructor(
     private config: NgbModalConfig,
@@ -38,10 +42,33 @@ export class CommentModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllComment(this.postId)
+    //this.getAllComment(this.postId)
+    this.getScrollComments(this.postId, this.latestComment)
     this.commentForm = this.formBuilder.group({
       body: ['', [Validators.required]]
     })
+  }
+
+  getScrollComments(postId: bigint, latestComment: bigint) {
+    this.commentService.getScrollComments(postId, latestComment).subscribe({
+      next: data => {
+        this.comments = this.comments.concat(data.content)
+        this.latestComment += BigInt(data.content.length)
+        this.lastComment = data.last
+        this.commentLoading = false
+      }, error: err => {
+        this.toastService.showErrorToast("Error fetching comments: " + err.message)
+        this.commentLoading = false
+        console.log(err)
+      }
+    })
+  }
+
+  onScroll = () => {
+    if (!this.lastComment) {
+      this.commentLoading = true
+      this.getScrollComments(this.postId, this.latestComment) 
+    }
   }
 
   getAllComment(postId: bigint) {

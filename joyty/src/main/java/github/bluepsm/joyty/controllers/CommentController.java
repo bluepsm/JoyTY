@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Window;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import github.bluepsm.joyty.models.Comment;
+import github.bluepsm.joyty.models.Post;
 import github.bluepsm.joyty.models.User;
 import github.bluepsm.joyty.models.notification.EEntity;
 import github.bluepsm.joyty.models.notification.EType;
@@ -141,5 +143,12 @@ public class CommentController {
         }
 
         return ResponseEntity.ok(updatedComment.get());
+    }
+    
+    @GetMapping("/getScrollComments/{postId}")
+    public ResponseEntity<Window<Comment>> getScrollComments(@PathVariable Long postId, @RequestParam(defaultValue = "0") Long latestComment) {
+    	Window<Comment> comments = commentService.getScrollComments(postId, latestComment);
+
+        return ResponseEntity.ok(comments);
     }
 }

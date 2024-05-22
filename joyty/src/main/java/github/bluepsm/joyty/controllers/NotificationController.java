@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Window;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,5 +48,12 @@ public class NotificationController {
 		}
 		
         return ResponseEntity.ok(notifications.get());
+    }
+    
+    @GetMapping("/getScrollNotifications/{userId}")
+    public ResponseEntity<Window<Notification>> getScrollNotifications(@PathVariable Long userId, @RequestParam(defaultValue = "0") Long latestNotification) {
+    	Window<Notification> notifications = notificationService.getScrollNotifications(userId, latestNotification);
+
+        return ResponseEntity.ok(notifications);
     }
 }

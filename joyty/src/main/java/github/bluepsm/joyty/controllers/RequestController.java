@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Window;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -189,5 +190,26 @@ public class RequestController {
         }
         
     	return ResponseEntity.ok(request);
+    }
+    
+    @GetMapping("/getFirst10Requests/{postId}")
+    public ResponseEntity<Window<Request>> getFirst10Requests(@PathVariable Long postId) {
+    	Window<Request> requests = requestService.getRequestsUsingOffset(postId);
+
+        return ResponseEntity.ok(requests);
+    }
+    
+    @GetMapping("/getNext10Requests/{postId}")
+    public ResponseEntity<Window<Request>> getNext10Requests(@PathVariable Long postId, @RequestParam Long lastRequest) {
+    	Window<Request> nextRequests = requestService.getNextRequestsUsingOffset(postId, lastRequest);
+
+        return ResponseEntity.ok(nextRequests);
+    }
+    
+    @GetMapping("/getScrollRequests/{postId}")
+    public ResponseEntity<Window<Request>> getScrollRequests(@PathVariable Long postId, @RequestParam(defaultValue = "0") Long latestRequest) {
+    	Window<Request> requests = requestService.getScrollRequests(postId, latestRequest);
+
+        return ResponseEntity.ok(requests);
     }
 }

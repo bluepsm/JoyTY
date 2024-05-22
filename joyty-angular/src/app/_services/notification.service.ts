@@ -21,4 +21,8 @@ export class NotificationService {
   getAllNotifications(userId: bigint): Observable<Notification[]> {
     return this.http.get<Notification[]>(NOTIFICATION_API + '/getNotificationByUserId/' + userId, httpOptions)
   }
+
+  getScrollNotifications(userId: bigint, latestNotification: bigint): Observable<any> {
+    return this.http.get<any>(NOTIFICATION_API + '/getScrollNotifications/' + userId + '?latestNotification=' + latestNotification, httpOptions)
+  }
 }

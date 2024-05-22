@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { PostModalComponent } from '../modal/post-modal/post-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -17,18 +17,18 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.css',
 })
-export class FeedComponent implements OnInit {
-  content?: string
+export class FeedComponent implements OnInit, AfterViewInit {
   postData: Post[] = []
   date = new Date()
   userData?: any
   joinRequest?: any
   joinRequestId: bigint[] = []
-  private modalService = inject(NgbModal)
 
   latestPost: bigint = BigInt(0)
   lastPost: boolean = false
   postLoading: boolean = false
+
+  private modalService = inject(NgbModal)
 
   constructor(
     private postService: PostService,
@@ -39,8 +39,13 @@ export class FeedComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getFirst5Posts()
     this.userData = this.storageService.getUser()
+  }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    this.getScrollPosts(this.latestPost)
     this.getAllJoinRequest(this.userData.id)
   }
 
@@ -76,7 +81,7 @@ export class FeedComponent implements OnInit {
     this.postService.createPost(newPostForm).subscribe({
       next: () => {
         this.toastService.showStatusToast("Post created successfully")
-        this.getFirst5Posts()
+        this.getScrollPosts(this.latestPost)
         this.cd.detectChanges()
       }, error: err => {
         this.toastService.showErrorToast("Error creating post: " + err.message)
@@ -85,23 +90,8 @@ export class FeedComponent implements OnInit {
     })
   }
 
-  getFirst5Posts() {
-    this.postService.getFirst5Posts().subscribe({
-      next: data => {
-        this.postData = this.postData.concat(data.content)
-        this.latestPost = BigInt(data.content.length)
-        this.lastPost = data.last
-        this.postLoading = false
-      }, error: err => {
-        this.toastService.showErrorToast("Error fetching posts: " + err.message)
-        this.postLoading = false
-        console.log(err)
-      }
-    })
-  }
-
-  getNext5Posts() {
-    this.postService.getNext5Posts(this.latestPost).subscribe({
+  getScrollPosts(latestPost: bigint) {
+    this.postService.getScrollPosts(latestPost).subscribe({
       next: data => {
         this.postData = this.postData.concat(data.content)
         this.latestPost += BigInt(data.content.length)
@@ -118,7 +108,7 @@ export class FeedComponent implements OnInit {
   onScroll = () => {
     if (!this.lastPost) {
       this.postLoading = true
-      this.getNext5Posts() 
+      this.getScrollPosts(this.latestPost)
     }
   }
 
@@ -234,7 +224,7 @@ export class FeedComponent implements OnInit {
     this.postService.updatePost(postId, editedPostForm).subscribe({
       next: () => {
         this.toastService.showStatusToast("Post edited successfully")
-        this.getFirst5Posts()
+        this.getScrollPosts(this.latestPost)
         this.cd.detectChanges()
       }, error: err => {
         this.toastService.showErrorToast("Error editing post: " + err.message)
@@ -247,7 +237,7 @@ export class FeedComponent implements OnInit {
     this.postService.deletePostById(postId).subscribe({
       next: () => {
         this.toastService.showStatusToast("Delete post successfully.")
-        this.getFirst5Posts()
+        this.getScrollPosts(this.latestPost)
         this.cd.detectChanges()
       }, error: err => {
         this.toastService.showErrorToast("Error Delete Post: " + err.message)

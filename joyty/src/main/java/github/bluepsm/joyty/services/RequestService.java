@@ -11,8 +11,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.OffsetScrollPosition;
+import org.springframework.data.domain.ScrollPosition;
+import org.springframework.data.domain.Window;
 import org.springframework.stereotype.Service;
 
+import github.bluepsm.joyty.models.Comment;
 import github.bluepsm.joyty.models.ERequest;
 import github.bluepsm.joyty.models.Post;
 import github.bluepsm.joyty.models.Request;
@@ -150,5 +154,12 @@ public class RequestService {
         requestRepository.save(request);
         
         return Optional.of(request);
+    }
+    
+    public Window<Request> getScrollRequests(Long postId, Long latestRequest) {
+    	OffsetScrollPosition offset = ScrollPosition.offset(latestRequest);
+    	Window<Request> requests = requestRepository.findFirst10ByJoinIdOrderByCreatedAtAsc(postId, offset);
+    	
+    	return requests;
     }
 }

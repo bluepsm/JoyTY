@@ -2,7 +2,7 @@
     <h4 class="modal-title">Join Requests</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
 </div>
-<div class="modal-body">
+<div class="modal-body" infinite-scroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500" (scrolled)="onScroll()" [scrollWindow]="false">
     <div class="container">
         <div *ngIf="joinRequests">
             <div class="row mb-3" *ngFor="let joinRequest of joinRequests">
@@ -44,6 +44,15 @@
                 </div>
             </div>
         </div>
+        @if (!lastRequest) {
+            <div *ngIf="requestLoading" class="loading-container-inplace d-flex justify-content-center">
+                <div class="loader" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        } @else {
+            <div class="text-sm-center text-secondary">You have seen all the requests.</div>
+        }
     </div>
 </div>
 <div class="modal-footer">

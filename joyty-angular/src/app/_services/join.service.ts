@@ -33,4 +33,8 @@ export class JoinService {
   respondToRequest(requestId: bigint, response: string): Observable<any> {
     return this.http.get(JOIN_API + '/respondToRequest/' + requestId + '?response=' + response, httpOptions)
   }
+
+  getScrollRequests(postId: bigint, latestRequest: bigint): Observable<any> {
+    return this.http.get<any>(JOIN_API + '/getScrollRequests/' + postId + '?latestRequest=' + latestRequest, httpOptions)
+  }
 }

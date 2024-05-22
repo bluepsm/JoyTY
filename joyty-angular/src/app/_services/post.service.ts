@@ -85,11 +85,7 @@ export class PostService {
       }, httpOptions)
   }
 
-  getFirst5Posts(): Observable<any> {
-    return this.http.get<any>(POST_API + '/getFirst5Posts', httpOptions)
-  }
-
-  getNext5Posts(lastPost: bigint): Observable<any> {
-    return this.http.get<any>(POST_API + '/getNext5Posts/' + lastPost, httpOptions)
+  getScrollPosts(latestPost: bigint): Observable<any> {
+    return this.http.get<any>(POST_API + '/getScrollPosts?latestPost=' + latestPost, httpOptions)
   }
 }

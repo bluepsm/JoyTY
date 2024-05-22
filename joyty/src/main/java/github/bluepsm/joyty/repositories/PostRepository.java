@@ -11,5 +11,4 @@ import github.bluepsm.joyty.models.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 	Window<Post> findFirst5AllByOrderByCreatedAtDesc(OffsetScrollPosition position);
-	Window<Post> findFirst5AllByOrderByCreatedAtDesc(KeysetScrollPosition position);
 }
