@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Injectable, Input, OnInit, Output, TemplateRef, ViewChild, inject } from '@angular/core';
-import { NgbActiveModal, NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Injectable, Input, OnInit, inject } from '@angular/core';
+import { NgbActiveModal, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-confirm-dialog',

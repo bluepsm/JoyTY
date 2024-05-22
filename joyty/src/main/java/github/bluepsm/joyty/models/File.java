@@ -1,11 +1,15 @@
 package github.bluepsm.joyty.models;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -20,6 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "files")
+@EntityListeners(AuditingEntityListener.class)
 public class File {
 	@Id
 	@GeneratedValue(generator = "uuid")
@@ -32,6 +37,10 @@ public class File {
 	
 	@Lob
 	private byte[] data;
+	
+	@Column(name = "uploadedAt")
+    @CreatedDate
+    private Long uploadedAt;
 	
 	@JsonIgnore
 	@ManyToOne

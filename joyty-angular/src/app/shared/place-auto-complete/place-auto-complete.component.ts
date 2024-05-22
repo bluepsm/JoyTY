@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { Loader } from "@googlemaps/js-api-loader"
 
 const loader = new Loader({

@@ -144,7 +144,7 @@ public class UserService {
     		
     		String fileName = StringUtils.cleanPath(image.getOriginalFilename());
     		File fileDB = new File(fileName, image.getContentType(), image.getBytes());
-    		//fileDB.setFileOwner(user);
+    		fileDB.setFileOwner(user);
     		
     		try {
     			File file = fileRepository.save(fileDB);

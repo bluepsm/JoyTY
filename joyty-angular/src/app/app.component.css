@@ -23,10 +23,11 @@
 }
   
 .site-content {
+    /* background-color: #25b09b; */
     margin-top: 13px;
     height: calc(100vh - 65px);
-    padding: 0 15px;
-    overflow: auto;
+    padding: 0;
+    overflow: hidden;
 }
 
 /* HTML: <div class="loader"></div> */

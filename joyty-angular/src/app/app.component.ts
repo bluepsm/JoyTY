@@ -3,12 +3,11 @@ import { Router } from '@angular/router';
 import { EventBusService } from './shared/event-bus.service';
 import { Subscription, delay } from 'rxjs';
 import { LoadingService } from './shared/loading.service';
-import { StorageService } from './services/storage.service';
-import { HeaderService } from './services/header.service';
-import { AuthService } from './services/auth.service';
+import { StorageService } from './_services/storage.service';
+import { HeaderService } from './_services/header.service';
+import { AuthService } from './_services/auth.service';
 import { ToastService } from './shared/toast/toast.service';
-import { UserService } from './services/user.service';
-import { ProfileService } from './services/profile.service';
+import { ProfileService } from './_services/profile.service';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +41,7 @@ export class AppComponent implements OnInit {
       }
       this.headerService.setUserState(userState)
       this.headerService.setProfileImg(user.profileImg)
-      this.router.navigate(['/user'])
+      this.router.navigate(['/feed'])
     }
 
     this.eventBusSub = this.eventBusService.on('logout', () => {

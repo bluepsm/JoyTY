@@ -27,7 +27,7 @@ public class FileStorageService {
 		
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 		File fileDB = new File(fileName, file.getContentType(), file.getBytes());
-		//fileDB.setFileOwner(user);
+		fileDB.setFileOwner(user);
 		
 		return Optional.of(fileRepository.save(fileDB));
 	}

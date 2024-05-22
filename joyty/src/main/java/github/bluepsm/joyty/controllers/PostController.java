@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Window;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.support.WindowIterator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -125,5 +127,19 @@ public class PostController {
         }
 
         return ResponseEntity.ok(updatedPost.get());
+    }
+    
+    @GetMapping("/getFirst5Posts")
+    public ResponseEntity<Window<Post>> getFirst5Method1() {
+    	Window<Post> posts = postService.getPostsUsingOffset();
+
+        return ResponseEntity.ok(posts);
+    }
+    
+    @GetMapping("/getNext5Posts/{lastPost}")
+    public ResponseEntity<Window<Post>> getNext5Method1(@PathVariable Long lastPost) {
+    	Window<Post> nextPosts = postService.getNextPostsUsingOffset(lastPost);
+
+        return ResponseEntity.ok(nextPosts);
     }
 }

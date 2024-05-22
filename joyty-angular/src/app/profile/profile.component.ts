@@ -1,20 +1,18 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { Country, State, City, ICountry, IState, ICity } from 'country-state-city';
-import { StorageService } from '../services/storage.service';
-import { ProfileService } from '../services/profile.service';
+import { StorageService } from '../_services/storage.service';
+import { ProfileService } from '../_services/profile.service';
 import { User } from '../models/user.model';
-import { ValidationService } from '../utils/validationService';
+import { ValidationService } from '../_utils/validations/validationService';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../shared/toast/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FileService } from '../services/file.service';
 import { Observable } from 'rxjs';
-import { HeaderService } from '../services/header.service';
+import { HeaderService } from '../_services/header.service';
 
 
 @Component({

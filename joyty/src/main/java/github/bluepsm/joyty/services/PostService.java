@@ -15,8 +15,13 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.KeysetScrollPosition;
+import org.springframework.data.domain.OffsetScrollPosition;
+import org.springframework.data.domain.ScrollPosition;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.domain.Window;
+import org.springframework.data.support.WindowIterator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,5 +208,19 @@ public class PostService {
         } catch(EmptyResultDataAccessException err) {
             return false;
         }
+    }
+    
+    public Window<Post> getPostsUsingOffset() {
+    	OffsetScrollPosition offset = ScrollPosition.offset();
+    	Window<Post> posts = postRepository.findFirst5AllByOrderByCreatedAtDesc(offset);
+    	
+    	return posts;
+    }
+    
+    public Window<Post> getNextPostsUsingOffset(Long lastPost) {
+    	OffsetScrollPosition offset = ScrollPosition.offset(lastPost);
+    	Window<Post> nextPosts = postRepository.findFirst5AllByOrderByCreatedAtDesc(offset);
+    	
+    	return nextPosts;
     }
 }
