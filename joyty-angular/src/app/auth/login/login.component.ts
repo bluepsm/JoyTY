@@ -4,6 +4,7 @@ import { StorageService } from '../../_services/storage.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../shared/toast/toast.service';
 import { HeaderService } from '../../_services/header.service';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +12,12 @@ import { HeaderService } from '../../_services/header.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit{
-  form: any = {
-    username: null,
-    password: null
-  }
+  submitted = false
+
+  loginForm: FormGroup = new FormGroup({
+    username: new FormControl(''),
+    password: new FormControl('')
+  })
 
   constructor(
     private authService: AuthService, 
@@ -22,16 +25,32 @@ export class LoginComponent implements OnInit{
     private router: Router,
     private toastService: ToastService,
     private headerService: HeaderService,
+    private formBuilder: FormBuilder,
   ) {}
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
       this.router.navigate(['/feed'])
     }
+
+    this.loginForm = this.formBuilder.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
+    })
   }
 
-  onSubmit(): void {
-    const {username, password} = this.form
+  get lf(): { [key: string]: AbstractControl } {
+    return this.loginForm.controls;
+  }
+
+  onLoginFormSubmit(): void {
+    this.submitted = true;
+
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    const {username, password} = this.loginForm.value
 
     this.authService.login(username, password).subscribe({
       next: data => {

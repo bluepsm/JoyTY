@@ -1,0 +1,5 @@
+.container-fluid {
+    width: 100%;
+    height: calc(100vh - 77px);
+    overflow-y: auto;
+}

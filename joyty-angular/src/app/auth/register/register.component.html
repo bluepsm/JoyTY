@@ -1,322 +1,321 @@
-<div class="container mt-5 border">
-
-    <div class="mt-3 mb-3">
-        <h1>Register</h1>
-    </div>
-    
-    <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-
-        <div class="form-group mt-3 mb-3">
-            <label for="username">Username:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="username"
-              [(ngModel)]="form.username"
-              required
-              minlength="3"
-              maxlength="20"
-              #username="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && username.errors}"
-            />
-            @if (username.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (username.errors['required']) {
-                        <div>Username is required!</div>
-                    }
-                    @if (username.errors['minlength']) {
-                        <div>Username must be at least 3 character.</div>
-                    }
-                    @if (username.errors['maxlength']) {
-                        <div>Username must be at most 20 character.</div>
-                    }
+<div class="container-fluid p-5">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div class="p-5 border shadow">
+                <div class="mb-5">
+                    <h1>Register</h1>
                 </div>
-            }
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="email">Email:</label>
-            <input
-              type="email"
-              class="form-control"
-              name="email"
-              [(ngModel)]="form.email"
-              required
-              email
-              #email="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && email.errors}"
-            />
-            @if (email.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (email.errors['required']) {
-                        <div>Email is required!</div>
-                    }
-                    @if (email.errors['email']) {
-                        <div>Email must be a valid email address.</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="password">Password:</label>
-            <input
-              type="password"
-              class="form-control"
-              name="password"
-              [(ngModel)]="form.password"
-              required
-              minlength="8"
-              #password="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && password.errors}"
-            />
-            @if (password.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (password.errors['required']) {
-                        <div>Password is required!</div>
-                    }
-                    @if (password.errors['minlength']) {
-                        <div>Password must be at least 8 characters.</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="firstName">First Name:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="firstName"
-              [(ngModel)]="form.firstName"
-              required
-              minlength="3"
-              maxlength="30"
-              #firstName="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && firstName.errors}"
-            />
-            @if (firstName.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (firstName.errors['required']) {
-                        <div>First name is required!</div>
-                    }
-                    @if (firstName.errors['minlength']) {
-                        <div>First name must be at least 3 character.</div>
-                    }
-                    @if (firstName.errors['maxlength']) {
-                        <div>First name must be at most 30 character.</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="lastName">Last Name:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="lastName"
-              [(ngModel)]="form.lastName"
-              required
-              minlength="3"
-              maxlength="30"
-              #lastName="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && lastName.errors}"
-            />
-            @if (lastName.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (lastName.errors['required']) {
-                        <div>Last name is required!</div>
-                    }
-                    @if (lastName.errors['minlength']) {
-                        <div>Last name must be at least 3 character.</div>
-                    }
-                    @if (lastName.errors['maxlength']) {
-                        <div>Last name must be at most 30 character.</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="phoneNumber">Phone Number:</label>
-            <input
-              type="tel"
-              class="form-control"
-              name="phoneNumber"
-              [(ngModel)]="form.phoneNumber"
-              required
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-              #phoneNumber="ngModel"
-              [ngClass]="{'is-invalid': f.submitted && phoneNumber.errors}"
-            />
-            @if (phoneNumber.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (phoneNumber.errors['required']) {
-                        <div>Phone number is required!</div>
-                    }
-                    @if (phoneNumber.errors['pattern']) {
-                        <div>Phone number must be a valid number.</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group mb-3">
-            <label>Gender</label>
-            <div class="form-control" [ngClass]="{'is-invalid': f.submitted && gender.errors}">
-
-                <div class="form-check form-check-inline">
-                    <input
-                        class="form-check-input is-invalid"
-                        type="radio"
-                        name="gender"
-                        id="gender_male"
-                        value="male"
-                        [(ngModel)]="form.gender"
-                        #gender="ngModel"
-                        required
-                        [ngClass]="{'is-invalid': f.submitted && gender.errors}"
-                    />
-                    <label class="form-check-label" for="gender_male">Male</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input
-                        class="form-check-input is-invalid"
-                        type="radio"
-                        name="gender"
-                        id="gender_female"
-                        value="female"
-                        [(ngModel)]="form.gender"
-                        #gender="ngModel"
-                        required
-                        [ngClass]="{'is-invalid': f.submitted && gender.errors}"
-                    />
-                    <label class="form-check-label" for="gender_female">Female</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input
-                        class="form-check-input is-invalid"
-                        type="radio"
-                        name="gender"
-                        id="gender_other"
-                        value="other"
-                        [(ngModel)]="form.gender"
-                        #gender="ngModel"
-                        required
-                        [ngClass]="{'is-invalid': f.submitted && gender.errors}"
-                    />
-                    <label class="form-check-label" for="gender_other">Other</label>
-                </div>
+                <form [formGroup]="registerForm" (ngSubmit)="onRegisterFormSubmit()">
+                    <div class="form-group mt-3 mb-3">
+                        <label for="username">Username:</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="username"
+                          formControlName="username"
+                          [ngClass]="{'is-invalid': submitted && rf['username'].errors}"
+                        />
+                        @if (rf['username'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['username'].errors['required']) {
+                                    <div>Username is required!</div>
+                                }
+                                @if (rf['username'].errors['minlength']) {
+                                    <div>Username must be at least 3 character.</div>
+                                }
+                                @if (rf['username'].errors['maxlength']) {
+                                    <div>Username must be at most 20 character.</div>
+                                }
+                                @if (rf['username'].errors['isExists']) {
+                                    <div>Username is already taken.</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="email">Email:</label>
+                        <input
+                          type="email"
+                          class="form-control"
+                          name="email"
+                          formControlName="email"
+                          [ngClass]="{'is-invalid': submitted && rf['email'].errors}"
+                        />
+                        @if (rf['email'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['email'].errors['required']) {
+                                    <div>Email is required!</div>
+                                }
+                                @if (rf['email'].errors['email']) {
+                                    <div>Email must be a valid email address.</div>
+                                }
+                                @if (rf['email'].errors['isExists']) {
+                                    <div>Email is already in use.</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password">Password:</label>
+                        <input
+                          type="password"
+                          class="form-control"
+                          name="password"
+                          formControlName="password"
+                          [ngClass]="{'is-invalid': submitted && rf['password'].errors}"
+                        />
+                        @if (rf['password'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['password'].errors['required']) {
+                                    <div>Password is required!</div>
+                                }
+                                @if (rf['password'].errors['minlength']) {
+                                    <div>Password must be at least 8 characters.</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password">Confirm Password:</label>
+                        <input
+                          type="password"
+                          class="form-control"
+                          name="password"
+                          formControlName="confirmPassword"
+                          [ngClass]="{'is-invalid': submitted && rf['confirmPassword'].errors}"
+                        />
+                        @if (rf['confirmPassword'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['confirmPassword'].errors['required']) {
+                                    <div>Confirm password is required!</div>
+                                }
+                                @if (rf['confirmPassword'].errors['matching']) {
+                                    <div>Password does not match!</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="firstName">First Name:</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="firstName"
+                          formControlName="firstName"
+                          [ngClass]="{'is-invalid': submitted && rf['firstName'].errors}"
+                        />
+                        @if (rf['firstName'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['firstName'].errors['required']) {
+                                    <div>First name is required!</div>
+                                }
+                                @if (rf['firstName'].errors['minlength']) {
+                                    <div>First name must be at least 3 character.</div>
+                                }
+                                @if (rf['firstName'].errors['maxlength']) {
+                                    <div>First name must be at most 30 character.</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="lastName">Last Name:</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="lastName"
+                          formControlName="lastName"
+                          [ngClass]="{'is-invalid': submitted && rf['lastName'].errors}"
+                        />
+                        @if (rf['lastName'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['lastName'].errors['required']) {
+                                    <div>Last name is required!</div>
+                                }
+                                @if (rf['lastName'].errors['minlength']) {
+                                    <div>Last name must be at least 3 character.</div>
+                                }
+                                @if (rf['lastName'].errors['maxlength']) {
+                                    <div>Last name must be at most 30 character.</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input
+                          type="tel"
+                          class="form-control"
+                          name="phoneNumber"
+                          formControlName="phoneNumber"
+                          [ngClass]="{'is-invalid': submitted && rf['phoneNumber'].errors}"
+                        />
+                        @if (rf['phoneNumber'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['phoneNumber'].errors['required']) {
+                                    <div>Phone number is required!</div>
+                                }
+                                @if (rf['phoneNumber'].errors['pattern']) {
+                                    <div>Phone number must be a valid number.</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Gender</label>
+                        <div class="form-control" [ngClass]="{'is-invalid': submitted && rf['gender'].errors}">
+            
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input is-invalid"
+                                    type="radio"
+                                    name="gender"
+                                    id="gender_male"
+                                    value="male"
+                                    formControlName="gender"
+                                    [ngClass]="{'is-invalid': submitted && rf['gender'].errors}"
+                                />
+                                <label class="form-check-label" for="gender_male">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input is-invalid"
+                                    type="radio"
+                                    name="gender"
+                                    id="gender_female"
+                                    value="female"
+                                    formControlName="gender"
+                                    [ngClass]="{'is-invalid': submitted && rf['gender'].errors}"
+                                />
+                                <label class="form-check-label" for="gender_female">Female</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input is-invalid"
+                                    type="radio"
+                                    name="gender"
+                                    id="gender_other"
+                                    value="other"
+                                    formControlName="gender"
+                                    [ngClass]="{'is-invalid': submitted && rf['gender'].errors}"
+                                />
+                                <label class="form-check-label" for="gender_other">Other</label>
+                            </div>
+                        </div>
+                        @if (rf['gender'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['gender'].errors['required']) {
+                                    <div>Gender is required!</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="dateOfBirth">Date of birth:</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="dateOfBirth"
+                            id="dateOfBirth"
+                            placeholder="YYYY-MM-DD"
+                            bsDatepicker
+                            formControlName="dateOfBirth"
+                            [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', isAnimated: true, adaptivePosition: true}"
+                            [ngClass]="{'is-invalid': submitted && rf['dateOfBirth'].errors}"
+                        />
+                        @if (rf['dateOfBirth'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['dateOfBirth'].errors['required']) {
+                                    <div>Date of birth is required!</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="country">Country:</label>
+                        <select 
+                            class="form-select" 
+                            name="country"
+                            id="country"
+                            (change)="onCountryChange()"
+                            [(ngModel)]="selectedCountry"
+                            [ngModelOptions]="{standalone: true}"
+                            [ngClass]="{'is-invalid': submitted && rf['country'].errors}"
+                        >
+                            <option [value]="null">-- Select Your Country --</option>
+                            <option *ngFor="let country of countries" [value]="country | json">{{ country.flag }}&nbsp;&nbsp;{{ country.name }}</option>
+                        </select>
+                        @if (rf['country'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['country'].errors['required']) {
+                                    <div>Country is required!</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3" *ngIf="selectedCountry">
+                        <label for="state">State:</label>
+                        <select 
+                            class="form-select" 
+                            name="state"
+                            id="state"
+                            (change)="onStateChange()" 
+                            [(ngModel)]="selectedState"
+                            [ngModelOptions]="{standalone: true}"
+                            [ngClass]="{'is-invalid': submitted && rf['state'].errors}"
+                        >
+                            <option [value]="null">-- Select Your State --</option>
+                            <option *ngFor="let state of states" [value]="state | json">{{ state.name }}</option>
+                        </select>
+                        @if (rf['state'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['state'].errors['required']) {
+                                    <div>State is required!</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group mb-3" *ngIf="selectedCountry && selectedState">
+                        <label for="city">City:</label>
+                        <select 
+                            class="form-select" 
+                            name="city"
+                            id="city"
+                            (change)="onCityChange()"
+                            [(ngModel)]="selectedCity"
+                            [ngModelOptions]="{standalone: true}"
+                            [ngClass]="{'is-invalid': submitted && rf['city'].errors}"
+                        >
+                            <option [value]="null">-- Select Your City --</option>
+                            <option *ngFor="let city of cities" [value]="city | json">{{ city.name }}</option>
+                        </select>
+                        @if (rf['city'].errors && submitted) {
+                            <div class="invalid-feedback">
+                                @if (rf['city'].errors['required']) {
+                                    <div>City is required!</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group form-check mt-5">
+                        <input
+                          type="checkbox"
+                          formControlName="acceptTerms"
+                          class="form-check-input"
+                          [ngClass]="{ 'is-invalid': submitted && rf['acceptTerms'].errors }"
+                        />
+                        <label for="acceptTerms" class="form-check-label">
+                            I have read and agree to the Terms
+                        </label>
+                        @if (submitted && rf['acceptTerms'].errors) {
+                            <div class="invalid-feedback">Accept Terms is required</div>
+                        }
+                    </div>
+                    <div class="form-group mt-2">
+                        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                    </div>
+                </form>
             </div>
-            @if (gender.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (gender.errors['required']) {
-                        <div>Gender is required!</div>
-                    }
-                </div>
-            }
         </div>
-        
-        <div class="form-group mb-3">
-            <label for="dateOfBirth">Date of birth:</label>
-            <input
-                type="text"
-                class="form-control"
-                name="dateOfBirth"
-                id="dateOfBirth"
-                placeholder="YYYY-MM-DD"
-                bsDatepicker
-                [(ngModel)]="form.dateOfBirth"
-                required
-                #dateOfBirth="ngModel"
-                [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', isAnimated: true, adaptivePosition: true}"
-                [ngClass]="{'is-invalid': f.submitted && dateOfBirth.errors}"
-            />
-            @if (dateOfBirth.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (dateOfBirth.errors['required']) {
-                        <div>Date of birth is required!</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="country">Country:</label>
-            <select 
-                class="form-select" 
-                name="country"
-                id="country"
-                (change)="onCountryChange()"
-                [(ngModel)]="selectedCountry"
-                #country="ngModel"
-                required
-                [ngClass]="{'is-invalid': f.submitted && country.errors}"
-            >
-                <option [value]="null">-- Select Your Country --</option>
-                <option *ngFor="let country of countries" [value]="country | json">{{ country.flag }}&nbsp;&nbsp;{{ country.name }}</option>
-            </select>
-            @if (country.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (country.errors['required']) {
-                        <div>Country is required!</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group mb-3" *ngIf="selectedCountry">
-            <label for="state">State:</label>
-            <select 
-                class="form-select" 
-                name="state"
-                id="state"
-                (change)="onStateChange()" 
-                [(ngModel)]="selectedState"
-                #state="ngModel"
-                required
-                [ngClass]="{'is-invalid': f.submitted && state.errors}"
-            >
-                <option [value]="null">-- Select Your State --</option>
-                <option *ngFor="let state of states" [value]="state | json">{{ state.name }}</option>
-            </select>
-            @if (state.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (state.errors['required']) {
-                        <div>State is required!</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group mb-3" *ngIf="selectedCountry && selectedState">
-            <label for="city">City:</label>
-            <select 
-                class="form-select" 
-                name="city"
-                id="city"
-                (change)="onCityChange()" 
-                [(ngModel)]="selectedCity"
-                #city="ngModel"
-                required
-                [ngClass]="{'is-invalid': f.submitted && city.errors}"
-            >
-                <option [value]="null">-- Select Your City --</option>
-                <option *ngFor="let city of cities" [value]="city | json">{{ city.name }}</option>
-            </select>
-            @if (city.errors && f.submitted) {
-                <div class="invalid-feedback">
-                    @if (city.errors['required']) {
-                        <div>City is required!</div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group">
-            <button class="btn btn-primary btn-block">Sign Up</button>
-        </div>
-
-    </form>
+    </div>
 </div>
