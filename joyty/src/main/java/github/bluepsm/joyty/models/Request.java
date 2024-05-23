@@ -1,17 +1,9 @@
 package github.bluepsm.joyty.models;
 
 import java.io.Serializable;
-import java.sql.Date;
-
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jakarta.persistence.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -49,11 +41,6 @@ public class Request implements Serializable {
     @ManyToOne
     @JoinColumn(name = "postId")
     private Post join;
-
-    /* @PrePersist
-    protected void onCreate() {
-        created_at = System.currentTimeMillis();
-    } */
 
     public Request() {}
 

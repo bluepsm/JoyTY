@@ -1,18 +1,11 @@
 package github.bluepsm.joyty.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Window;
-import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.support.WindowIterator;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,37 +32,6 @@ import github.bluepsm.joyty.services.PostService;
 public class PostController {
 	@Autowired
 	private PostService postService;
-
-//    @GetMapping("/all")
-//    public ResponseEntity<List<Post>> getAllPosts() {
-//        Optional<List<Post>> posts = postService.getAllPosts();
-//        
-//        if(!posts.isPresent()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        return ResponseEntity.ok(posts.get());
-//    }
-
-//    @GetMapping("/{postId}")
-//    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
-//        Optional<Post> post = postService.getPostById(postId);
-//
-//        if(!post.isPresent()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        return ResponseEntity.ok(post.get());
-//    }
-
-	/*
-	 * @PostMapping("/create/{userId}") public ResponseEntity<Post>
-	 * createPost(@PathVariable Long userId, @RequestBody Post
-	 * newPost, @RequestParam Long... tags) { Post createdPost =
-	 * postService.createPost(userId, newPost, tags);
-	 * 
-	 * return ResponseEntity.status(HttpStatus.CREATED).body(createdPost); }
-	 */
     
     @PostMapping("/create")
     public ResponseEntity<?> createPost(@Valid @RequestBody CreatePostRequest createPostRequest) {

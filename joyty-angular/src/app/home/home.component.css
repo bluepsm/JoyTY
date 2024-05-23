@@ -1,0 +1,37 @@
+.container-fluid {
+    overflow-y: auto;
+    height: calc(100vh - 77px);
+    width: 100%;
+}
+
+.web-banner-container {
+    padding: 0;
+    position: relative;
+    text-align: center;
+}
+
+.banner-text-top {
+    font-size: 150px;
+    letter-spacing: 70px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+}
+
+.banner-button-bottom {
+    font-size: 70px;
+    letter-spacing: 5px;
+    position: absolute;
+    bottom: 120px;
+    left: 50%;
+    transform: translate(-50%, 50%);
+}
+
+section > div > div:first-child {
+    border-right: 4px solid black;
+}
+
+section > div > div:last-child {
+    padding-left: 60px;
+}

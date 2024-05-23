@@ -1,11 +1,8 @@
 package github.bluepsm.joyty.services;
 
 import lombok.extern.slf4j.Slf4j;
-
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -16,7 +13,6 @@ import org.springframework.data.domain.ScrollPosition;
 import org.springframework.data.domain.Window;
 import org.springframework.stereotype.Service;
 
-import github.bluepsm.joyty.models.Comment;
 import github.bluepsm.joyty.models.ERequest;
 import github.bluepsm.joyty.models.Post;
 import github.bluepsm.joyty.models.Request;
@@ -44,7 +40,6 @@ public class RequestService {
 
     @Cacheable(value = "requests", key = "#id", unless = "#result == null")
     public Optional<Request> getRequestById(Long id) {
-        log.info("Redis is Retrieve Request ID: {}", id);
         return requestRepository.findById(id);
     }
 
@@ -74,33 +69,6 @@ public class RequestService {
             return false;
         }
     }
-
-//    public Request requestRespond(Long requestId, String respond) {
-//        Request request = requestRepository.findById(requestId).get();
-//        Post post = request.getJoin();
-//        User user = request.getOwner();
-//        Integer numberOfMember = post.getParty_member().size();
-//        Integer partySize = post.getParty_size();
-//
-//        switch (respond) {
-//            case "accept":
-//                if (partySize == 0 || numberOfMember < partySize) {
-//                    request.setStatus(ERequest.ACCEPT);
-//                    post.getParty_member().add(user);
-//                    postRepository.save(post);
-//                } else {
-//                    log.info("Party is full.");
-//                };
-//                break;
-//            case "reject":
-//                request.setStatus(ERequest.REJECT);
-//                break;
-//            default:
-//                log.info("response is not matching.");
-//        };
-//
-//        return request;
-//    }
     
     public Optional<Request> createRequest(Long postId, Long userId, String body) {
         Post post = postRepository.findById(postId).get();
@@ -115,12 +83,10 @@ public class RequestService {
     }
     
     public Optional<List<Request>> getRequestByUserId(Long userId) {
-        //log.info("Redis is Retrieve Request ID: {}", id);
         return requestRepository.findByOwnerId(userId);
     }
     
     public Optional<List<Request>> getRequestByPostId(Long postId) {
-        //log.info("Redis is Retrieve Request ID: {}", id);
         return requestRepository.findByJoinId(postId);
     }
     

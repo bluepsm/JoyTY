@@ -3,8 +3,6 @@ package github.bluepsm.joyty.payload.request;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
-
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

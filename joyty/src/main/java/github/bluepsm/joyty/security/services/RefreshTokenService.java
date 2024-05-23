@@ -1,14 +1,10 @@
 package github.bluepsm.joyty.security.services;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.Optional;
-import java.util.TimeZone;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,14 +43,12 @@ public class RefreshTokenService {
 		ZonedDateTime zdtAdded = zdt.plus(refreshTokenDurationMs, ChronoUnit.MILLIS);
 		refreshToken.setExpiryDate(zdtAdded);
 		
-		//refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
 		refreshToken.setToken(UUID.randomUUID().toString());
 		
 		return refreshTokenRepository.save(refreshToken);
 	}
 	
 	public RefreshToken verifyExpiration(RefreshToken token) {
-		//if (token.getExpiryDate().toInstant().compareTo(Instant.now()) < 0) {
 		ZoneId z = ZoneId.systemDefault();
 		if (token.getExpiryDate().compareTo(ZonedDateTime.now(z)) < 0) {
 			refreshTokenRepository.delete(token);

@@ -1,15 +1,9 @@
 package github.bluepsm.joyty.services;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.IOException;
-import java.security.spec.EncodedKeySpec;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -25,7 +19,6 @@ import github.bluepsm.joyty.models.User;
 import github.bluepsm.joyty.repositories.FileRepository;
 import github.bluepsm.joyty.repositories.UserRepository;
 
-@Slf4j
 @Service
 public class UserService {
 	@Autowired
@@ -41,7 +34,6 @@ public class UserService {
 
     @Cacheable(value = "users", key = "#id", unless = "#result == null")
     public Optional<User> getUserById(Long id) {
-        log.info("Redis is Retrieve User ID: {}", id);
         return userRepository.findById(id);
     }
 
@@ -91,8 +83,6 @@ public class UserService {
     public Optional<User> updateDateOfBirth(Long userId, Date dob) {
     	try {
     		User user = userRepository.findById(userId).get();
-    		
-    		log.info("dob params: " + dob);
     		
     		user.setDateOfBirth(dob);
     		
@@ -158,8 +148,4 @@ public class UserService {
 			return Optional.empty();
 		}
     }
-    
-//    public Optional<File> getProfileImgById(Long userId) {
-//    	return userRepository.getProfileImgById(userId);
-//    }
 }

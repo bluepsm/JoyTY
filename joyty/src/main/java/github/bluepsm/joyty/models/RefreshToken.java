@@ -1,8 +1,6 @@
 package github.bluepsm.joyty.models;
 
-import java.time.Instant;
 import java.time.ZonedDateTime;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

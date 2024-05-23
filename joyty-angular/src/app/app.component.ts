@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       }
       this.headerService.setUserState(userState)
       this.headerService.setProfileImg(user.profileImg)
-      this.router.navigate(['/feed'])
+      //this.router.navigate(['/feed'])
     }
 
     this.eventBusSub = this.eventBusService.on('logout', () => {

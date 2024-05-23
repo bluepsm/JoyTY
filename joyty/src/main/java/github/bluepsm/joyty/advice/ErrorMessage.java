@@ -1,8 +1,6 @@
 package github.bluepsm.joyty.advice;
 
 import java.util.Date;
-
-import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,22 +1,14 @@
 package github.bluepsm.joyty.controllers;
 
-import java.lang.ProcessHandle.Info;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.crypto.SecretKey;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +44,6 @@ import github.bluepsm.joyty.security.services.RefreshTokenService;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 
 @Slf4j
-//@CrossOrigin(origins = "*", maxAge = 3600)
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
@@ -122,10 +112,6 @@ public class AuthController {
 	    	return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
 	    }
 
-	    //System.out.println("Register submitted: " + signUpRequest);
-	    //log.info("method registerUser is executed.");
-
-	    // Create new user's account
 	    User user = new User(signUpRequest.getUsername(),
 	                        encoder.encode(signUpRequest.getPassword()),
 	                         signUpRequest.getEmail(),
@@ -225,6 +211,27 @@ public class AuthController {
 		return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
 	}
 	
+	@GetMapping("/existsByUsername")
+    public ResponseEntity<Boolean> existsByUsername(@RequestParam String username) {
+		//log.info("ExistByUsername got this: " + username);
+    	if (userRepository.existsByUsername(username)) {
+    		//log.info("Is Existed");
+    		return ResponseEntity.ok(true);
+    	} else {
+    		//log.info("Is not Existed");
+			return ResponseEntity.ok(false);
+		}
+    }
+	
+	@GetMapping("/existsByEmail")
+    public ResponseEntity<Boolean> existsByEmail(@RequestParam String email) {
+    	if (userRepository.existsByEmail(email)) {
+    		return ResponseEntity.ok(true);
+    	} else {
+			return ResponseEntity.ok(false);
+		}
+    }
+	
 	@PatchMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
     	//log.info("Password before encode: " + updatePasswordRequest.getPassword());
@@ -272,26 +279,4 @@ public class AuthController {
     		
     	return ResponseEntity.ok(new MessageResponse("Username update successfully!"));
     }
-	
-	@GetMapping("/existsByUsername")
-    public ResponseEntity<Boolean> existsByUsername(@RequestParam String username) {
-		//log.info("ExistByUsername got this: " + username);
-    	if (userRepository.existsByUsername(username)) {
-    		//log.info("Is Existed");
-    		return ResponseEntity.ok(true);
-    	} else {
-    		//log.info("Is not Existed");
-			return ResponseEntity.ok(false);
-		}
-    }
-	
-	@GetMapping("/existsByEmail")
-    public ResponseEntity<Boolean> existsByEmail(@RequestParam String email) {
-    	if (userRepository.existsByEmail(email)) {
-    		return ResponseEntity.ok(true);
-    	} else {
-			return ResponseEntity.ok(false);
-		}
-    }
-	
 }

@@ -19,12 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import github.bluepsm.joyty.models.Comment;
-import github.bluepsm.joyty.models.ERequest;
 import github.bluepsm.joyty.models.Request;
 import github.bluepsm.joyty.models.notification.EEntity;
 import github.bluepsm.joyty.models.notification.EType;
-import github.bluepsm.joyty.models.notification.Notification;
 import github.bluepsm.joyty.payload.request.JoinRequest;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 import github.bluepsm.joyty.services.RequestService;
@@ -81,13 +78,6 @@ public class RequestController {
 
         return ResponseEntity.ok().build();
     }
-
-//    @PutMapping("/{requestId}/respond")
-//    public ResponseEntity<Request> requestRespond(@PathVariable Long requestId, @RequestParam String respond) {
-//        Request request = requestService.requestRespond(requestId, respond);
-//
-//        return ResponseEntity.ok(request);
-//    }
     
     private Optional<Long> getUserId() {
     	Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -190,20 +180,6 @@ public class RequestController {
         }
         
     	return ResponseEntity.ok(request);
-    }
-    
-    @GetMapping("/getFirst10Requests/{postId}")
-    public ResponseEntity<Window<Request>> getFirst10Requests(@PathVariable Long postId) {
-    	Window<Request> requests = requestService.getRequestsUsingOffset(postId);
-
-        return ResponseEntity.ok(requests);
-    }
-    
-    @GetMapping("/getNext10Requests/{postId}")
-    public ResponseEntity<Window<Request>> getNext10Requests(@PathVariable Long postId, @RequestParam Long lastRequest) {
-    	Window<Request> nextRequests = requestService.getNextRequestsUsingOffset(postId, lastRequest);
-
-        return ResponseEntity.ok(nextRequests);
     }
     
     @GetMapping("/getScrollRequests/{postId}")

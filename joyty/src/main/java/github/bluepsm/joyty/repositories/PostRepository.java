@@ -1,6 +1,5 @@
 package github.bluepsm.joyty.repositories;
 
-import org.springframework.data.domain.KeysetScrollPosition;
 import org.springframework.data.domain.OffsetScrollPosition;
 import org.springframework.data.domain.Window;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -2,7 +2,6 @@ package github.bluepsm.joyty.controllers;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Window;
 import org.springframework.http.HttpStatus;
@@ -20,17 +19,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import github.bluepsm.joyty.models.Comment;
-import github.bluepsm.joyty.models.Post;
-import github.bluepsm.joyty.models.User;
 import github.bluepsm.joyty.models.notification.EEntity;
 import github.bluepsm.joyty.models.notification.EType;
 import github.bluepsm.joyty.payload.request.CreateCommentRequest;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 import github.bluepsm.joyty.services.CommentService;
 import github.bluepsm.joyty.services.notification.NotificationService;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/comment")
@@ -63,13 +58,6 @@ public class CommentController {
         return ResponseEntity.ok(comment.get());
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<Comment> createComment(@RequestParam Long postId, @RequestParam Long userId, @RequestBody Comment newComment) {        
-//        Comment createdComment = commentService.createComment(postId, userId, newComment);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
-//    }
-    
     private Optional<Long> getUserId() {
     	Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	if (principle.toString() != "anonymousUser") {
