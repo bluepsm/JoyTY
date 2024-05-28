@@ -1,6 +1,5 @@
 package github.bluepsm.joyty.services;
 
-import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.data.domain.OffsetScrollPosition;
 import org.springframework.data.domain.ScrollPosition;
 import org.springframework.data.domain.Window;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import github.bluepsm.joyty.models.ERequest;
 import github.bluepsm.joyty.models.Post;
@@ -21,7 +21,6 @@ import github.bluepsm.joyty.repositories.PostRepository;
 import github.bluepsm.joyty.repositories.RequestRepository;
 import github.bluepsm.joyty.repositories.UserRepository;
 
-@Slf4j
 @Service
 public class RequestService {
 	@Autowired
@@ -47,7 +46,7 @@ public class RequestService {
     public Optional<Request> updateRequestById(Long id, Request request) {
         Optional<Request> requestOpt = requestRepository.findById(id);
 
-        if(!requestOpt.isPresent()) {
+        if(requestOpt.isEmpty()) {
             return Optional.empty();
         }
 
@@ -70,14 +69,19 @@ public class RequestService {
         }
     }
     
+    @Transactional
     public Optional<Request> createRequest(Long postId, Long userId, String body) {
-        Post post = postRepository.findById(postId).get();
-        User user = userRepository.findById(userId).get();
+        Optional<Post> postOpt = postRepository.findById(postId);
+        Optional<User> userOpt = userRepository.findById(userId);
+        
+        if (postOpt.isEmpty() || userOpt.isEmpty()) {
+        	return Optional.empty();
+        }
         
         Request request = new Request(body);
         
-        request.setJoin(post);
-        request.setOwner(user);
+        request.setJoin(postOpt.get());
+        request.setOwner(userOpt.get());
         
         return Optional.of(requestRepository.save(request));
     }
@@ -90,8 +94,15 @@ public class RequestService {
         return requestRepository.findByJoinId(postId);
     }
     
+    @Transactional
     public Optional<Request> respondToRequest(Long requestId, String response) {
-        Request request = requestRepository.findById(requestId).get();
+        Optional<Request> requestOpt = requestRepository.findById(requestId);
+        
+        if (requestOpt.isEmpty()) {
+        	return Optional.empty();
+        }
+        
+        Request request = requestOpt.get();
         Post post = request.getJoin();
         User user = request.getOwner();
         Long createdAt = request.getCreatedAt();
@@ -106,14 +117,16 @@ public class RequestService {
                     post.setJoinner(numberOfMember + 1);
                     postRepository.save(post);
                 } else {
-                    log.info("Party is full.");
+                    //log.info("Party is full.");
+                    return Optional.empty();
                 };
                 break;
             case "REJECT":
                 request.setStatus(ERequest.REJECT);
                 break;
             default:
-                log.info("response is not matching.");
+            	//log.info("response is not matching.");
+            	return Optional.empty();
         };
         
         request.setCreatedAt(createdAt);
@@ -122,9 +135,9 @@ public class RequestService {
         return Optional.of(request);
     }
     
-    public Window<Request> getScrollRequests(Long postId, Long latestRequest) {
+    public Optional<Window<Request>> getScrollRequests(Long postId, Long latestRequest) {
     	OffsetScrollPosition offset = ScrollPosition.offset(latestRequest);
-    	Window<Request> requests = requestRepository.findFirst10ByJoinIdOrderByCreatedAtAsc(postId, offset);
+    	Optional<Window<Request>> requests = requestRepository.findFirst10ByJoinIdOrderByCreatedAtAsc(postId, offset);
     	
     	return requests;
     }

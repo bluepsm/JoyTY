@@ -45,7 +45,7 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         Optional<List<User>> users = userService.getAllUsers();
 
-        if(!users.isPresent()) {
+        if(users.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -53,11 +53,11 @@ public class UserController {
     }
     
     @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<User> getUserById(@PathVariable Long userId) {
         Optional<User> user = userService.getUserById(userId);
 
-        if(!user.isPresent()) {
+        if(user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -66,15 +66,20 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody User newUser) {
-        User createdUser = userService.createUser(newUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        Optional<User> createdUserOpt = userService.createUser(newUser);
+        
+        if(createdUserOpt.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUserOpt.get());
     }
 
     @PutMapping("/{userId}/update")
     public ResponseEntity<User> updateUserById(@PathVariable Long userId, @RequestBody User newUser) {
         Optional<User> updatedUser = userService.updateUserById(userId, newUser);
 
-        if(!updatedUser.isPresent()) {
+        if(updatedUser.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -98,7 +103,7 @@ public class UserController {
     	
     	Optional<User> user = userService.updateName(userId, firstName, lastName);
     	
-    	if (!user.isPresent()) {
+    	if (user.isEmpty()) {
     		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update name!"));
     	}
     		
@@ -112,7 +117,7 @@ public class UserController {
     	
     	Optional<User> user = userService.updateDateOfBirth(userId, dob);
     	
-    	if (!user.isPresent()) {
+    	if (user.isEmpty()) {
     		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update date of birth!"));
     	}
     		
@@ -126,7 +131,7 @@ public class UserController {
     	
     	Optional<User> user = userService.updateGender(userId, gender);
     		
-    	if (!user.isPresent()) {
+    	if (user.isEmpty()) {
     		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update gender!"));
     	}
     		
@@ -140,7 +145,7 @@ public class UserController {
     	
     	Optional<User> user = userService.updatePhoneNumber(userId, phoneNumber);
     		
-    	if (!user.isPresent()) {
+    	if (user.isEmpty()) {
     		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update phone number!"));
     	}
     		
@@ -156,7 +161,7 @@ public class UserController {
     	
     	Optional<User> user = userService.updateLocation(userId, country, state, city);
     		
-    	if (!user.isPresent()) {
+    	if (user.isEmpty()) {
     		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update location!"));
     	}
     		
@@ -168,7 +173,7 @@ public class UserController {
     	try {
     		Optional<User> user = userService.updateProfileImg(userId, image);
     		
-    		if (!user.isPresent()) {
+    		if (user.isEmpty()) {
         		return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot update profile image!"));
         	}
         		

@@ -2,11 +2,11 @@ package github.bluepsm.joyty.controllers;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,7 +44,6 @@ import github.bluepsm.joyty.security.jwt.JwtUtils;
 import github.bluepsm.joyty.security.services.RefreshTokenService;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 
-@Slf4j
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
@@ -103,6 +103,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
+	@Transactional
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
@@ -129,7 +130,7 @@ public class AuthController {
 	    Set<Role> roles = new HashSet<>();
 	    
 	    if (signUpRequest.getPhoneNumber().equals("000-000-0000")) {
-	    	log.info("Dev Register");
+	    	//log.info("Dev Register");
 	    	strRoles = new HashSet<String>();
 	    	strRoles.add("user");
 	    	strRoles.add("mod");
@@ -238,7 +239,12 @@ public class AuthController {
     	final Long userId = resetPasswordRequest.getUserId();
     	final String encodedPassword = encoder.encode(resetPasswordRequest.getPassword());
     		
-    	User user = userRepository.findById(userId).get();
+    	Optional<User> userOpt = userRepository.findById(userId);
+    	
+    	if (userOpt.isEmpty()) {
+    		return ResponseEntity.badRequest().body(new MessageResponse("Cannot find user's data."));
+    	}
+    	User user = userOpt.get();
 		user.setPassword(encodedPassword);
 		
 		userRepository.save(user);
@@ -255,7 +261,12 @@ public class AuthController {
 	    	return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
 	    }
     	
-    	User user = userRepository.findById(userId).get();
+    	Optional<User> userOpt = userRepository.findById(userId);
+    	if (userOpt.isEmpty()) {
+    		return ResponseEntity.badRequest().body(new MessageResponse("Cannot find user's data."));
+    	}
+    	User user = userOpt.get();
+    	
 		user.setEmail(email);
 		
 		userRepository.save(user);
@@ -272,7 +283,11 @@ public class AuthController {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 	    }
     	
-    	User user = userRepository.findById(userId).get();
+    	Optional<User> userOpt = userRepository.findById(userId);
+    	if (userOpt.isEmpty()) {
+    		return ResponseEntity.badRequest().body(new MessageResponse("Cannot find user's data."));
+    	}
+    	User user = userOpt.get();
 		user.setUsername(username);
 		
 		userRepository.save(user);

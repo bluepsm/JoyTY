@@ -40,7 +40,7 @@ public class CommentController {
     public ResponseEntity<List<Comment>> getAllComments() {
         Optional<List<Comment>> comments = commentService.getAllComments();
         
-        if(!comments.isPresent()) {
+        if(comments.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -51,7 +51,7 @@ public class CommentController {
     public ResponseEntity<Comment> getCommentById(@PathVariable Long commentId) {
         Optional<Comment> comment = commentService.getCommentById(commentId);
 
-        if(!comment.isPresent()) {
+        if(comment.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -72,13 +72,13 @@ public class CommentController {
     public ResponseEntity<Comment> createComment(@RequestBody CreateCommentRequest commentRequest) {
     	Optional<Long> userId = getUserId();
     	
-    	if (!userId.isPresent()) {
+    	if (userId.isEmpty()) {
     		return ResponseEntity.internalServerError().build();
     	}
     		
         Optional<Comment> createdComment = commentService.createComment(commentRequest.getPostId(), userId.get(), commentRequest.getBody());
 
-        if (!createdComment.isPresent()) {
+        if (createdComment.isEmpty()) {
     		return ResponseEntity.internalServerError().build();
     	}
         
@@ -106,7 +106,7 @@ public class CommentController {
     public ResponseEntity<List<Comment>> getCommentByPostId(@PathVariable Long postId) {
     	Optional<List<Comment>> comments = commentService.getCommentsByPostId(postId);
 
-        if(!comments.isPresent()) {
+        if(comments.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -126,7 +126,7 @@ public class CommentController {
     public ResponseEntity<Comment> updateCommentById(@PathVariable Long commentId, @RequestBody CreateCommentRequest editingComment) {
         Optional<Comment> updatedComment = commentService.updateCommentById(commentId, editingComment);
 
-        if(!updatedComment.isPresent()) {
+        if(updatedComment.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -135,8 +135,12 @@ public class CommentController {
     
     @GetMapping("/getScrollComments/{postId}")
     public ResponseEntity<Window<Comment>> getScrollComments(@PathVariable Long postId, @RequestParam(defaultValue = "0") Long latestComment) {
-    	Window<Comment> comments = commentService.getScrollComments(postId, latestComment);
-
-        return ResponseEntity.ok(comments);
+    	Optional<Window<Comment>> comments = commentService.getScrollComments(postId, latestComment);
+    	
+    	if(comments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+    	
+        return ResponseEntity.ok(comments.get());
     }
 }

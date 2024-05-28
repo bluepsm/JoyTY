@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.domain.Window;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import github.bluepsm.joyty.models.Post;
 import github.bluepsm.joyty.models.User;
@@ -35,14 +36,23 @@ public class PostService {
     @Autowired
     private TagRepository tagRepository;
     
-    public Post createPost(Long userId, CreatePostRequest createPostRequest) {
-        Optional<User> user = userRepository.findById(userId);
+    @Transactional
+    public Optional<Post> createPost(Long userId, CreatePostRequest createPostRequest) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        
+        if (userOpt.isEmpty()) {
+        	return Optional.empty();
+        }
         
         Set<Tag> tags = new HashSet<Tag>();
-
         for (Long tagId : createPostRequest.getTags()) {
-            Tag tag = tagRepository.findById(tagId).get();
-            tags.add(tag);
+            Optional<Tag> tagOpt = tagRepository.findById(tagId);
+            
+            if (tagOpt.isEmpty()) {
+            	return Optional.empty();
+            }
+            
+            tags.add(tagOpt.get());
         }
         
         String body = createPostRequest.getBody();
@@ -65,12 +75,12 @@ public class PostService {
 			        		costEstimate, 
 			        		costShare);
         
-        post.setAuthor(user.get());
+        post.setAuthor(userOpt.get());
         post.setTags(tags);
         post.setJoinner(0);
         post.setMeetingDone(false);
         
-        return postRepository.save(post);
+        return Optional.of(postRepository.save(post));
     }
     
     public Optional<List<Post>> getAllPosts(String[] sort) {
@@ -106,10 +116,11 @@ public class PostService {
     	return Sort.Direction.DESC;
     }
     
+    @Transactional
     public Optional<Post> updatePost(Long postId, CreatePostRequest updatePostRequest) {
     	Optional<Post> postOpt = postRepository.findById(postId);
     	
-    	if(!postOpt.isPresent()) {
+    	if(postOpt.isEmpty()) {
     		return Optional.empty();
     	}
     	
@@ -118,8 +129,13 @@ public class PostService {
         Set<Tag> tags = new HashSet<Tag>();
 
         for (Long tagId : updatePostRequest.getTags()) {
-            Tag tag = tagRepository.findById(tagId).get();
-            tags.add(tag);
+            Optional<Tag> tag = tagRepository.findById(tagId);
+            
+            if (tag.isEmpty()) {
+            	return Optional.empty();
+            }
+            
+            tags.add(tag.get());
         }
         
         post.setBody(updatePostRequest.getBody());
@@ -145,9 +161,9 @@ public class PostService {
         }
     }
     
-    public Window<Post> getScrollPosts(Long latestPost) {
+    public Optional<Window<Post>> getScrollPosts(Long latestPost) {
     	OffsetScrollPosition offset = ScrollPosition.offset(latestPost);
-    	Window<Post> posts = postRepository.findFirst5AllByOrderByCreatedAtDesc(offset);
+    	Optional<Window<Post>> posts = postRepository.findFirst5AllByOrderByCreatedAtDesc(offset);
     	
     	return posts;
     }

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Window;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import github.bluepsm.joyty.models.User;
 import github.bluepsm.joyty.models.notification.EEntity;
 import github.bluepsm.joyty.models.notification.EType;
@@ -27,6 +29,7 @@ public class NotificationService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Transactional
 	public Optional<Notification> createNotification(
 													Long fromUserId, 
 													Long toUserId, 
@@ -38,13 +41,17 @@ public class NotificationService {
 													) {
 		Notification notification = new Notification(type, entity, entityId, relatedEntity, relatedEntityId);
 		
-		User fromUser = userRepository.findById(fromUserId).get();
-		notification.setFromUser(fromUser);
+		Optional<User> fromUserOpt = userRepository.findById(fromUserId);
+		Optional<User> toUserOpt = userRepository.findById(toUserId);
 		
-		User toUser = userRepository.findById(toUserId).get();
+		if (fromUserOpt.isEmpty() || toUserOpt.isEmpty()) {
+			return Optional.empty();
+		}
+		
+		notification.setFromUser(fromUserOpt.get());
 		
 		Set<User> users = new HashSet<User>();
-		users.add(toUser);
+		users.add(toUserOpt.get());
 		
 		notification.setToUsers(users);
 
@@ -77,20 +84,6 @@ public class NotificationService {
     	}
     	
     	return Sort.Direction.DESC;
-    }
-	
-	public Window<Notification> getNotificationsUsingOffset(Long userId) {
-    	OffsetScrollPosition offset = ScrollPosition.offset();
-    	Window<Notification> notifications = notificationRepository.findFirst10ByToUsersIdOrderByCreatedAtDesc(userId, offset);
-    	
-    	return notifications;
-    }
-    
-    public Window<Notification> getNextNotificationsUsingOffset(Long userId, Long lastNotification) {
-    	OffsetScrollPosition offset = ScrollPosition.offset(lastNotification);
-    	Window<Notification> nextNotifications = notificationRepository.findFirst10ByToUsersIdOrderByCreatedAtDesc(userId, offset);
-    	
-    	return nextNotifications;
     }
     
     public Window<Notification> getScrollNotifications(Long userId, Long latestNotification) {

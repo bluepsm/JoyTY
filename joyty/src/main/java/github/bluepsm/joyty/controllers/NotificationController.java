@@ -25,7 +25,7 @@ public class NotificationController {
 	public ResponseEntity<List<Notification>> getNotificationByUserId(@PathVariable Long userId, @RequestParam(defaultValue = "createdAt,desc") String[] sort) {
 		Optional<List<Notification>> notifications = notificationService.getNotificationByUserId(userId, sort);
 		
-		if (!notifications.isPresent()) {
+		if (notifications.isEmpty()) {
 			return ResponseEntity.internalServerError().build();
 		}
 		

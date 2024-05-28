@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,18 +23,23 @@ public class FileStorageService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Transactional
 	public Optional<File> store(Long userId, MultipartFile file) throws IOException {
-		User user = userRepository.findById(userId).get();
+		Optional<User> userOpt = userRepository.findById(userId);
+		
+		if (userOpt.isEmpty()) {
+			return Optional.empty();
+		}
 		
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 		File fileDB = new File(fileName, file.getContentType(), file.getBytes());
-		fileDB.setFileOwner(user);
+		fileDB.setFileOwner(userOpt.get());
 		
 		return Optional.of(fileRepository.save(fileDB));
 	}
 	
-	public File getFile(String id) {
-		return fileRepository.findById(id).get();
+	public Optional<File> getFile(String id) {
+		return fileRepository.findById(id);
 	}
 	
 	public Stream<File> getAllFiles() {

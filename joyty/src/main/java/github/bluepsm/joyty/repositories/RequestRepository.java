@@ -13,5 +13,5 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	Optional<List<Request>> findByOwnerId(Long userId);
 	Optional<List<Request>> findByJoinId(Long postId);
 	
-	Window<Request> findFirst10ByJoinIdOrderByCreatedAtAsc(Long postId, OffsetScrollPosition position);
+	Optional<Window<Request>> findFirst10ByJoinIdOrderByCreatedAtAsc(Long postId, OffsetScrollPosition position);
 }

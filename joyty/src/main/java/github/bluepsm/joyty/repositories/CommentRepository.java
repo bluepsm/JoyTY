@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 	Optional<List<Comment>> findByPostId(Long postId);
-	Window<Comment> findFirst10ByPostIdOrderByCreatedAtAsc(Long postId, OffsetScrollPosition position);
+	Optional<Window<Comment>> findFirst10ByPostIdOrderByCreatedAtAsc(Long postId, OffsetScrollPosition position);
 }

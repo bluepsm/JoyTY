@@ -1,6 +1,7 @@
 package github.bluepsm.joyty.controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -63,8 +64,14 @@ public class FileController {
 	
 	@GetMapping("/getFile/{id}")
 	  public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-	    File file = fileStorageService.getFile(id);
+	    Optional<File> fileOpt = fileStorageService.getFile(id);
+	    
+	    if (fileOpt.isEmpty()) {
+	    	return ResponseEntity.badRequest().build();
+	    }
 
+	    File file = fileOpt.get();
+	    
 	    return ResponseEntity.ok()
 	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
 	        .body(file.getData());

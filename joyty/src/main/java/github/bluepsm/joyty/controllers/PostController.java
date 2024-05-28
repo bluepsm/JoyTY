@@ -3,7 +3,6 @@ package github.bluepsm.joyty.controllers;
 import java.util.List;
 import java.util.Optional;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Window;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,6 @@ import github.bluepsm.joyty.payload.response.MessageResponse;
 import github.bluepsm.joyty.security.services.UserDetailsImpl;
 import github.bluepsm.joyty.services.PostService;
 
-@Slf4j
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/post")
@@ -35,14 +33,14 @@ public class PostController {
     
     @PostMapping("/create")
     public ResponseEntity<?> createPost(@Valid @RequestBody CreatePostRequest createPostRequest) {
-    	log.info("In PostController CreatePost");
+    	//log.info("In PostController CreatePost");
     	Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	if (principle.toString() != "anonymousUser") {
 			Long userId = ((UserDetailsImpl) principle).getId();
 			postService.createPost(userId, createPostRequest);
-			log.info("In PostController CreatePost: Checkpoint");
+			//log.info("In PostController CreatePost: Checkpoint");
 		} else {
-			log.info("In PostController CreatePost: Error occured");
+			//log.info("In PostController CreatePost: Error occured");
 			return ResponseEntity.badRequest().body(new MessageResponse("No Authorized"));
 		}
     	
@@ -53,7 +51,7 @@ public class PostController {
     public ResponseEntity<List<Post>> getAllPosts(@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
     	Optional<List<Post>> posts = postService.getAllPosts(sort);
         
-        if(!posts.isPresent()) {
+        if(posts.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -64,7 +62,7 @@ public class PostController {
     public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
         Optional<Post> post = postService.getPostById(postId);
 
-        if(!post.isPresent()) {
+        if(post.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -84,7 +82,7 @@ public class PostController {
     public ResponseEntity<Post> updatePostById(@PathVariable Long postId, @Valid @RequestBody CreatePostRequest updatePostRequest) {
         Optional<Post> updatedPost = postService.updatePost(postId, updatePostRequest);
 
-        if(!updatedPost.isPresent()) {
+        if(updatedPost.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -93,8 +91,12 @@ public class PostController {
     
     @GetMapping("/getScrollPosts")
     public ResponseEntity<Window<Post>> getScrollPosts(@RequestParam(defaultValue = "0") Long latestPost) {
-    	Window<Post> posts = postService.getScrollPosts(latestPost);
+    	Optional<Window<Post>> postsOpt = postService.getScrollPosts(latestPost);
     	
-    	return ResponseEntity.ok(posts);
+    	if(postsOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+    	
+    	return ResponseEntity.ok(postsOpt.get());
     }
 }

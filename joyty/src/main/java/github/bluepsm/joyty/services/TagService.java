@@ -32,15 +32,15 @@ public class TagService {
         return tagRepository.findById(id);
     }
 
-    public Tag createTag(Tag tag) {
-        return tagRepository.save(tag);
+    public Optional<Tag> createTag(Tag tag) {
+        return Optional.of(tagRepository.save(tag));
     }
 
     @CachePut(value = "tags", key = "#id")
     public Optional<Tag> updateTagById(Long id, Tag tag) {
         Optional<Tag> tagOpt = tagRepository.findById(id);
 
-        if(!tagOpt.isPresent()) {
+        if(tagOpt.isEmpty()) {
             return Optional.empty();
         }
 

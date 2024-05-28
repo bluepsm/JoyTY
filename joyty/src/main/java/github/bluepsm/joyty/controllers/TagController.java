@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import github.bluepsm.joyty.models.Tag;
 import github.bluepsm.joyty.services.TagService;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/tag")
@@ -30,10 +28,10 @@ public class TagController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Tag>> getAllTags() {
-    	log.info("In POST CONTROLLER");
+    	//log.info("In POST CONTROLLER");
         Optional<List<Tag>> tags = tagService.getAllTags();
         
-        if(!tags.isPresent()) {
+        if(tags.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -44,7 +42,7 @@ public class TagController {
     public ResponseEntity<Tag> getTagById(@PathVariable Long tagId) {
         Optional<Tag> tag = tagService.getTagById(tagId);
 
-        if(!tag.isPresent()) {
+        if(tag.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -53,16 +51,21 @@ public class TagController {
 
     @PostMapping("/create")
     public ResponseEntity<Tag> createTag(@RequestBody Tag newTag) {
-        Tag createdTag = tagService.createTag(newTag);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTag);
+        Optional<Tag> createdTagOpt = tagService.createTag(newTag);
+        
+        if(createdTagOpt.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTagOpt.get());
     }
 
     @PutMapping("/{tagId}/update")
     public ResponseEntity<Tag> updateTagById(@PathVariable Long tagId, @RequestBody Tag newTag) {
         Optional<Tag> updatedTag = tagService.updateTagById(tagId, newTag);
 
-        if(!updatedTag.isPresent()) {
-            return ResponseEntity.notFound().build();
+        if(updatedTag.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(updatedTag.get());

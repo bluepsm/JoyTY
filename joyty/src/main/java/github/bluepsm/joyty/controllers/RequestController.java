@@ -41,7 +41,7 @@ public class RequestController {
     public ResponseEntity<List<Request>> getAllRequests() {
         Optional<List<Request>> requests = requestService.getAllRequests();
         
-        if(!requests.isPresent()) {
+        if(requests.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -52,7 +52,7 @@ public class RequestController {
     public ResponseEntity<Request> getRequestById(@PathVariable Long requestId) {
         Optional<Request> request = requestService.getRequestById(requestId);
 
-        if(!request.isPresent()) {
+        if(request.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -63,7 +63,7 @@ public class RequestController {
     public ResponseEntity<Request> updateRequestById(@PathVariable Long requestId, @RequestBody Request newRequest) {
         Optional<Request> updatedRequest = requestService.updateRequestById(requestId, newRequest);
 
-        if(!updatedRequest.isPresent()) {
+        if(updatedRequest.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -93,13 +93,13 @@ public class RequestController {
     public ResponseEntity<Request> createRequest(@RequestBody JoinRequest joinRequest) {
     	Optional<Long> userId = getUserId();
     	
-    	if (!userId.isPresent()) {
+    	if (userId.isEmpty()) {
     		return ResponseEntity.internalServerError().build();
     	}
     	
         Optional<Request> createdRequest = requestService.createRequest(joinRequest.getPostId(), userId.get(), joinRequest.getBody());
 
-        if (!createdRequest.isPresent()) {
+        if (createdRequest.isEmpty()) {
     		return ResponseEntity.internalServerError().build();
     	}
         
@@ -124,7 +124,7 @@ public class RequestController {
     public ResponseEntity<List<Request>> getJoinRequestByUserId(@PathVariable Long userId) {
     	Optional<List<Request>> requests = requestService.getRequestByUserId(userId);
 
-        if(!requests.isPresent()) {
+        if(requests.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -135,7 +135,7 @@ public class RequestController {
     public ResponseEntity<List<Request>> getJoinRequestByPostId(@PathVariable Long postId) {
     	Optional<List<Request>> requests = requestService.getRequestByPostId(postId);
 
-        if(!requests.isPresent()) {
+        if(requests.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -146,7 +146,7 @@ public class RequestController {
     public ResponseEntity<Request> respondToRequest(@PathVariable Long requestId, @RequestParam String response) {
     	Optional<Request> requestResponded = requestService.respondToRequest(requestId, response);
     	
-    	if (!requestResponded.isPresent()) {
+    	if (requestResponded.isEmpty()) {
     		return ResponseEntity.internalServerError().build();
     	}
         
@@ -184,8 +184,12 @@ public class RequestController {
     
     @GetMapping("/getScrollRequests/{postId}")
     public ResponseEntity<Window<Request>> getScrollRequests(@PathVariable Long postId, @RequestParam(defaultValue = "0") Long latestRequest) {
-    	Window<Request> requests = requestService.getScrollRequests(postId, latestRequest);
+    	Optional<Window<Request>> requestsOpt = requestService.getScrollRequests(postId, latestRequest);
 
-        return ResponseEntity.ok(requests);
+    	if (requestsOpt.isEmpty()) {
+    		return ResponseEntity.notFound().build();
+    	}
+    	
+        return ResponseEntity.ok(requestsOpt.get());
     }
 }

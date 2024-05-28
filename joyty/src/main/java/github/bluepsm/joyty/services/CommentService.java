@@ -1,6 +1,5 @@
 package github.bluepsm.joyty.services;
 
-import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.data.domain.OffsetScrollPosition;
 import org.springframework.data.domain.ScrollPosition;
 import org.springframework.data.domain.Window;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import github.bluepsm.joyty.models.Comment;
 import github.bluepsm.joyty.models.Post;
@@ -21,7 +21,6 @@ import github.bluepsm.joyty.repositories.CommentRepository;
 import github.bluepsm.joyty.repositories.PostRepository;
 import github.bluepsm.joyty.repositories.UserRepository;
 
-@Slf4j
 @Service
 public class CommentService {
 	@Autowired
@@ -40,7 +39,6 @@ public class CommentService {
 
     @Cacheable(value = "comments", key = "#id", unless = "#result == null")
     public Optional<Comment> getCommentById(Long id) {
-        log.info("Redis is Retrieve Comment ID: {}", id);
         return commentRepository.findById(id);
     }
 
@@ -48,7 +46,7 @@ public class CommentService {
     public Optional<Comment> updateCommentById(Long commentId, CreateCommentRequest commentRequest) {
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
 
-        if(!commentOpt.isPresent()) {
+        if(commentOpt.isEmpty()) {
             return Optional.empty();
         }
         
@@ -74,25 +72,29 @@ public class CommentService {
         }
     }
     
+    @Transactional
     public Optional<Comment> createComment(Long postId, Long userId, String body) {
-        Post post = postRepository.findById(postId).get();
-        User user = userRepository.findById(userId).get();
+        Optional<Post> postOpt = postRepository.findById(postId);
+        Optional<User> userOpt = userRepository.findById(userId);
+        
+        if (postOpt.isEmpty() || userOpt.isEmpty()) {
+        	return Optional.empty();
+        }
         
         Comment comment = new Comment(body);
-        comment.setPost(post);
-        comment.setUser(user);
+        comment.setPost(postOpt.get());
+        comment.setUser(userOpt.get());
         
         return Optional.of(commentRepository.save(comment));
     }
     
     public Optional<List<Comment>> getCommentsByPostId(Long postId) {
-        //log.info("Redis is Retrieve Comment ID: {}", id);
         return commentRepository.findByPostId(postId);
     }
     
-    public Window<Comment> getScrollComments(Long postId, Long latestComment) {
+    public Optional<Window<Comment>> getScrollComments(Long postId, Long latestComment) {
     	OffsetScrollPosition offset = ScrollPosition.offset(latestComment);
-    	Window<Comment> comments = commentRepository.findFirst10ByPostIdOrderByCreatedAtAsc(postId, offset);
+    	Optional<Window<Comment>> comments = commentRepository.findFirst10ByPostIdOrderByCreatedAtAsc(postId, offset);
     	
     	return comments;
     }

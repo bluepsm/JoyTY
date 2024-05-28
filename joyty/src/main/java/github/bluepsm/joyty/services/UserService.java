@@ -37,15 +37,15 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public Optional<User> createUser(User user) {
+        return Optional.of(userRepository.save(user));
     }
 
     @CachePut(value = "users", key = "#id")
     public Optional<User> updateUserById(Long id, User user) {
         Optional<User> userOpt = userRepository.findById(id);
 
-        if(!userOpt.isPresent()) {
+        if(userOpt.isEmpty()) {
             return Optional.empty();
         }
 
@@ -70,7 +70,13 @@ public class UserService {
     
     public Optional<User> updateName(Long userId, String firstName, String lastName) {
     	try {
-    		User user = userRepository.findById(userId).get();
+    		Optional<User> userOpt = userRepository.findById(userId);
+    		
+    		if (userOpt.isEmpty()) {
+    			return Optional.empty();
+    		}
+    		
+    		User user = userOpt.get();
     		user.setFirstName(firstName);
     		user.setLastName(lastName);
     		
@@ -82,8 +88,13 @@ public class UserService {
     
     public Optional<User> updateDateOfBirth(Long userId, Date dob) {
     	try {
-    		User user = userRepository.findById(userId).get();
+    		Optional<User> userOpt = userRepository.findById(userId);
     		
+    		if (userOpt.isEmpty()) {
+    			return Optional.empty();
+    		}
+    		
+    		User user = userOpt.get();
     		user.setDateOfBirth(dob);
     		
     		return Optional.of(userRepository.save(user));
@@ -94,7 +105,13 @@ public class UserService {
     
     public Optional<User> updateGender(Long userId, String gender) {
     	try {
-    		User user = userRepository.findById(userId).get();
+    		Optional<User> userOpt = userRepository.findById(userId);
+    		
+    		if (userOpt.isEmpty()) {
+    			return Optional.empty();
+    		}
+    		
+    		User user = userOpt.get();
     		user.setGender(gender);
     		
     		return Optional.of(userRepository.save(user));
@@ -105,7 +122,13 @@ public class UserService {
     
     public Optional<User> updatePhoneNumber(Long userId, String phoneNumber) {
     	try {
-    		User user = userRepository.findById(userId).get();
+    		Optional<User> userOpt = userRepository.findById(userId);
+    		
+    		if (userOpt.isEmpty()) {
+    			return Optional.empty();
+    		}
+    		
+    		User user = userOpt.get();
     		user.setPhoneNumber(phoneNumber);
     		
     		return Optional.of(userRepository.save(user));
@@ -116,7 +139,13 @@ public class UserService {
     
     public Optional<User> updateLocation(Long userId, String country, String state, String city) {
     	try {
-    		User user = userRepository.findById(userId).get();
+    		Optional<User> userOpt = userRepository.findById(userId);
+    		
+    		if (userOpt.isEmpty()) {
+    			return Optional.empty();
+    		}
+    		
+    		User user = userOpt.get();
     		user.setCountry(country);
     		user.setState(state);
     		user.setCity(city);
@@ -130,7 +159,13 @@ public class UserService {
     @Transactional
     public Optional<User> updateProfileImg(Long userId, MultipartFile image) throws IOException {
     	try {
-    		User user = userRepository.findById(userId).get();
+    		Optional<User> userOpt = userRepository.findById(userId);
+    		
+    		if (userOpt.isEmpty()) {
+    			return Optional.empty();
+    		}
+    		
+    		User user = userOpt.get();
     		
     		String fileName = StringUtils.cleanPath(image.getOriginalFilename());
     		File fileDB = new File(fileName, image.getContentType(), image.getBytes());

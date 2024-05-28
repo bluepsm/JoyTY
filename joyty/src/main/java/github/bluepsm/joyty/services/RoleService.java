@@ -24,14 +24,14 @@ public class RoleService {
         return roleRepository.findById(id);
     }
 
-    public Role createRole(Role role) {
-        return roleRepository.save(role);
+    public Optional<Role> createRole(Role role) {
+        return Optional.of(roleRepository.save(role));
     }
 
     public Optional<Role> updateRoleById(Long id, Role role) {
         Optional<Role> roleOpt = roleRepository.findById(id);
 
-        if (!roleOpt.isPresent()) {
+        if (roleOpt.isEmpty()) {
             return Optional.empty();
         }
 

@@ -29,7 +29,7 @@ public class RoleController {
     public ResponseEntity<List<Role>> getAllRoles() {
         Optional<List<Role>> roles = roleService.getAllRoles();
         
-        if(!roles.isPresent()) {
+        if(roles.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -40,7 +40,7 @@ public class RoleController {
     public ResponseEntity<Role> getTagById(@PathVariable Long roleId) {
         Optional<Role> role = roleService.getRoleById(roleId);
 
-        if(!role.isPresent()) {
+        if(role.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -49,16 +49,21 @@ public class RoleController {
 
     @PostMapping("/create")
     public ResponseEntity<Role> createRole(@RequestBody Role newRole) {
-        Role createdRole = roleService.createRole(newRole);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdRole);
+        Optional<Role> createdRoleOpt = roleService.createRole(newRole);
+        
+        if (createdRoleOpt.isEmpty()) {
+        	return ResponseEntity.badRequest().build();
+        }
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdRoleOpt.get());
     }
 
     @PutMapping("/{roleId}/update")
     public ResponseEntity<Role> updateRoleById(@PathVariable Long roleId, @RequestBody Role newRole) {
         Optional<Role> updatedRole = roleService.updateRoleById(roleId, newRole);
 
-        if(!updatedRole.isPresent()) {
-            return ResponseEntity.notFound().build();
+        if(updatedRole.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(updatedRole.get());
